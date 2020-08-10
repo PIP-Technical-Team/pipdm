@@ -109,7 +109,6 @@ compute_gini <- function(y, w){
   sY <- 0
   for (i in seq_along(y)) {
     auc <- auc + (sY + delta[i] / 2) * w[i]
-    # sW <- sW + w[i] # Cumulative weight
     sY <- sY + delta[i] # Cumulative income
   }
   gini <- 1 - auc / sum(w) / sum(delta) * 2
