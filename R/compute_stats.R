@@ -1,4 +1,5 @@
 #' @importFrom data.table fifelse
+#' @importFrom dplyr lag
 NULL
 
 #' Summary statistics
@@ -104,13 +105,10 @@ compute_gini <- function(y, w){
   check_yw_input(y, w)
 
   # Calculate Gini
-  delta <- w * y
-  auc <- 0
-  sY <- 0
-  for (i in seq_along(y)) {
-    auc <- auc + (sY + delta[i] / 2) * w[i]
-    sY <- sY + delta[i] # Cumulative income
-  }
+  delta <- y * w
+  delta_lag <- dplyr::lag(delta, default = 0)
+  v <- (cumsum(delta_lag) + delta / 2) * w
+  auc <- sum(v)
   gini <- 1 - auc / sum(w) / sum(delta) * 2
   return(gini)
 }
