@@ -4,21 +4,20 @@
 \alias{compute_lorenz}
 \title{Lorenz curve}
 \usage{
-compute_lorenz(y, w)
+compute_lorenz(measure, weight)
 }
 \arguments{
-\item{y}{numeric: A vector of income or consumption values}
+\item{measure}{numeric: A vector of income or consumption values}
 
-\item{w}{numeric: A vector of weights}
+\item{weight}{numeric: A vector of weights}
 }
 \description{
 Compute the Lorenz curve.
 }
 \details{
-Given a vector of income or consumption values (\code{y}) and their respective
-weights (\code{w}) \code{compute_lorenz} computes the Lorenz curve the
-distribution.
+Given a vector of income or consumption values and their respective weights
+\code{compute_lorenz} computes the Lorenz curve for the distribution.
 
 Note that the input parameters cannot contain missing values and that
-\code{y} must be sorted in increasing order.
+\code{measure} must be sorted in increasing order.
 }

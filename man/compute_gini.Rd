@@ -4,21 +4,20 @@
 \alias{compute_gini}
 \title{Gini coefficient}
 \usage{
-compute_gini(y, w)
+compute_gini(measure, weight)
 }
 \arguments{
-\item{y}{numeric: A vector of income or consumption values}
+\item{measure}{numeric: A vector of income or consumption values}
 
-\item{w}{numeric: A vector of weights}
+\item{weight}{numeric: A vector of weights}
 }
 \description{
 Compute the Gini coefficient.
 }
 \details{
-Given a vector of income or consumption values (\code{y}) and their respective
-weights (\code{w}) \code{compute_gini} computes the Gini coefficient for the
-distribution.
+Given a vector of income or consumption values and their respective weights
+\code{compute_gini} computes the Gini coefficient for the distribution.
 
 Note that the input parameters cannot contain missing values and that
-\code{y} must be sorted in increasing order.
+\code{measure} must be sorted in increasing order.
 }

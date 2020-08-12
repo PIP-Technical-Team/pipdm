@@ -8,40 +8,36 @@ NULL
 #' minimum and maximum values.
 #'
 #' Note that the input parameters cannot contain missing values and that
-#' \code{y} must be sorted in increasing order.
+#' \code{measure} must be sorted in increasing order.
 #'
-#' @param y numeric: A vector of income or consumption values
-#' @param w numeric: A vector of weights
+#' @param measure numeric: A vector of income or consumption values
+#' @param weight numeric: A vector of weights
 #'
 #' @return Returns a list of summary statistics.
 #' @export
 #'
-compute_stats <- function(y, w){
+compute_stats <- function(measure, weight){
 
   # CHECK that inputs are valid
-  check_yw_input(y, w)
-
-  # Define number of points on the Lorenz curve
-  nobs <- length(y)
-  m <- ifelse(nobs > 1000, 100, 20)
+  check_measure_weight_input(measure, weight)
 
   # Calculate summary statistics
-  sumW <- sum(w)
-  sumY <- sum(w * y)
-  meanY <- stats::weighted.mean(y, w)
-  minY <- min(y)
-  maxY <- max(y)
-  mld <- compute_mld(y, w)
-  gini <- compute_gini(y, w)
-  lorenz <- compute_lorenz(y, w)
+  sum_weight <- sum(weight)
+  sum_weighted_measure <- sum(measure * weight)
+  mean_weighted_measure <- stats::weighted.mean(measure, weight)
+  min_measure <- min(measure)
+  max_measure <- max(measure)
+  mld <- compute_mld(measure, weight)
+  gini <- compute_gini(measure, weight)
+  lorenz <- compute_lorenz(measure, weight)
 
-  out <- list(nobs = nobs,
-              m = m,
-              sumW = sumW,
-              sumY = sumY,
-              meanY = meanY,
-              minY = minY,
-              maxY = maxY,
+  out <- list(nobs = length(measure),
+              m = nrow(lorenz),
+              sum_weight = sum_weight,
+              sum_weighted_measure = sum_weighted_measure,
+              mean_weighted_measure = mean_weighted_measure,
+              min_measure = min_measure,
+              max_measure = max_measure,
               mld = mld,
               gini = gini,
               lorenz = lorenz
@@ -54,29 +50,28 @@ compute_stats <- function(y, w){
 #'
 #' Compute mean log deviation.
 #'
-#' Given a vector of income or consumption values (\code{y}) and their respective
-#' weights (\code{w}) \code{compute_mld} computes the mean log deviation for the
-#' distribution.
+#' Given a vector of income or consumption values and their respective weights
+#' \code{compute_mld} computes the mean log deviation for the distribution.
 #'
 #' Note that the input parameters cannot contain missing values and that
-#' \code{y} must be sorted in increasing order.
+#' \code{measure} must be sorted in increasing order.
 #'
 #' @inheritParams compute_stats
 #'
 #' @export
 #'
-compute_mld <- function(y, w){
+compute_mld <- function(measure, weight){
 
   # CHECK that inputs are valid
-  check_yw_input(y, w)
+  check_measure_weight_input(measure, weight)
 
   # Calculate mld
-  weighted_mean_y <- stats::weighted.mean(y, w)
-  sum_weights <- sum(w)
+  mean_weighted_measure <- stats::weighted.mean(measure, weight)
+  sum_weight <- sum(weight)
   v <- suppressWarnings(
-    data.table::fifelse(y > 0,
-                        w / sum_weights * log(weighted_mean_y / y),
-                        w / sum_weights * log(weighted_mean_y)
+    data.table::fifelse(measure > 0,
+                        weight / sum_weight * log(mean_weighted_measure / measure),
+                        weight / sum_weight * log(mean_weighted_measure)
     )
   )
   mld <- sum(v)
@@ -88,28 +83,27 @@ compute_mld <- function(y, w){
 #'
 #' Compute the Gini coefficient.
 #'
-#' Given a vector of income or consumption values (\code{y}) and their respective
-#' weights (\code{w}) \code{compute_gini} computes the Gini coefficient for the
-#' distribution.
+#' Given a vector of income or consumption values and their respective weights
+#' \code{compute_gini} computes the Gini coefficient for the distribution.
 #'
 #' Note that the input parameters cannot contain missing values and that
-#' \code{y} must be sorted in increasing order.
+#' \code{measure} must be sorted in increasing order.
 #'
 #' @inheritParams compute_stats
 #'
 #' @export
 #'
-compute_gini <- function(y, w){
+compute_gini <- function(measure, weight){
 
   # CHECK that inputs are valid
-  check_yw_input(y, w)
+  check_measure_weight_input(measure, weight)
 
   # Calculate Gini
-  delta <- y * w
-  delta_lag <- dplyr::lag(delta, default = 0)
-  v <- (cumsum(delta_lag) + delta / 2) * w
-  auc <- sum(v)
-  gini <- 1 - auc / sum(w) / sum(delta) * 2
+  delta_measure <- measure * weight
+  delta_measure_lag <- dplyr::lag(delta_measure, default = 0)
+  v <- (cumsum(delta_measure_lag) + delta_measure / 2) * weight
+  auc <- sum(v) # Area below Lorenz curve
+  gini <- 1 - auc / sum(weight) / sum(delta_measure) * 2
   return(gini)
 }
 
@@ -117,49 +111,51 @@ compute_gini <- function(y, w){
 #'
 #' Compute the Lorenz curve.
 #'
-#' Given a vector of income or consumption values (\code{y}) and their respective
-#' weights (\code{w}) \code{compute_lorenz} computes the Lorenz curve the
-#' distribution.
+#' Given a vector of income or consumption values and their respective weights
+#' \code{compute_lorenz} computes the Lorenz curve for the distribution.
 #'
 #' Note that the input parameters cannot contain missing values and that
-#' \code{y} must be sorted in increasing order.
+#' \code{measure} must be sorted in increasing order.
 #'
 #' @inheritParams compute_stats
 #'
 #' @export
 #'
-compute_lorenz <- function(y, w){
+compute_lorenz <- function(measure, weight){
 
   # CHECK that inputs are valid
-  check_yw_input(y, w)
+  check_measure_weight_input(measure, weight)
 
-  m <- ifelse(length(w) > 1000, 100, 20)
-  delta <- y * w
-  sumY <- sum(delta)
-  sumW <- sum(w)
-  yStep <- sumW / m
-  nextLevel <- yStep
+  # Define number of points on the Lorenz curve
+  if (length(weight) > 1000) m <- 100 else m <- 20
+
+  # Initialize values
+  delta_measure <- measure * weight
+  sum_weighted_measure <- sum(delta_measure)
+  sum_weight <- sum(weight)
+  measure_step <- sum_weight / m
+  next_level <- measure_step
   j <- 1
-  sW <- 0
-  sY <- 0
+  cum_weight <- 0
+  cum_measure <- 0
 
   # Compute Lorenz curve
   df <- data.frame(matrix(0, m, 3))
-  names(df) <- c('y', 'lorenzW', 'lorenzY')
+  names(df) <- c('measure', 'lorenz_weight', 'lorenz_weighted_measure')
 
-  for (i in seq_along(y)) {
+  for (i in seq_along(measure)) {
 
-    sW <- sW + w[i] # Cumulative weight
-    sY <- sY + delta[i] # Cumulative income
+    cum_weight <- cum_weight  + weight[i] # Cumulative weight
+    cum_measure  <- cum_measure + delta_measure[i] # Cumulative income
 
-    while ((sW >= nextLevel) & (j <= m)) {
+    while ((cum_weight >= next_level) & (j <= m)) {
 
-      df$y[j] <- y[i]
-      df$lorenzW[j] <- sW / sumW
-      df$lorenzY[j] <- sY / sumY
+      df$measure[j] <- measure[i]
+      df$lorenz_weight[j] <- cum_weight / sum_weight
+      df$lorenz_weighted_measure[j] <- cum_measure / sum_weighted_measure
 
       j <- j + 1
-      if (j <= m) {nextLevel <- (yStep * j) * (0.999999999)} # Why 0.9999?
+      if (j <= m) {next_level <- (measure_step * j) * (0.999999999)} # Why 0.9999?
     }
   }
   return(df)
@@ -170,20 +166,12 @@ compute_lorenz <- function(y, w){
 #' @inheritParams compute_stats
 #'
 #'@noRd
-check_yw_input <- function(y, w){
+check_measure_weight_input <- function(measure, weight){
   # Validation checks
-  assertthat::assert_that(!anyNA(w), msg = 'w cannot contain missing values')
-  assertthat::assert_that(!anyNA(y), msg = 'y cannot contain missing values')
-  assertthat::assert_that(is.numeric(w))
-  assertthat::assert_that(is.numeric(y))
-  assertthat::assert_that(length(w) == length(y), msg = 'y and w must be of the same length')
-  assertthat::assert_that(!is.unsorted(y), msg = "y must be sorted in increasing order")
+  assertthat::assert_that(!anyNA(weight), msg = 'weight cannot contain missing values')
+  assertthat::assert_that(!anyNA(measure), msg = 'measure cannot contain missing values')
+  assertthat::assert_that(is.numeric(weight))
+  assertthat::assert_that(is.numeric(measure))
+  assertthat::assert_that(length(weight) == length(measure), msg = 'measure and weight must be of the same length')
+  assertthat::assert_that(!is.unsorted(measure), msg = "measure must be sorted in increasing order")
 }
-
-
-
-
-
-
-
-

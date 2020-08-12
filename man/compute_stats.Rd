@@ -4,12 +4,12 @@
 \alias{compute_stats}
 \title{Summary statistics}
 \usage{
-compute_stats(y, w)
+compute_stats(measure, weight)
 }
 \arguments{
-\item{y}{numeric: A vector of income or consumption values}
+\item{measure}{numeric: A vector of income or consumption values}
 
-\item{w}{numeric: A vector of weights}
+\item{weight}{numeric: A vector of weights}
 }
 \value{
 Returns a list of summary statistics.
@@ -20,5 +20,5 @@ minimum and maximum values.
 }
 \details{
 Note that the input parameters cannot contain missing values and that
-\code{y} must be sorted in increasing order.
+\code{measure} must be sorted in increasing order.
 }
