@@ -20,8 +20,6 @@ BugReports: https://github.com/PovcalNet-Team/pipdm/issues
 Depends:
     R (>= 3.5.0)
 Imports: 
-    purrr,
     data.table,
     assertthat,
-    pcndm,
     dplyr
