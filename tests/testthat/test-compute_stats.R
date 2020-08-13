@@ -25,7 +25,7 @@ test_that('check_measure_weight_input() works as expected', {
 })
 
 # Gini
-test_that('compute_gini() returns the same result as pcndm::compute_pcb_stats()', {
+test_that('compute_gini() returns the correct result', {
   lapply(dl, function(x){
     df <- x$data
     res <- compute_gini(measure = df$welfare, weight = df$weight)
@@ -34,7 +34,7 @@ test_that('compute_gini() returns the same result as pcndm::compute_pcb_stats()'
 })
 
 # Mean log deviation
-test_that('compute_mld() returns the same result as pcndm::compute_pcb_stats()', {
+test_that('compute_mld() returns the correct result', {
   lapply(dl, function(x){
     df <- x$data
     res <- compute_mld(measure = df$welfare, weight = df$weight)
@@ -43,7 +43,7 @@ test_that('compute_mld() returns the same result as pcndm::compute_pcb_stats()',
 })
 
 # Lorenz curve
-test_that('compute_lorenz() returns the same result as pcndm::create_rpcb()', {
+test_that('compute_lorenz() returns the correct results', {
   lapply(dl, function(x){
     df <- x$data
     res1 <- x$stats$lorenz
@@ -56,7 +56,7 @@ test_that('compute_lorenz() returns the same result as pcndm::create_rpcb()', {
 })
 
 # compute_stats
-test_that('compute_stats() returns the same result as pcndm::compute_pcb_stats()', {
+test_that('compute_stats() returns the correct results', {
   lapply(dl, function(x){
     df <- x$data
     res1 <- x$stats
