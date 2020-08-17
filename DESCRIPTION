@@ -14,7 +14,9 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
 URL: https://github.com/PovcalNet-Team/pipdm
 BugReports: https://github.com/PovcalNet-Team/pipdm/issues
 Depends:
@@ -23,3 +25,4 @@ Imports:
     data.table,
     assertthat,
     dplyr
+VignetteBuilder: knitr

@@ -1,0 +1,90 @@
+---
+title: "Precompute summary statistics for microdata"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Precompute summary statistics for microdata}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pipdm)
+```
+
+## Introduction
+
+This vignette explains how to compute summary statistics for microdata surveys used in the Poverty & Inequality Platform (PIP). Given a vector of welfare values and a vector of their respective weights the Gini coefficient, mean log deviation (MLD) and Lorenz curve can be calculated, as well as other statistics like the sum and mean of the weighted welfare distribution.
+
+## Compute all statistics
+
+The main function to calculate the summary statistics is the `compute_stats()` function. This function takes two arguments; `measure` specifying a vector with the income or consumption values to be used and `weight` specifying the respective weights. Both parameters needs to be set.
+
+In order to test the function we first need to load the synthetic microdata that comes with the `pipdm` package.
+
+```{r load_data}
+data("microdata")
+head(microdata)
+```
+
+There are two important things to note about the structure of this dataset; 1) the `welfare` and `weight` columns do not contain any missing values and 2) the data is sorted by the increasing order of the `welfare` column. Both these conditions are necessary for `compute_stats()` and its underlying functions to work.
+
+```{r check_data}
+# Check for missing values
+!anyNA(microdata$welfare)
+!anyNA(microdata$weight)
+# Test if the data is correctly sorted
+!is.unsorted(microdata$welfare)
+```
+
+The use of the function is then simple enough:
+
+  ```{r stats}
+res <- compute_stats(measure = microdata$welfare, weight = microdata$weight)
+```
+
+It returns a list of 10 objects containing the number of observations used in the calculation (`nobs`), the number of points
+on the Lorenz curve (`m`) and the different summary statistics.
+
+```{r display_stats}
+str(res)
+```
+
+## Compute seperate measures
+
+For the three main statistics Gini, MLD and Lorenz there are also a set of independent functions you can use to calculate these measures.
+
+### Compute Gini
+
+```{r gini}
+compute_gini(measure = microdata$welfare, weight = microdata$weight)
+```
+
+### Compute MLD
+
+```{r mld}
+compute_mld(measure = microdata$welfare, weight = microdata$weight)
+```
+
+### Compute Lorenz
+
+```{r lorenz}
+lorenz <- compute_lorenz(measure = microdata$welfare, weight = microdata$weight)
+head(lorenz)
+```
+
+Note that the output of `compute_lorenz()` will depend on the number of observations in the given dataset. For microdata with more than 1000 observation the result will be a data frame with 100 rows (points on the Lorenz curve). For datasets with less than 1000 observations, which is typical for binned data, the result will be a data frame with 20 rows.
+
+```{r lorenz2}
+m <- sort(sample(microdata$welfare, 400))
+w <- sample(microdata$weight, 400)
+lorenz_binned <- compute_lorenz(measure = m, weight = w)
+nrow(lorenz)
+nrow(lorenz_binned)
+```
