@@ -307,9 +307,6 @@ db_adjust_welfare_mean <- function(df){
 #' @keywords internal
 db_select_lineup_surveys <- function(df){
 
-  # Define NULL values
-  # country_code <- survey_coverage <- reference_year <- svy_lineup_data <- NULL
-
   # Nest by country, coverage and reference year
   df <- tidyfast::dt_nest(df, country_code, survey_coverage, reference_year, .key = 'data')
 
