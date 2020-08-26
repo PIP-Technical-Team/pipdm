@@ -17,3 +17,12 @@ Suggests:
     testthat
 URL: https://github.com/PovcalNet-Team/pipdm
 BugReports: https://github.com/PovcalNet-Team/pipdm/issues
+Depends: 
+    R (>= 2.10)
+Imports: 
+    dplyr,
+    data.table,
+    purrr,
+    tidyfast,
+    tidyr,
+    magrittr
