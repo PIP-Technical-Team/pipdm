@@ -182,7 +182,7 @@ get_welfare_adjustment_method <- function(svy_table, ref_year, ref_gdp, ref_pce)
         return('missing_gdp_a')
       }
       if (is.na(svy_table[['adjusted_svy_gdp']][2])) {
-        return('missing_gdp_a')
+        return('missing_gdp_b')
       }
     }
   }
