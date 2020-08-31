@@ -67,8 +67,8 @@ select_lineup_survey <- function(df, ref_year) {
 
   # Return as is if there is only a single survey to choose from
   n_svy <- nrow(df)
-  if (n_svy == 1) {return(df)}
-  if (length(unique(df[['data_type']])) == 1) {return(df)}
+  if (n_svy == 1) {return(as.data.frame(df))}
+  if (length(unique(df[['data_type']])) == 1) {return(as.data.frame(df))}
 
   # Deal with cases where survey_year == ref_year
   tmp <- df %>%
@@ -76,7 +76,8 @@ select_lineup_survey <- function(df, ref_year) {
       is_ref_year = ref_year == survey_year
     ) %>%
     dplyr::filter(is_ref_year == TRUE) %>%
-    dplyr::select(-is_ref_year)
+    dplyr::select(-is_ref_year) %>%
+    as.data.frame()
 
   if (nrow(tmp) > 1) {return(tmp[tmp[['data_type']] == 'C', ])}
   if (nrow(tmp) == 1) {return(tmp)}
@@ -89,7 +90,8 @@ select_lineup_survey <- function(df, ref_year) {
       both_sides = length(n_per_data_type) == 2
     ) %>%
     dplyr::filter(both_sides == TRUE) %>%
-    dplyr::select(-n_per_data_type, -both_sides)
+    dplyr::select(-n_per_data_type, -both_sides) %>%
+    as.data.frame()
 
   if (length(unique(tmp[['data_type']])) > 1) {return(tmp[tmp[['data_type']] == 'C', ]) }
   if (length(unique(tmp[['data_type']])) == 1) {return(tmp)}
@@ -104,7 +106,8 @@ select_lineup_survey <- function(df, ref_year) {
       ) %>%
       dplyr::ungroup() %>%
       dplyr::filter(dist_from_ref_year == min(dist_from_ref_year, na.rm = TRUE)) %>%
-      dplyr::select(-dist_from_ref_year)
+      dplyr::select(-dist_from_ref_year) %>%
+      as.data.frame()
     if (nrow(tmp) == 1) {
       return(tmp)
     } else {
