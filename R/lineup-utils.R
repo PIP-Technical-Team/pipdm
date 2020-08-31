@@ -115,7 +115,8 @@ select_lineup_survey <- function(df, ref_year) {
     }
   }
 
-  return(df)
+  # AE: No need to return anything unless above conditions are triggered?
+  # return(df)
 
 }
 
