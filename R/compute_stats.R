@@ -4,18 +4,30 @@ NULL
 
 #' Summary statistics
 #'
-#' Compute summary statistics, including Gini, Lorenz curve, weighted mean and
-#' minimum and maximum values.
+#' Compute summary statistics.
+#'
+#' Given a vector of income or consumption values and their respective weights
+#' `compute_stats()` calculates the Gini, mean log deviation, Lorenz curve, weighted mean and
+#' minimum and maximum values for the distribution.
 #'
 #' Note that the input parameters cannot contain missing values and that
-#' \code{measure} must be sorted in increasing order.
+#' `measure` must be sorted in increasing order.
 #'
-#' @param measure numeric: A vector of income or consumption values
-#' @param weight numeric: A vector of weights
+#' @param measure numeric: A vector of income or consumption values.
+#' @param weight numeric: A vector of weights.
 #'
-#' @return Returns a list of summary statistics.
+#' @return list
+#' @seealso [compute_gini()] [compute_mld()] [compute_lorenz()]
+#'
+#' @examples
+#' # Simple example
+#' compute_stats(measure = 1:100, weight = rep(1, 100))
+#'
+#' # Microdata example
+#' data("microdata")
+#' compute_stats(measure = microdata$welfare, microdata$weight)
+#'
 #' @export
-#'
 compute_stats <- function(measure, weight){
 
   # CHECK that inputs are valid
@@ -45,21 +57,30 @@ compute_stats <- function(measure, weight){
   return(out)
 }
 
-
 #' Mean log deviation
 #'
 #' Compute mean log deviation.
 #'
 #' Given a vector of income or consumption values and their respective weights
-#' \code{compute_mld} computes the mean log deviation for the distribution.
+#' `compute_mld()` computes the mean log deviation for the distribution.
 #'
 #' Note that the input parameters cannot contain missing values and that
-#' \code{measure} must be sorted in increasing order.
+#' `measure` must be sorted in increasing order.
 #'
 #' @inheritParams compute_stats
 #'
-#' @export
+#' @return numeric
+#' @seealso [compute_stats()] [compute_gini()] [compute_lorenz()]
 #'
+#' @examples
+#' # Simple example
+#' compute_mld(measure = 1:100, weight = rep(1, 100))
+#'
+#' # Microdata example
+#' data("microdata")
+#' compute_mld(measure = microdata$welfare, microdata$weight)
+#'
+#' @export
 compute_mld <- function(measure, weight){
 
   # CHECK that inputs are valid
@@ -84,15 +105,25 @@ compute_mld <- function(measure, weight){
 #' Compute the Gini coefficient.
 #'
 #' Given a vector of income or consumption values and their respective weights
-#' \code{compute_gini} computes the Gini coefficient for the distribution.
+#' `compute_gini()` computes the Gini coefficient for the distribution.
 #'
 #' Note that the input parameters cannot contain missing values and that
-#' \code{measure} must be sorted in increasing order.
+#' `measure` must be sorted in increasing order.
 #'
 #' @inheritParams compute_stats
 #'
-#' @export
+#' @return numeric
+#' @seealso [compute_stats()] [compute_mld()] [compute_lorenz()]
 #'
+#' @examples
+#' # Simple example
+#' compute_gini(measure = 1:100, weight = rep(1, 100))
+#'
+#' # Microdata example
+#' data("microdata")
+#' compute_gini(measure = microdata$welfare, microdata$weight)
+#'
+#' @export
 compute_gini <- function(measure, weight){
 
   # CHECK that inputs are valid
@@ -112,15 +143,25 @@ compute_gini <- function(measure, weight){
 #' Compute the Lorenz curve.
 #'
 #' Given a vector of income or consumption values and their respective weights
-#' \code{compute_lorenz} computes the Lorenz curve for the distribution.
+#' `compute_lorenz()` computes the Lorenz curve for the distribution.
 #'
 #' Note that the input parameters cannot contain missing values and that
-#' \code{measure} must be sorted in increasing order.
+#' `measure` must be sorted in increasing order.
 #'
 #' @inheritParams compute_stats
 #'
-#' @export
+#' @return numeric
+#' @seealso [compute_stats()] [compute_gini()] [compute_mld()]
 #'
+#' @examples
+#' # Simple example
+#' compute_lorenz(measure = 1:100, weight = rep(1, 100))
+#'
+#' # Microdata example
+#' data("microdata")
+#' compute_lorenz(measure = microdata$welfare, microdata$weight)
+#'
+#' @export
 compute_lorenz <- function(measure, weight){
 
   # CHECK that inputs are valid
@@ -161,11 +202,11 @@ compute_lorenz <- function(measure, weight){
   return(df)
 }
 
-#' Check that y and w inputs are valid.
+#' Check that measure and weight inputs are valid.
 #'
 #' @inheritParams compute_stats
-#'
-#'@noRd
+#' @return logical
+#' @noRd
 check_measure_weight_input <- function(measure, weight){
   # Validation checks
   assertthat::assert_that(!anyNA(weight), msg = 'weight cannot contain missing values')

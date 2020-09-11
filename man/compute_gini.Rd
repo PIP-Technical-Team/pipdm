@@ -7,17 +7,32 @@
 compute_gini(measure, weight)
 }
 \arguments{
-\item{measure}{numeric: A vector of income or consumption values}
+\item{measure}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: A vector of weights}
+\item{weight}{numeric: A vector of weights.}
+}
+\value{
+numeric
 }
 \description{
 Compute the Gini coefficient.
 }
 \details{
 Given a vector of income or consumption values and their respective weights
-\code{compute_gini} computes the Gini coefficient for the distribution.
+\code{compute_gini()} computes the Gini coefficient for the distribution.
 
 Note that the input parameters cannot contain missing values and that
 \code{measure} must be sorted in increasing order.
+}
+\examples{
+# Simple example
+compute_gini(measure = 1:100, weight = rep(1, 100))
+
+# Microdata example
+data("microdata")
+compute_gini(measure = microdata$welfare, microdata$weight)
+
+}
+\seealso{
+\code{\link[=compute_stats]{compute_stats()}} \code{\link[=compute_mld]{compute_mld()}} \code{\link[=compute_lorenz]{compute_lorenz()}}
 }

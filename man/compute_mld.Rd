@@ -7,17 +7,32 @@
 compute_mld(measure, weight)
 }
 \arguments{
-\item{measure}{numeric: A vector of income or consumption values}
+\item{measure}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: A vector of weights}
+\item{weight}{numeric: A vector of weights.}
+}
+\value{
+numeric
 }
 \description{
 Compute mean log deviation.
 }
 \details{
 Given a vector of income or consumption values and their respective weights
-\code{compute_mld} computes the mean log deviation for the distribution.
+\code{compute_mld()} computes the mean log deviation for the distribution.
 
 Note that the input parameters cannot contain missing values and that
 \code{measure} must be sorted in increasing order.
+}
+\examples{
+# Simple example
+compute_mld(measure = 1:100, weight = rep(1, 100))
+
+# Microdata example
+data("microdata")
+compute_mld(measure = microdata$welfare, microdata$weight)
+
+}
+\seealso{
+\code{\link[=compute_stats]{compute_stats()}} \code{\link[=compute_gini]{compute_gini()}} \code{\link[=compute_lorenz]{compute_lorenz()}}
 }

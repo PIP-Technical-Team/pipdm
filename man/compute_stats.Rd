@@ -7,18 +7,33 @@
 compute_stats(measure, weight)
 }
 \arguments{
-\item{measure}{numeric: A vector of income or consumption values}
+\item{measure}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: A vector of weights}
+\item{weight}{numeric: A vector of weights.}
 }
 \value{
-Returns a list of summary statistics.
+list
 }
 \description{
-Compute summary statistics, including Gini, Lorenz curve, weighted mean and
-minimum and maximum values.
+Compute summary statistics.
 }
 \details{
+Given a vector of income or consumption values and their respective weights
+\code{compute_stats()} calculates the Gini, mean log deviation, Lorenz curve, weighted mean and
+minimum and maximum values for the distribution.
+
 Note that the input parameters cannot contain missing values and that
 \code{measure} must be sorted in increasing order.
+}
+\examples{
+# Simple example
+compute_stats(measure = 1:100, weight = rep(1, 100))
+
+# Microdata example
+data("microdata")
+compute_stats(measure = microdata$welfare, microdata$weight)
+
+}
+\seealso{
+\code{\link[=compute_gini]{compute_gini()}} \code{\link[=compute_mld]{compute_mld()}} \code{\link[=compute_lorenz]{compute_lorenz()}}
 }

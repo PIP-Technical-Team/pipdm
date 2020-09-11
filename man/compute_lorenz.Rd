@@ -7,17 +7,32 @@
 compute_lorenz(measure, weight)
 }
 \arguments{
-\item{measure}{numeric: A vector of income or consumption values}
+\item{measure}{numeric: A vector of income or consumption values.}
 
-\item{weight}{numeric: A vector of weights}
+\item{weight}{numeric: A vector of weights.}
+}
+\value{
+numeric
 }
 \description{
 Compute the Lorenz curve.
 }
 \details{
 Given a vector of income or consumption values and their respective weights
-\code{compute_lorenz} computes the Lorenz curve for the distribution.
+\code{compute_lorenz()} computes the Lorenz curve for the distribution.
 
 Note that the input parameters cannot contain missing values and that
 \code{measure} must be sorted in increasing order.
+}
+\examples{
+# Simple example
+compute_lorenz(measure = 1:100, weight = rep(1, 100))
+
+# Microdata example
+data("microdata")
+compute_lorenz(measure = microdata$welfare, microdata$weight)
+
+}
+\seealso{
+\code{\link[=compute_stats]{compute_stats()}} \code{\link[=compute_gini]{compute_gini()}} \code{\link[=compute_mld]{compute_mld()}}
 }
