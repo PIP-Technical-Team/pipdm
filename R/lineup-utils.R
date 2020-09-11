@@ -21,16 +21,19 @@ if (getRversion() >= '2.15.1')
 #' @keywords internal
 get_closest_surveys <- function(svy_lkup, ref_year) {
 
-  # Order table by survey year
-  out <- svy_lkup[order(svy_lkup$survey_year), ]
-
   n <- nrow(svy_lkup)
-  i <- findInterval(ref_year, out[['survey_year']])
 
   # Case 1: No survey found
   if (n == 0) {
+    out <- svy_lkup
     return(out)
   }
+
+  # Order table by survey year
+  out <- svy_lkup[order(svy_lkup$survey_year), ]
+
+  # Find interval
+  i <- findInterval(ref_year, out[['survey_year']])
 
   # Case 2: reference year == survey year
   if (ref_year %in% out[['survey_year']]) {
