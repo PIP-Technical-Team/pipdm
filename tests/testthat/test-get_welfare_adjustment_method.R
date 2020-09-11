@@ -22,8 +22,10 @@ create_df <- function(survey_year = c(2005.5, 2010), adjusted_svy_pce = c(100, 1
 test_that('get_survey_side() is working as expected', {
   df <- create_df(n = 1)
   df2 <- create_df()
+  df3 <- data.frame(country_code = NULL, survey_year = NULL)
   expect_identical(get_survey_side(df), 'one-side')
   expect_identical(get_survey_side(df2), 'both-sides')
+  expect_identical(get_survey_side(df3), NA)
 })
 
 # is_same_direction
@@ -64,8 +66,8 @@ test_that('is_non_monotonic_adjusted_with_pce() is working as expected', {
   expect_false(is_non_monotonic_adjusted_with_pce(create_df(), ref_pce = NA))
   expect_false(is_non_monotonic_adjusted_with_pce(svy_table = create_df(adjusted_svy_pce = NA), ref_pce = 100))
   expect_false(is_non_monotonic_adjusted_with_pce(svy_table = create_df(wb_region_code = 'SSA'), ref_pce = 100))
+  expect_true(is_non_monotonic_adjusted_with_pce(svy_table = create_df(adjusted_svy_pce = c(100, 110)), ref_pce = 105))
   expect_true(is_non_monotonic_adjusted_with_pce(create_df(), ref_pce = 100))
-  expect_true(is_non_monotonic_adjusted_with_pce(svy_table = create_df(wb_region_code = 'ECA'), ref_pce = 100))
 })
 
 # is_same_direction_interpolated_with_pce
@@ -85,7 +87,6 @@ test_that('is_same_direction_interpolated_with_pce() is working as expected', {
   expect_false(is_same_direction_interpolated_with_pce(
     create_df(svy_year_mean = c(1000, 990)), ref_pce = 105)
   )
-  # What about second TRUE argument?
 })
 
 # is_non_monotonic_adjusted_with_gdp

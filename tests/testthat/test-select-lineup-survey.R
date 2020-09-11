@@ -29,6 +29,14 @@ test_that('select_lineup_survey() works as expected', {
   out <- select_lineup_survey(df, ref_year = 2010)
   expect_true(all(out$survey_year == 2010 & out$data_type == 'I'))
 
+  # Cases with at least one instance of both-sides surveys
+  df <- data.frame(survey_year = c(2005, 2010, 2010), data_type = c('C', 'C', 'I'))
+  out <- select_lineup_survey(df, ref_year = 2007)
+  expect_equal(out, df[df[['data_type']] == 'C', ])
+  df <- data.frame(survey_year = c(2005, 2009, 2010, 2010), data_type = c('C', 'I', 'C', 'I'))
+  out <- select_lineup_survey(df, ref_year = 2007)
+  expect_equal(out, df[df[['data_type']] == 'C', ])
+
   # Both sides - Income
   # Keep both
   df <- data.frame(survey_year = c(2005, 2010), data_type = c('I', 'I'))
