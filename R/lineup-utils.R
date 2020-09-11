@@ -71,7 +71,8 @@ select_lineup_survey <- function(df, ref_year) {
   # Return as is if there is only a single survey to choose from
   n_svy <- nrow(df)
   if (n_svy == 1) {return(as.data.frame(df))}
-  if (length(unique(df[['data_type']])) == 1) {return(as.data.frame(df))}
+  # AE: This is the same as line 101 and should not be run here?
+  # if (length(unique(df[['data_type']])) == 1) {return(as.data.frame(df))}
 
   # Deal with cases where survey_year == ref_year
   tmp <- df %>%
