@@ -1,8 +1,13 @@
-#' Recode datalevel and survey coverage
+#' @importFrom dplyr recode
+NULL
+
+#' Recode data_level and survey coverage
 #'
 #' Recodes 'data_level' variables in the auxiliary data to match
 #' the 'survey_coverage' variable in the Survey Anchor table.
 #'
+#' AE: Note this merge should really be done on an other variable in
+#' the Survey Anchor table.
 #' @noRd
 recode_data_level <- function(x){
   dplyr::recode(x, '0' = 'Rural', '1' = 'Urban', '2' = 'National')
@@ -10,7 +15,6 @@ recode_data_level <- function(x){
 recode_survey_coverage <- function(x){
   dplyr::recode(x, N = 'National', U = 'Urban', R = 'Rural')
 }
-
 
 #' Find countries without national coverage
 #'
