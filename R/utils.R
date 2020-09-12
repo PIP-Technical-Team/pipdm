@@ -47,6 +47,7 @@ find_unique_coverage <- function(cc, svy_anchor){
   x <- unique(svy_anchor[svy_anchor$country_code == cc,]$survey_coverage)
   if (length(x) == 1) {
     out <- data.frame(country_code = cc, survey_coverage = x)
+    return(out)
   }
 }
 
