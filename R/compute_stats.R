@@ -31,7 +31,7 @@ NULL
 compute_stats <- function(measure, weight){
 
   # CHECK that inputs are valid
-  check_measure_weight_input(measure, weight)
+  check_inputs_measure_weight(measure, weight)
 
   # Calculate summary statistics
   sum_weight <- sum(weight)
@@ -84,7 +84,7 @@ compute_stats <- function(measure, weight){
 compute_mld <- function(measure, weight){
 
   # CHECK that inputs are valid
-  check_measure_weight_input(measure, weight)
+  check_inputs_measure_weight(measure, weight)
 
   # Calculate mld
   mean_weighted_measure <- stats::weighted.mean(measure, weight)
@@ -127,7 +127,7 @@ compute_mld <- function(measure, weight){
 compute_gini <- function(measure, weight){
 
   # CHECK that inputs are valid
-  check_measure_weight_input(measure, weight)
+  check_inputs_measure_weight(measure, weight)
 
   # Calculate Gini
   delta_measure <- measure * weight
@@ -165,7 +165,7 @@ compute_gini <- function(measure, weight){
 compute_lorenz <- function(measure, weight){
 
   # CHECK that inputs are valid
-  check_measure_weight_input(measure, weight)
+  check_inputs_measure_weight(measure, weight)
 
   # Define number of points on the Lorenz curve
   if (length(weight) > 1000) m <- 100 else m <- 20
@@ -207,7 +207,7 @@ compute_lorenz <- function(measure, weight){
 #' @inheritParams compute_stats
 #' @return logical
 #' @noRd
-check_measure_weight_input <- function(measure, weight){
+check_inputs_measure_weight <- function(measure, weight){
   # Validation checks
   assertthat::assert_that(!anyNA(weight), msg = 'weight cannot contain missing values')
   assertthat::assert_that(!anyNA(measure), msg = 'measure cannot contain missing values')

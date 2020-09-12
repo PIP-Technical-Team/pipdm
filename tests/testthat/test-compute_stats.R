@@ -15,13 +15,13 @@ dl <- lapply(dl, function(x){
 })
 
 # Validation checks
-test_that('check_measure_weight_input() works as expected', {
-  expect_error(check_measure_weight_input(measure = 1:2, weight = c(1, NA)), 'weight cannot contain missing values')
-  expect_error(check_measure_weight_input(measure = c(1, NA), weight = 1:2), 'measure cannot contain missing values')
-  expect_error(check_measure_weight_input(measure = 1, weight = '1'), 'weight is not a numeric or integer vector')
-  expect_error(check_measure_weight_input(measure = '1', weight = 1), 'measure is not a numeric or integer vector')
-  expect_error(check_measure_weight_input(measure = 1:2, weight = 1), 'measure and weight must be of the same length')
-  expect_error(check_measure_weight_input(measure = 3:1, weight = 1:3), 'measure must be sorted in increasing order')
+test_that('check_inputs_measure_weight() works as expected', {
+  expect_error(check_inputs_measure_weight(measure = 1:2, weight = c(1, NA)), 'weight cannot contain missing values')
+  expect_error(check_inputs_measure_weight(measure = c(1, NA), weight = 1:2), 'measure cannot contain missing values')
+  expect_error(check_inputs_measure_weight(measure = 1, weight = '1'), 'weight is not a numeric or integer vector')
+  expect_error(check_inputs_measure_weight(measure = '1', weight = 1), 'measure is not a numeric or integer vector')
+  expect_error(check_inputs_measure_weight(measure = 1:2, weight = 1), 'measure and weight must be of the same length')
+  expect_error(check_inputs_measure_weight(measure = 3:1, weight = 1:3), 'measure must be sorted in increasing order')
 })
 
 # Gini
