@@ -16,12 +16,22 @@ dl <- lapply(dl, function(x){
 
 # Validation checks
 test_that('check_inputs_measure_weight() works as expected', {
-  expect_error(check_inputs_measure_weight(measure = 1:2, weight = c(1, NA)), 'weight cannot contain missing values')
-  expect_error(check_inputs_measure_weight(measure = c(1, NA), weight = 1:2), 'measure cannot contain missing values')
-  expect_error(check_inputs_measure_weight(measure = 1, weight = '1'), 'weight is not a numeric or integer vector')
-  expect_error(check_inputs_measure_weight(measure = '1', weight = 1), 'measure is not a numeric or integer vector')
-  expect_error(check_inputs_measure_weight(measure = 1:2, weight = 1), 'measure and weight must be of the same length')
-  expect_error(check_inputs_measure_weight(measure = 3:1, weight = 1:3), 'measure must be sorted in increasing order')
+  expect_error(check_inputs_measure_weight(measure = 1:2, weight = c(1, NA)),
+               '`weight` cannot contain missing values.')
+  expect_error(check_inputs_measure_weight(measure = c(1, NA), weight = 1:2),
+               '`measure` cannot contain missing values.')
+  expect_error(check_inputs_measure_weight(measure = 1, weight = '1'),
+               '`weight` must be a numeric or integer vector:\n.* You\'ve supplied an object of class character.')
+  expect_error(check_inputs_measure_weight(measure = '1', weight = 1),
+               '`measure` must be a numeric or integer vector:\n.* You\'ve supplied an object of class character.')
+  expect_error(check_inputs_measure_weight(measure = 1, weight = list('1')),
+               '`weight` must be a numeric or integer vector:\n.* You\'ve supplied an object of class list.')
+  expect_error(check_inputs_measure_weight(measure = data.frame('1'), weight = 1),
+               '`measure` must be a numeric or integer vector:\n.* You\'ve supplied an object of class data.frame.')
+  expect_error(check_inputs_measure_weight(measure = 1:2, weight = 1),
+               '`measure` and `weight` must have compatible lengths:\n.*`measure` has length 2.\n.* `weight` has length 1.')
+  expect_error(check_inputs_measure_weight(measure = 3:1, weight = 1:3),
+               '`measure` must be sorted in increasing order.')
 })
 
 # Gini

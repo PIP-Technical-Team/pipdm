@@ -1,5 +1,6 @@
 #' @importFrom data.table fifelse
 #' @importFrom dplyr lag
+#' @importFrom rlang abort
 NULL
 
 #' Summary statistics
@@ -209,10 +210,17 @@ compute_lorenz <- function(measure, weight){
 #' @noRd
 check_inputs_measure_weight <- function(measure, weight){
   # Validation checks
-  assertthat::assert_that(!anyNA(weight), msg = 'weight cannot contain missing values')
-  assertthat::assert_that(!anyNA(measure), msg = 'measure cannot contain missing values')
-  assertthat::assert_that(is.numeric(weight))
-  assertthat::assert_that(is.numeric(measure))
-  assertthat::assert_that(length(weight) == length(measure), msg = 'measure and weight must be of the same length')
-  assertthat::assert_that(!is.unsorted(measure), msg = "measure must be sorted in increasing order")
+  if (anyNA(weight)) rlang::abort('`weight` cannot contain missing values.')
+  if (anyNA(measure)) rlang::abort('`measure` cannot contain missing values.')
+  if (!is.numeric(weight))
+    rlang::abort(c('`weight` must be a numeric or integer vector:',
+                 x = sprintf('You\'ve supplied an object of class %s.', class(weight))))
+  if (!is.numeric(measure))
+    rlang::abort(c('`measure` must be a numeric or integer vector:',
+                   x = sprintf('You\'ve supplied an object of class %s.', class(measure))))
+  if (length(weight) != length(measure))
+    rlang::abort(c('`measure` and `weight` must have compatible lengths:',
+                   x = sprintf('`measure` has length %s.', length(measure)),
+                   x = sprintf('`weight` has length %s.', length(weight))))
+  if (is.unsorted(measure)) rlang::abort('`measure` must be sorted in increasing order.')
 }

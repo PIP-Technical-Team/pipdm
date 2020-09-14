@@ -23,6 +23,6 @@ Depends:
     R (>= 3.5.0)
 Imports: 
     data.table,
-    assertthat,
+    rlang,
     dplyr
 VignetteBuilder: knitr
