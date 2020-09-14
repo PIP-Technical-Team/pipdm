@@ -20,6 +20,10 @@ test_that('check_inputs_measure_weight() works as expected', {
                '`weight` cannot contain missing values.')
   expect_error(check_inputs_measure_weight(measure = c(1, NA), weight = 1:2),
                '`measure` cannot contain missing values.')
+  expect_error(check_inputs_measure_weight(measure = 1:2, weight = c(-1, 2)),
+               '`weight` cannot contain negative values.')
+  expect_error(check_inputs_measure_weight(measure = c(-1, 1), weight = 1:2),
+               '`measure` cannot contain negative values.')
   expect_error(check_inputs_measure_weight(measure = 1, weight = '1'),
                '`weight` must be a numeric or integer vector:\n.* You\'ve supplied an object of class character.')
   expect_error(check_inputs_measure_weight(measure = '1', weight = 1),

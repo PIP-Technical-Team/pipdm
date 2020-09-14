@@ -21,8 +21,8 @@ Compute the Gini coefficient.
 Given a vector of income or consumption values and their respective weights
 \code{compute_gini()} computes the Gini coefficient for the distribution.
 
-Note that the input parameters cannot contain missing values and that
-\code{measure} must be sorted in increasing order.
+Note that the input parameters cannot contain missing or negative values and
+that \code{measure} must be sorted in increasing order.
 }
 \examples{
 # Simple example

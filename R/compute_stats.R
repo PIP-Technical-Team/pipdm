@@ -8,11 +8,11 @@ NULL
 #' Compute summary statistics.
 #'
 #' Given a vector of income or consumption values and their respective weights
-#' `compute_stats()` calculates the Gini, mean log deviation, Lorenz curve, weighted mean and
-#' minimum and maximum values for the distribution.
+#' `compute_stats()` calculates the Gini, mean log deviation, Lorenz curve,
+#' weighted mean and minimum and maximum values for the distribution.
 #'
-#' Note that the input parameters cannot contain missing values and that
-#' `measure` must be sorted in increasing order.
+#' Note that the input parameters cannot contain missing or negative values and
+#' that `measure` must be sorted in increasing order.
 #'
 #' @param measure numeric: A vector of income or consumption values.
 #' @param weight numeric: A vector of weights.
@@ -65,8 +65,8 @@ compute_stats <- function(measure, weight){
 #' Given a vector of income or consumption values and their respective weights
 #' `compute_mld()` computes the mean log deviation for the distribution.
 #'
-#' Note that the input parameters cannot contain missing values and that
-#' `measure` must be sorted in increasing order.
+#' Note that the input parameters cannot contain missing or negative values and
+#' that `measure` must be sorted in increasing order.
 #'
 #' @inheritParams compute_stats
 #'
@@ -108,8 +108,8 @@ compute_mld <- function(measure, weight){
 #' Given a vector of income or consumption values and their respective weights
 #' `compute_gini()` computes the Gini coefficient for the distribution.
 #'
-#' Note that the input parameters cannot contain missing values and that
-#' `measure` must be sorted in increasing order.
+#' Note that the input parameters cannot contain missing or negative values and
+#' that `measure` must be sorted in increasing order.
 #'
 #' @inheritParams compute_stats
 #'
@@ -146,8 +146,8 @@ compute_gini <- function(measure, weight){
 #' Given a vector of income or consumption values and their respective weights
 #' `compute_lorenz()` computes the Lorenz curve for the distribution.
 #'
-#' Note that the input parameters cannot contain missing values and that
-#' `measure` must be sorted in increasing order.
+#' Note that the input parameters cannot contain missing or negative values and
+#' that `measure` must be sorted in increasing order.
 #'
 #' @inheritParams compute_stats
 #'
@@ -212,6 +212,8 @@ check_inputs_measure_weight <- function(measure, weight){
   # Validation checks
   if (anyNA(weight)) rlang::abort('`weight` cannot contain missing values.')
   if (anyNA(measure)) rlang::abort('`measure` cannot contain missing values.')
+  if (any(weight < 0)) rlang::abort('`weight` cannot contain negative values.')
+  if (any(measure < 0)) rlang::abort('`measure` cannot contain negative values.')
   if (!is.numeric(weight))
     rlang::abort(c('`weight` must be a numeric or integer vector:',
                  x = sprintf('You\'ve supplied an object of class %s.', class(weight))))

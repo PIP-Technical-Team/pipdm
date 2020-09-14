@@ -19,11 +19,11 @@ Compute summary statistics.
 }
 \details{
 Given a vector of income or consumption values and their respective weights
-\code{compute_stats()} calculates the Gini, mean log deviation, Lorenz curve, weighted mean and
-minimum and maximum values for the distribution.
+\code{compute_stats()} calculates the Gini, mean log deviation, Lorenz curve,
+weighted mean and minimum and maximum values for the distribution.
 
-Note that the input parameters cannot contain missing values and that
-\code{measure} must be sorted in increasing order.
+Note that the input parameters cannot contain missing or negative values and
+that \code{measure} must be sorted in increasing order.
 }
 \examples{
 # Simple example
