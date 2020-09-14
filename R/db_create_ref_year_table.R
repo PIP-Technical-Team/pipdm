@@ -39,6 +39,14 @@ db_create_ref_year_table <- function(gdp_table,
                                      ref_years = pipdm:::reference_years,
                                      pip_years = pipdm:::pip_years) {
 
+  # CHECK inputs
+  check_inputs_gdp_table(gdp_table)
+  check_inputs_pce_table(pce_table)
+  check_inputs_svy_anchor(svy_anchor)
+  # svy_mean_table
+  check_inputs_ref_years(ref_years)
+  check_inputs_pip_years(pip_years)
+
   # Create a combined table with National Accounts data
   df_nac <-
     db_create_nac_table(gdp_table, pce_table) %>%
@@ -82,6 +90,10 @@ db_create_ref_year_table <- function(gdp_table,
 #' @keywords internal
 db_create_nac_table <- function(gdp_table, pce_table){
 
+  # CHECK inputs
+  check_inputs_gdp_table(gdp_table)
+  check_inputs_pce_table(pce_table)
+
   # Standardize ^_data_level ^_domain column names
   names(pce_table) <- sub('^pce[_]', '', names(pce_table))
   names(gdp_table) <- sub('^gdp[_]', '', names(gdp_table))
@@ -108,6 +120,10 @@ db_create_nac_table <- function(gdp_table, pce_table){
 #' @keywords internal
 db_subset_nac_table <- function(nac_table, pip_years)  {
 
+  # CHECK inputs
+  check_inputs_nac_table(nac_table)
+  check_inputs_pip_years(pip_years)
+
   nac_table[nac_table$year %in% pip_years, ]
 
 }
@@ -123,6 +139,10 @@ db_subset_nac_table <- function(nac_table, pip_years)  {
 #' @return `data.table`
 #' @keywords internal
 db_merge_anchor_nac <- function(svy_anchor, nac_table){
+
+  # CHECK inputs
+  check_inputs_nac_table(nac_table)
+  check_inputs_svy_anchor(svy_anchor)
 
   # Select relevant survey anchor columns
   sa_vars <- c('wb_region_code', 'country_code', 'survey_year', 'survey_coverage',
@@ -172,6 +192,9 @@ db_merge_anchor_nac <- function(svy_anchor, nac_table){
 #' @keywords internal
 db_adjust_nac_values <- function(df){
 
+  # CHECK inputs
+  check_inputs_db_class(df)
+
   # Adjust GDP and PCE values for surveys spanning two calender years
   df$adjusted_svy_gdp <- purrr::map2_dbl(df$survey_year, df$data, adjust_aux_values, value_var = 'gdp')
   df$adjusted_svy_pce <- purrr::map2_dbl(df$survey_year, df$data, adjust_aux_values, value_var = 'pce')
@@ -195,6 +218,11 @@ db_adjust_nac_values <- function(df){
 #' @return `data.table`
 #' @keywords internal
 db_create_lkup_table <- function(df, nac_table, ref_years) {
+
+  # CHECK inputs
+  check_inputs_db_class(df)
+  check_inputs_nac_table(nac_table)
+  check_inputs_ref_years(ref_years)
 
   # Add reference year column
   df <- df %>% tidyr::expand_grid(reference_year = ref_years)
@@ -248,6 +276,9 @@ db_create_lkup_table <- function(df, nac_table, ref_years) {
 #' @keywords internal
 db_get_closest_surveys <- function(df){
 
+  # CHECK inputs
+  check_inputs_db_class(df)
+
   # Create a nested list of survey line-up tables
   df$svy_items <- purrr::map2(df$data, df$reference_year_index, get_closest_surveys)
 
@@ -267,6 +298,9 @@ db_get_closest_surveys <- function(df){
 #' @return `data.table`
 #' @keywords internal
 db_adjust_welfare_mean <- function(df){
+
+  # CHECK inputs
+  check_inputs_db_class(df)
 
   # Fetch adjustment method
   df$adjustment_method <-
@@ -307,6 +341,9 @@ db_adjust_welfare_mean <- function(df){
 #' @keywords internal
 db_select_lineup_surveys <- function(df){
 
+  # CHECK inputs
+  check_inputs_db_class(df)
+
   # Nest by country, coverage and reference year
   df <- tidyfast::dt_nest(df, country_code, survey_coverage, reference_year, .key = 'data')
 
@@ -333,6 +370,10 @@ db_select_lineup_surveys <- function(df){
 #' @return `data.table`
 #' @keywords internal
 db_finalize_ref_year_table <- function(df, svy_anchor){
+
+  # CHECK inputs
+  check_inputs_db_class(df)
+  check_inputs_svy_anchor(svy_anchor)
 
   # Check for countries without any national surveys
   cc <- check_no_national_survey(svy_anchor)
