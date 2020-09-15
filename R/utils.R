@@ -134,6 +134,7 @@ check_inputs_gdp_table <- function(gdp_table) {
   cols <- c('country_code', 'year', 'gdp_data_level', 'gdp', 'gdp_domain')
   col_types <- c('character', 'numeric', 'numeric', 'numeric', 'numeric')
   check_inputs_columns(gdp_table, cols, 'gdp_table')
+  gdp_table <- gdp_table[cols]
   check_inputs_column_types(gdp_table, cols, col_types, 'gdp_table')
 }
 
@@ -145,6 +146,7 @@ check_inputs_pce_table <- function(pce_table) {
   cols <- c('country_code', 'year', 'pce_data_level', 'pce', 'pce_domain')
   col_types <- c('character', 'numeric', 'numeric', 'numeric', 'numeric')
   check_inputs_columns(pce_table, cols, 'pce_table')
+  pce_table <- pce_table[cols]
   check_inputs_column_types(pce_table, cols, col_types, 'pce_table')
 }
 
@@ -154,8 +156,9 @@ check_inputs_pce_table <- function(pce_table) {
 #' @noRd
 check_inputs_nac_table <- function(nac_table) {
   cols <- c('country_code', 'year', 'data_level', 'domain', 'pce', 'gdp')
-  col_types <- c('character', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric')
+  col_types <- c('character', 'numeric', 'character', 'numeric', 'numeric', 'numeric')
   check_inputs_columns(nac_table, cols, 'nac_table')
+  nac_table <- nac_table[, cols, with = FALSE]
   check_inputs_column_types(nac_table, cols, col_types, 'nac_table')
 }
 
@@ -167,6 +170,7 @@ check_inputs_pop_table <- function(pop_table) {
   cols <- c('country_code', 'year', 'pop_data_level', 'pop', 'pop_domain')
   col_types <- c('character', 'numeric', 'numeric', 'numeric', 'numeric')
   check_inputs_columns(pop_table, cols, 'pop_table')
+  pop_table <- pop_table[cols]
   check_inputs_column_types(pop_table, cols, col_types, 'pop_table')
 }
 
@@ -180,6 +184,7 @@ check_inputs_ppp_table <- function(ppp_table) {
   col_types <- c('character', 'character', 'character', 'character', 'numeric',
                  'logical', 'logical', 'numeric', 'character')
   check_inputs_columns(ppp_table, cols, 'ppp_table')
+  ppp_table <- ppp_table[cols]
   check_inputs_column_types(ppp_table, cols, col_types, 'ppp_table')
 }
 
@@ -201,27 +206,30 @@ check_inputs_cpi_table <- function(cpi_table) {
 #' @return logical
 #' @noRd
 check_inputs_svy_anchor <- function(svy_anchor) {
-  cols <- c('region_code','country_code', 'survey_name', 'surveyid_year', 'survey_coverage',
-            'data_type', 'survey_year')
+  cols <- c('wb_region_code','country_code', 'survey_name', 'surveyid_year', 'survey_coverage',
+            'data_type', 'survey_year',
+            'svy_year_mean') # 'svy_year_mean' should come from the svy_mean table
   col_types <- c('character', 'character', 'character', 'numeric', 'character',
-                 'character', 'numeric')
+                 'character', 'numeric',
+                 'numeric') # 'svy_year_mean' should come from the svy_mean table
   check_inputs_columns(svy_anchor, cols, 'svy_anchor')
+  svy_anchor <- svy_anchor[cols]
   check_inputs_column_types(svy_anchor, cols, col_types, 'svy_anchor')
 }
 
 #' check_inputs_ref_years
 #' @noRd
 check_inputs_ref_years <- function(x){
-  if (!is.integer(x))
-    rlang::abort(c('`ref_years` must be an integer vector: ',
+  if (!is.numeric(x))
+    rlang::abort(c('`ref_years` must be a numeric or integer vector: ',
                    sprintf('You\'ve supplied a %s vector.', class(x))))
 }
 
 #' check_inputs_ref_years
 #' @noRd
 check_inputs_pip_years <- function(x){
-  if (!is.integer(x))
-    rlang::abort(c('`pip_years` must be an integer vector: ',
+  if (!is.numeric(x))
+    rlang::abort(c('`pip_years` must be a numeric or integer vector: ',
                    sprintf('You\'ve supplied a %s vector.', class(x))))
 }
 

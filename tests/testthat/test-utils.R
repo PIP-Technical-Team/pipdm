@@ -117,26 +117,31 @@ test_that('check_inputs_pce_table() works as expected', {
                       '`year` must be a numeric vector; not character.'))
 })
 
+# check_inputs_nac_table
 test_that('check_inputs_nac_table() works as expected', {
   # Correct table
-  df <- data.frame(country_code = 'ABC', year = 2005, data_level = 1,
-                   domain = 1, pce = 1000, gdp = 800)
+  df <- data.table::data.table(
+    country_code = 'ABC', year = 2005, data_level = 'National',
+    domain = 1, pce = 1000, gdp = 800)
   expect_null(check_inputs_nac_table(df))
   # Invalid column
-  df <- data.frame(country_code = 'ABC', year = 2005, data_level = 1,
-                   domain = 1, pce = 1000, gdp = 800, test = NA)
+  df <- data.table::data.table(
+    country_code = 'ABC', year = 2005, data_level = 'National',
+    domain = 1, pce = 1000, gdp = 800, test = NA)
   expect_error(check_inputs_nac_table(df),
                paste0('`nac_table` doesn\'t have the correct columns:\n.*',
                       '`test` is not a valid column.'))
   # Missing column
-  df <- data.frame(country_code = 'ABC', year = 2005, data_level = 1,
-                   domain = 1, gdp = 800)
+  df <- data.table::data.table(
+    country_code = 'ABC', year = 2005, data_level = 'National',
+    domain = 1, gdp = 800)
   expect_error(check_inputs_nac_table(df),
                paste0('`nac_table` doesn\'t have the correct columns:\n.*',
                       '`pce` is missing.'))
   # Incorrect column type
-  df <- data.frame(country_code = 'ABC', year = '2005', data_level = 1,
-                   domain = 1, pce = 1000, gdp = 800)
+  df <- data.table::data.table(
+    country_code = 'ABC', year = '2005', data_level = 'National',
+    domain = 1, pce = 1000, gdp = 800)
   expect_error(check_inputs_nac_table(df),
                paste0('`nac_table` doesn\'t have the correct column types:\n.*',
                       '`year` must be a numeric vector; not character.'))
@@ -206,26 +211,27 @@ test_that('check_inputs_cpi_table() works as expected', {
 # check_inputs_svy_anchor
 test_that('check_inputs_svy_anchor() works as expected', {
   # Correct table
-  df <- data.frame(region_code = 'ECA', country_code = 'ABC', survey_name = 'SURV-123',
-                   surveyid_year = 2005, survey_coverage = 'National',
+  df <- data.frame(wb_region_code = 'ECA', country_code = 'ABC', survey_name = 'SURV-123',
+                   surveyid_year = 2005, survey_coverage = 'National', svy_year_mean = 1, # Tmp
                    data_type = 'I', survey_year = 2005.5)
   expect_null(check_inputs_svy_anchor(df))
   # Invalid column
-  df <- data.frame(region_code = 'ECA', country_code = 'ABC', survey_name = 'SURV-123',
-                   surveyid_year = 2005, survey_coverage = 'National',
+  df <- data.frame(wb_region_code = 'ECA', country_code = 'ABC', survey_name = 'SURV-123',
+                   surveyid_year = 2005, survey_coverage = 'National', svy_year_mean = 1, # Tmp
                    data_type = 'I', survey_year = 2005.5, test = NA)
   expect_error(check_inputs_svy_anchor(df),
                paste0('`svy_anchor` doesn\'t have the correct columns:\n.*',
                       '`test` is not a valid column.'))
   # Missing column
-  df <- data.frame(region_code = 'ECA', country_code = 'ABC', survey_name = 'SURV-123',
-                   surveyid_year = 2005, data_type = 'I', survey_year = 2005.5)
+  df <- data.frame(wb_region_code = 'ECA', country_code = 'ABC', survey_name = 'SURV-123',
+                   surveyid_year = 2005, data_type = 'I', survey_year = 2005.5,
+                   svy_year_mean = 1) # Tmp
   expect_error(check_inputs_svy_anchor(df),
                paste0('`svy_anchor` doesn\'t have the correct columns:\n.*',
                       '`survey_coverage` is missing.'))
   # Incorrect column type
-  df <- data.frame(region_code = 'ECA', country_code = 'ABC', survey_name = 'SURV-123',
-                   surveyid_year = 2005, survey_coverage = 'National',
+  df <- data.frame(wb_region_code = 'ECA', country_code = 'ABC', survey_name = 'SURV-123',
+                   surveyid_year = 2005, survey_coverage = 'National', svy_year_mean = 1, # Tmp
                    data_type = 'I', survey_year = '2005.5')
   expect_error(check_inputs_svy_anchor(df),
                paste0('`svy_anchor` doesn\'t have the correct column types:\n.*',
