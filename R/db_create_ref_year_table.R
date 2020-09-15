@@ -175,6 +175,9 @@ db_merge_anchor_nac <- function(svy_anchor, nac_table){
               by.x = c('country_code', 'survey_coverage'),
               by.y = c('country_code', 'data_level'))
 
+  # Convert to data.table
+  df <- data.table::as.data.table(df)
+
   return(df)
 }
 
