@@ -17,3 +17,11 @@ Suggests:
     testthat
 URL: https://github.com/PovcalNet-Team/pipdm
 BugReports: https://github.com/PovcalNet-Team/pipdm/issues
+Imports: 
+    wbpip,
+    countrycode,
+    tidyr,
+    purrr,
+    dplyr,
+    data.table,
+    tidyfast
