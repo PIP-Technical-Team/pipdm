@@ -24,6 +24,7 @@ select_proxy <- function(svy_table, region_code, ref_gdp, ref_pce) {
   # CHECKs
   check_inputs_select_proxy(svy_table, region_code)
 
+  # If Sub-Saharan Africa, use GDP
   if (region_code == 'SSA') {
     if (nrow(svy_table) ==  1) {
       proxy <- list(value0 = svy_table$svy_gdp,
@@ -35,6 +36,7 @@ select_proxy <- function(svy_table, region_code, ref_gdp, ref_pce) {
                     req_value = ref_gdp)
     }
   } else {
+    # For other countries, use PCE if available
     if (!anyNA(c(svy_table$svy_pce, ref_pce))) {
       if (nrow(svy_table) ==  1) {
         proxy <- list(value0 = svy_table$svy_pce,
@@ -44,19 +46,20 @@ select_proxy <- function(svy_table, region_code, ref_gdp, ref_pce) {
         proxy <- list(value0 = svy_table$svy_pce[1],
                       value1 = svy_table$svy_pce[2],
                       req_value = ref_pce)
-        }
-      } else {
-        if (nrow(svy_table) ==  1) {
-          proxy <- list(value0 = svy_table$svy_gdp,
-                        value1 = NULL,
-                        req_value = ref_gdp)
-        } else if (nrow(svy_table) == 2) {
-          proxy <- list(value0 = svy_table$svy_gdp[1],
-                        value1 = svy_table$svy_gdp[2],
-                        req_value = ref_gdp)
-        }
+      }
+    } else {
+      # If PCE not available, use GDP
+      if (nrow(svy_table) ==  1) {
+        proxy <- list(value0 = svy_table$svy_gdp,
+                      value1 = NULL,
+                      req_value = ref_gdp)
+      } else if (nrow(svy_table) == 2) {
+        proxy <- list(value0 = svy_table$svy_gdp[1],
+                      value1 = svy_table$svy_gdp[2],
+                      req_value = ref_gdp)
       }
     }
+  }
   return(proxy)
 }
 
