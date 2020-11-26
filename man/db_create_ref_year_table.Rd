@@ -15,17 +15,17 @@ db_create_ref_year_table(
 )
 }
 \arguments{
-\item{gdp_table}{data.frame: A table with GDP data.}
+\item{gdp_table}{data.table: A table with GDP data.}
 
-\item{pce_table}{data.frame: A table with PCE data.}
+\item{pce_table}{data.table: A table with PCE data.}
 
-\item{pop_table}{data.frame: A table with population data.}
+\item{pop_table}{data.table: A table with population data.}
 
-\item{pfw_table}{data.frame: A table with the price framework file.}
+\item{pfw_table}{data.table: A table with the price framework file.}
 
-\item{dsm_table}{data.frame: A table with survey means.}
+\item{dsm_table}{data.table: A table with deflated survey means.}
 
-\item{ref_years}{numeric: a vector with reference years.}
+\item{ref_years}{numeric: A vector with reference years.}
 
 \item{pip_years}{numeric: A vector with calender years used in PIP.}
 }

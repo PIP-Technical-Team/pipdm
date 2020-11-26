@@ -35,7 +35,7 @@ db_create_lkup_table <- function(dt, nac_table, ref_years) {
 
   # Add index columns
   dt <- dt %>%
-    transform(
+    base::transform(
       region_code_index = region_code,
       country_code_index = country_code,
       welfare_type_index = welfare_type,

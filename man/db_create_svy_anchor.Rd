@@ -4,10 +4,10 @@
 \alias{db_create_svy_anchor}
 \title{Create survey anchor}
 \usage{
-db_create_svy_anchor(df)
+db_create_svy_anchor(dt)
 }
 \arguments{
-\item{df}{data.frame: The price framework file.}
+\item{dt}{data.table: The price framework file.}
 }
 \value{
 \code{data.table}

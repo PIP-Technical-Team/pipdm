@@ -4,12 +4,14 @@
 \alias{db_create_nac_table}
 \title{Merge GDP and PCE data}
 \usage{
-db_create_nac_table(gdp_table, pce_table)
+db_create_nac_table(gdp_table, pce_table, pip_years)
 }
 \arguments{
-\item{gdp_table}{data.frame: A table with GDP data.}
+\item{gdp_table}{data.table: A table with GDP data.}
 
-\item{pce_table}{data.frame: A table with PCE data.}
+\item{pce_table}{data.table: A table with PCE data.}
+
+\item{pip_years}{numeric: A vector with calender years used in PIP.}
 }
 \value{
 \code{data.table}

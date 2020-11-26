@@ -29,7 +29,7 @@ db_compute_predicted_means <- function(dt) {
   # Add predicted means to the survey data tables
   dt$req_items <-
     purrr::map2(dt$svy_lineup_items, out,
-                .f = function(x, y) transform(x, pred_mean_ppp = y))
+                .f = function(x, y) base::transform(x, pred_mean_ppp = y))
 
   # Remove 'svy_lineup_items'
   dt$svy_lineup_items <- NULL
