@@ -10,7 +10,7 @@ db_create_lkup_table(dt, nac_table, ref_years)
 \item{dt}{data.table: A table with survey data. See details.}
 
 \item{nac_table}{data.table: A table with GDP and PCE data. Output of
-\code{\link[=db_subset_nac_table]{db_subset_nac_table()}}.}
+\code{\link[=db_create_nac_table]{db_create_nac_table()}}.}
 
 \item{ref_years}{numeric: Vector with reference years.}
 }

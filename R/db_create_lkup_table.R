@@ -20,7 +20,7 @@ if (getRversion() >= '2.15.1')
 #'
 #' @param dt data.table: A table with survey data. See details.
 #' @param nac_table data.table: A table with GDP and PCE data. Output of
-#'   [db_subset_nac_table()].
+#'   [db_create_nac_table()].
 #' @param ref_years numeric: Vector with reference years.
 #'
 #' @return `data.table`

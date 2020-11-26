@@ -9,7 +9,7 @@ db_merge_anchor_nac(svy_anchor, nac_table)
 \arguments{
 \item{svy_anchor}{data.table: A table with survey metadata information.}
 
-\item{nac_table}{data.table: Output of \code{\link[=db_subset_nac_table]{db_subset_nac_table()}}.}
+\item{nac_table}{data.table: Output of \code{\link[=db_create_nac_table]{db_create_nac_table()}}.}
 }
 \value{
 \code{data.table}

@@ -13,7 +13,7 @@ if (getRversion() >= '2.15.1')
 #' adjusted by the weighted average of the years in question.
 #'
 #' @param svy_anchor data.table: A table with survey metadata information.
-#' @param nac_table data.table: Output of [db_subset_nac_table()].
+#' @param nac_table data.table: Output of [db_create_nac_table()].
 #'
 #' @seealso [adjust_aux_values()]
 #' @return `data.table`
