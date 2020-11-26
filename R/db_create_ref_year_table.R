@@ -60,8 +60,8 @@ db_create_ref_year_table <- function(gdp_table,
   dt_ref <-
     db_create_lkup_table(dt_svy, dt_nac, ref_years) %>% #
     db_get_closest_surveys() %>% # Select closets surveys
-    db_select_lineup_surveys %>% # Select lineup surveys
-    db_compute_predicted_means %>% # Calculate predicted means
+    db_select_lineup_surveys() %>% # Select lineup surveys
+    db_compute_predicted_means() %>% # Calculate predicted means
     db_finalize_ref_year_table(svy_anchor) # Finalize table (select rows and columns)
 
   return(dt_ref)
