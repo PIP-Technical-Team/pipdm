@@ -25,21 +25,6 @@ db_create_nac_table <- function(gdp_table, pce_table, pip_years){
     gdp_table, pce_table, all = TRUE,
     by = c('country_code', 'year', 'data_level', 'domain'))
 
-  ### TO BE REMOVED ONCE WE HAVE SOLVED
-  ### https://github.com/PIP-Technical-Team/pipaux/issues/8
-  # Recode data_level to string
-  dt$data_level <- dplyr::recode(dt$data_level,
-                                 '0' = 'rural',
-                                 '1' = 'urban',
-                                 '2' = 'national')
-
-  # Recode domain to string
-  dt$domain <- dplyr::recode(dt$domain,
-                             '1' = 'national',
-                             '2' = 'urban/rural',
-                             '3' = 'subnational region') # Placeholder for future codes.
-  ### END OF REMOVE
-
   # Subset to only include years used by PIP
   dt <- dt[dt$year %in% pip_years, ]
 
