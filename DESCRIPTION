@@ -29,5 +29,6 @@ Imports:
     data.table,
     tidyfast,
     magrittr,
-    rlang 
+    rlang,
+    pipload
 VignetteBuilder: knitr

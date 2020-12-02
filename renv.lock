@@ -135,6 +135,20 @@
       "Repository": "CRAN",
       "Hash": "7fce217eaaf8016e72065e85c73027b5"
     },
+    "fs": {
+      "Package": "fs",
+      "Version": "1.5.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "44594a07a42e5f91fac9f93fda6d0109"
+    },
+    "fst": {
+      "Package": "fst",
+      "Version": "0.9.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "66c2d5dffed8d181b9555617beb2d0f9"
+    },
     "generics": {
       "Package": "generics",
       "Version": "0.1.0",
