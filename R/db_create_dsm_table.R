@@ -23,13 +23,11 @@ db_create_dsm_table <- function(cpi     = NULL,
   #--------- In case CPI or PPP is null ---------
 
   if (is.null(cpi)) {
-    cpi <- paste0(datadir,"_aux/cpi/cpi.fst")
-    cpi <- fst::read_fst(cpi)
+    cpi <- pipload::pip_load_aux(measure = 'cpi')
   }
 
   if (is.null(ppp)) {
-    ppp <- paste0(datadir,"_aux/ppp/ppp.fst")
-    ppp <- fst::read_fst(ppp)
+    ppp <- pipload::pip_load_aux(measure = 'ppp')
   }
 
   #--------- in case dt is not provides ---------
