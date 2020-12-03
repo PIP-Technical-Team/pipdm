@@ -30,5 +30,6 @@ Imports:
     tidyfast,
     magrittr,
     rlang,
-    pipload
+    pipload,
+    cli
 VignetteBuilder: knitr

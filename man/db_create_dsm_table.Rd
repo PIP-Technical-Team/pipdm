@@ -5,15 +5,19 @@
 \title{Deflate survey mean in LCU to PPP}
 \usage{
 db_create_dsm_table(
+  inv = NULL,
   cpi = NULL,
   ppp = NULL,
   dt = NULL,
-  inv = NULL,
+  append = TRUE,
   datadir = getOption("pip.datadir"),
   pipedir = getOption("pip.pipedir")
 )
 }
 \arguments{
+\item{inv}{character: Survey IDs to be parsed to \code{db_create_table} in case
+argument \code{dt} is NULL. Only works is \code{dt} is NULL.}
+
 \item{cpi}{Data frame with most latest version of CPI}
 
 \item{ppp}{Data frame with most latest version of PPP}
@@ -21,8 +25,8 @@ db_create_dsm_table(
 \item{dt}{Updated table with LCU means. If NULL call \code{db_create_lcu_table}
 parsing argument \code{inv}}
 
-\item{inv}{character: Survey IDs to be parsed to \code{db_create_table} in case
-argument \code{dt} is NULL. Only works is \code{dt} is NULL.}
+\item{append}{logical: If TRUE, append to current dsm table file and save.
+TRUE is default.}
 
 \item{datadir}{character: PIP-Data directory}
 

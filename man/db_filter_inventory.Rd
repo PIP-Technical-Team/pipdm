@@ -5,13 +5,16 @@
 \title{filter repository of those surveys that are already in used in dsm_table}
 \usage{
 db_filter_inventory(
-  raw_inventory = NULL,
+  raw_inventory = getOption("pip.inventory"),
+  dsm_file = getOption("pip.dsmfile"),
   datadir = getOption("pip.datadir"),
   pipedir = getOption("pip.pipedir")
 )
 }
 \arguments{
-\item{raw_inventory}{dataframe from \code{paste0(datadir, "_inventory/inventory.fst")}}
+\item{raw_inventory}{dataframe from \code{getOption("pip.inventory")}}
+
+\item{dsm_file}{character: dsm table file. Dafault \code{getOption("pip.dsmfile")}}
 
 \item{datadir}{character: PIP-Data directory}
 
