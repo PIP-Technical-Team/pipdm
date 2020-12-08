@@ -2,17 +2,17 @@
 % Please edit documentation in R/db_create_lcu_table.R
 \name{db_create_lcu_table}
 \alias{db_create_lcu_table}
-\title{Create table with Survey means in Local Currency Units (LCU)}
+\title{Create survey mean table}
 \usage{
 db_create_lcu_table(inv = NULL)
 }
 \arguments{
 \item{inv}{character: vector of survey IDs. If NULL the entire repository
-will be used}
+will be used.}
 }
 \value{
-
+data.table
 }
 \description{
-Create table with Survey means in Local Currency Units (LCU)
+Create a table with welfare means in Local Currency Units (LCU) for each survey.
 }

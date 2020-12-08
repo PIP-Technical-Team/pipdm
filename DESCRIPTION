@@ -31,5 +31,8 @@ Imports:
     magrittr,
     rlang,
     pipload,
-    cli
+    cli,
+    fs,
+    fst, 
+    haven
 VignetteBuilder: knitr

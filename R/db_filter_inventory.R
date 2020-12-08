@@ -1,23 +1,36 @@
-#' filter repository of those surveys that are already in used in dsm_table
-#'
-#' @param raw_inventory dataframe from `getOption("pip.inventory")`
-#' @param datadir character: PIP-Data directory
-#' @param pipedir character: Pipeline ingestion directory
-#' @param dsm_file character: dsm table file. Dafault `getOption("pip.dsmfile")`
-#'
-#' @return
-#' @export
 #' @import data.table
+NULL
+
+# Add global variables to avoid NSE notes in R CMD check
+if (getRversion() >= '2.15.1')
+  utils::globalVariables(
+    c('filename', 'tool')
+  )
+
+#' Filter inventory
 #'
-#' @examples
-db_filter_inventory <-function(raw_inventory = getOption("pip.inventory"),
-                               dsm_file      = getOption("pip.dsmfile"),
-                               datadir       = getOption("pip.datadir"),
-                               pipedir       = getOption("pip.pipedir")) {
+#' Filter the PIP-Data inventory for those surveys that are not in the existing
+#' DSM table.
+#'
+#' @param raw_inventory character: Path to the raw inventory. Defaults to
+#'   `getOption("pip.inventory")`.
+#' @param dsm_file character: Path to the DSM file. Defaults to
+#'   `getOption("pip.dsmfile")`
+#' @param datadir character: Path to the PIP-Data directory. Defaults to
+#'   `getOption("pip.datadir")`.
+#' @param pipedir character: Path to the ingestion pipeline directory. Defaults
+#'   to `getOption("pip.pipedir")`.
+#'
+#' @return data.table
+#' @export
+db_filter_inventory <- function(raw_inventory = getOption("pip.inventory"),
+                                dsm_file      = getOption("pip.dsmfile"),
+                                datadir       = getOption("pip.datadir"),
+                                pipedir       = getOption("pip.pipedir")) {
 
   # Raw Inventory
   ri <- fst::read_fst(raw_inventory)
-  setDT(ri)
+  data.table::setDT(ri)
   ri <- ri[,
            survey_id := gsub("\\.dta", "", filename)
   ][
@@ -27,7 +40,7 @@ db_filter_inventory <-function(raw_inventory = getOption("pip.inventory"),
   if (fs::file_exists(dsm_file)) {
     # Inventory in Use
     csdm <- fst::read_fst(dsm_file)
-    setDT(csdm)
+    data.table::setDT(csdm)
 
     iu <- csdm[, "survey_id"]
 
@@ -40,11 +53,6 @@ db_filter_inventory <-function(raw_inventory = getOption("pip.inventory"),
     # If deflated svy file does not exist use the whole raw inventory
     ni <- ri
   }
-
-
-  # To DELETE
-  # ni <- ni[country_code %chin% c("HND", "PER", "PRY", "KGZ", "AGO", "POL")]
-  # ni <- ni[country_code %chin% c("CHL")]
 
   return(ni)
 

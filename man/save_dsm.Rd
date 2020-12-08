@@ -2,16 +2,18 @@
 % Please edit documentation in R/db_create_dsm_table.R
 \name{save_dsm}
 \alias{save_dsm}
-\title{Title}
+\title{Save DSM table}
 \usage{
-save_dsm(new_dsm, pipedir, output)
+save_dsm(new_dsm)
 }
 \arguments{
-\item{output}{}
+\item{new_dsm}{data.table: A data frame containing both the old and newly
+estimated DSM tables. Output of \code{join_dsm_tables()}.}
 }
 \value{
-
+logical
 }
 \description{
-Title
+Save the deflated survey mean table to multiple locations.
 }
+\keyword{internal}

@@ -1,13 +1,22 @@
-#' Create table with Survey means in Local Currency Units (LCU)
+#' @import data.table
+NULL
+
+# Add global variables to avoid NSE notes in R CMD check
+if (getRversion() >= '2.15.1')
+  utils::globalVariables(
+    c('survey_id', 'welfare', 'weight', 'cpi_data_level', 'ppp_data_level', '.',
+      'lcu_mean', 'survey_id', 'module', 'surveyid_year', 'vermast', 'veralt')
+  )
+
+#' Create survey mean table
+#'
+#' Create a table with welfare means in Local Currency Units (LCU) for each survey.
 #'
 #' @param inv character: vector of survey IDs. If NULL the entire repository
-#' will be used
+#' will be used.
 #'
-#' @return
+#' @return data.table
 #' @export
-#' @import data.table
-#'
-#' @examples
 db_create_lcu_table <- function(inv = NULL) {
 
   #--------- add inventory ---------
@@ -18,13 +27,13 @@ db_create_lcu_table <- function(inv = NULL) {
   #--------- Calculate survey mean LCU ---------
 
   ld <- purrr::map(.x = inv,
-                   .f = lcum)
+                   .f = calculate_survey_mean)
 
 
   #--------- convert to dataframe ---------
 
-  sm <- rbindlist(ld,
-                  use.names = TRUE)
+  sm <- data.table::rbindlist(ld,
+                              use.names = TRUE)
 
   #--------- create components of survey ID ---------
 
@@ -44,7 +53,7 @@ db_create_lcu_table <- function(inv = NULL) {
   sm[,
 
      # Name sections of filename into variables
-     (cnames) := tstrsplit(survey_id, "_", fixed=TRUE)
+     (cnames) := tstrsplit(survey_id, "_", fixed = TRUE)
   ][,
     # create tool and source
     c("tool", "source") := tstrsplit(module, "-", fixed = TRUE)
@@ -61,20 +70,22 @@ db_create_lcu_table <- function(inv = NULL) {
     !(is.na(survey_id))
   ]
 
-  setorder(sm, country_code, surveyid_year, module, vermast, veralt)
+  data.table::setorder(
+    sm, country_code, surveyid_year,
+    module, vermast, veralt)
 
   return(sm)
 }
 
-#' Calculate Survey mean in LCU for one survey
+#' Calculate survey mean
 #'
-#' @param inv character: survey ID.
+#' Calculate survey mean in local currency units (LCU) for a single survey.
 #'
-#' @return
-#' @export
+#' @param inv character: Survey ID.
 #'
-#' @examples
-lcum <- function(inv) {
+#' @return data.table
+#' @keywords internal
+calculate_survey_mean <- function(inv) {
 
   tryCatch(
     expr = {
@@ -83,14 +94,15 @@ lcum <- function(inv) {
                                    noisy     = FALSE)
       sm <- dt[,
                .(survey_id = unique(survey_id),
-                 lcu_mean  = weighted.mean(welfare, weight, na.rm = TRUE)),
+                 lcu_mean  = stats::weighted.mean(welfare, weight, na.rm = TRUE)),
                by = .(cpi_data_level, ppp_data_level)
       ]
     }, # end of expr section
 
     error = function(e) {
-      sm <- data.table(survey_id = inv,
-                       lcu_mean  = NA)
+      sm <- data.table::data.table(
+        survey_id = inv,
+        lcu_mean  = NA)
     } # end of error
   ) # End of trycatch
 

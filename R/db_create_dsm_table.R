@@ -1,20 +1,30 @@
-#' Deflate survey mean in LCU to PPP
+#' @import data.table
+NULL
+
+# Add global variables to avoid NSE notes in R CMD check
+if (getRversion() >= '2.15.1')
+  utils::globalVariables(
+    c('surveyid_year', 'i.cpi', 'i.ccf', 'i.ppp', 'cpi_data_level', 'ppp_default',
+      'dsm_mean')
+  )
+
+#' Create deflated survey mean table
 #'
-#' @param inv character: Survey IDs to be parsed to `db_create_table` in case
-#' argument `dt` is NULL. Only works is `dt` is NULL.
-#' @param cpi Data frame with most latest version of CPI
-#' @param ppp Data frame with most latest version of PPP
-#' @param dt  Updated table with LCU means. If NULL call `db_create_lcu_table`
-#' parsing argument `inv`
-#' @param append logical: If TRUE, append to current dsm table file and save.
-#' TRUE is default.
+#' Create a table with deflated welfare means for each country and surveyid
+#' year.
+#'
+#' @param inv character: Survey IDs to be parsed to `db_create_table()` in case
+#'   argument `dt` is NULL. Only works if `dt` is NULL.
+#' @param cpi data.table: A table with CPI data.
+#' @param ppp data.table: A table with PPP data.
+#' @param dt data.table: An updated table with LCU survey means. If NULL calls
+#'   `db_create_lcu_table()` parsing argument `inv`.
+#' @param append logical: If TRUE, append to current DSM table file and save.
+#'   TRUE is default.
 #' @inheritParams db_filter_inventory
 #'
-#' @return
+#' @return data.table
 #' @export
-#' @import data.table
-#'
-#' @examples
 db_create_dsm_table <- function(inv      = NULL,
                                 cpi      = NULL,
                                 ppp      = NULL,
@@ -49,9 +59,9 @@ db_create_dsm_table <- function(inv      = NULL,
 
   #--------- make sure everything is data.table ---------
   # Make sure everything is in data.table format
-  setDT(dt)
-  setDT(cpi)
-  setDT(ppp)
+  data.table::setDT(dt)
+  data.table::setDT(cpi)
+  data.table::setDT(ppp)
 
   #--------- merge CPI ---------
   cpi_keys <- c("country_code", "surveyid_year", "survey_acronym", "cpi_data_level")
@@ -77,7 +87,7 @@ db_create_dsm_table <- function(inv      = NULL,
 
   #--------- Mean to PPP values ---------
   dt[,
-     # dsm_mean := lcu_mean/cpi/ppp/ccf
+     # dsm_mean := lcu_mean/cpi/ppp
      dsm_mean := wbpip::deflate_welfare_mean(welfare_mean = lcu_mean,
                                              ppp = ppp,
                                              cpi = cpi)
@@ -90,7 +100,7 @@ db_create_dsm_table <- function(inv      = NULL,
     if (fs::file_exists(getOption("pip.dsmfile"))) {
 
       old <- fst::read_fst(getOption("pip.dsmfile"))
-      setDT(old)
+      data.table::setDT(old)
 
     } else {
       old <- NULL
@@ -104,17 +114,16 @@ db_create_dsm_table <- function(inv      = NULL,
 }
 
 
-#' Append new and old dsm tables
+#' Append new and old DSM tables
 #'
-#' @param new dataframe from `db_create_dsm_table`
-#' @param old dataframe in `getOption("pip.dsmfile")`
+#' @param new data.table: A table from `db_create_dsm_table()`.
+#' @param old data.table: A table from `getOption("pip.dsmfile")`.
 #'
 #' @return data.table
-#'
-#' @examples
+#' @keywords internal
 join_dsm_tables <- function(new,
                             old = NULL) {
-  setDT(new)
+  data.table::setDT(new)
 
   if (is.null(old)) {
 
@@ -122,7 +131,7 @@ join_dsm_tables <- function(new,
 
   } else {
 
-    setDT(old)
+    data.table::setDT(old)
     new_id <- new[, .(survey_id = unique(survey_id))]
 
     #remove in old in case there is an update
@@ -130,24 +139,26 @@ join_dsm_tables <- function(new,
                on = .(survey_id)]
 
     # append data
-    df <- rbindlist(list(new, old),
-                    use.names = TRUE,
-                    fill = TRUE)
+    df <- data.table::rbindlist(
+      list(new, old),
+      use.names = TRUE,
+      fill = TRUE)
   }
-  setorder(df, country_code, surveyid_year, module, vermast, veralt)
+  data.table::setorder(df, country_code, surveyid_year, module, vermast, veralt)
 
   return(df)
 
 }
 
-
-#' Save Deflated Survey Mean table
+#' Save DSM table
 #'
-#' @param new_dsm New dataframe joining old and just estimated dsm
+#' Save the deflated survey mean table to multiple locations.
 #'
-#' @return TRUE
+#' @param new_dsm data.table: A data frame containing both the old and newly
+#'   estimated DSM tables. Output of `join_dsm_tables()`.
 #'
-#' @examples
+#' @return logical
+#' @keywords internal
 save_dsm <- function(new_dsm) {
 
   # time for vintage

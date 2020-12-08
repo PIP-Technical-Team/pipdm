@@ -2,7 +2,7 @@
 % Please edit documentation in R/db_filter_inventory.R
 \name{db_filter_inventory}
 \alias{db_filter_inventory}
-\title{filter repository of those surveys that are already in used in dsm_table}
+\title{Filter inventory}
 \usage{
 db_filter_inventory(
   raw_inventory = getOption("pip.inventory"),
@@ -12,17 +12,22 @@ db_filter_inventory(
 )
 }
 \arguments{
-\item{raw_inventory}{dataframe from \code{getOption("pip.inventory")}}
+\item{raw_inventory}{character: Path to the raw inventory. Defaults to
+\code{getOption("pip.inventory")}.}
 
-\item{dsm_file}{character: dsm table file. Dafault \code{getOption("pip.dsmfile")}}
+\item{dsm_file}{character: Path to the DSM file. Defaults to
+\code{getOption("pip.dsmfile")}}
 
-\item{datadir}{character: PIP-Data directory}
+\item{datadir}{character: Path to the PIP-Data directory. Defaults to
+\code{getOption("pip.datadir")}.}
 
-\item{pipedir}{character: Pipeline ingestion directory}
+\item{pipedir}{character: Path to the ingestion pipeline directory. Defaults
+to \code{getOption("pip.pipedir")}.}
 }
 \value{
-
+data.table
 }
 \description{
-filter repository of those surveys that are already in used in dsm_table
+Filter the PIP-Data inventory for those surveys that are not in the existing
+DSM table.
 }

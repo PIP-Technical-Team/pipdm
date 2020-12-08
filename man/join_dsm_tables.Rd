@@ -2,18 +2,19 @@
 % Please edit documentation in R/db_create_dsm_table.R
 \name{join_dsm_tables}
 \alias{join_dsm_tables}
-\title{Append new and old dsm tables}
+\title{Append new and old DSM tables}
 \usage{
 join_dsm_tables(new, old = NULL)
 }
 \arguments{
-\item{new}{dataframe from \code{db_create_dsm_table}}
+\item{new}{data.table: A table from \code{db_create_dsm_table()}.}
 
-\item{old}{dataframe in \code{getOption("pip.dsmfile")}}
+\item{old}{data.table: A table from \code{getOption("pip.dsmfile")}.}
 }
 \value{
 data.table
 }
 \description{
-Append new and old dsm tables
+Append new and old DSM tables
 }
+\keyword{internal}

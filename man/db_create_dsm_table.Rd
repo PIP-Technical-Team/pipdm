@@ -2,7 +2,7 @@
 % Please edit documentation in R/db_create_dsm_table.R
 \name{db_create_dsm_table}
 \alias{db_create_dsm_table}
-\title{Deflate survey mean in LCU to PPP}
+\title{Create deflated survey mean table}
 \usage{
 db_create_dsm_table(
   inv = NULL,
@@ -15,26 +15,29 @@ db_create_dsm_table(
 )
 }
 \arguments{
-\item{inv}{character: Survey IDs to be parsed to \code{db_create_table} in case
-argument \code{dt} is NULL. Only works is \code{dt} is NULL.}
+\item{inv}{character: Survey IDs to be parsed to \code{db_create_table()} in case
+argument \code{dt} is NULL. Only works if \code{dt} is NULL.}
 
-\item{cpi}{Data frame with most latest version of CPI}
+\item{cpi}{data.table: A table with CPI data.}
 
-\item{ppp}{Data frame with most latest version of PPP}
+\item{ppp}{data.table: A table with PPP data.}
 
-\item{dt}{Updated table with LCU means. If NULL call \code{db_create_lcu_table}
-parsing argument \code{inv}}
+\item{dt}{data.table: An updated table with LCU survey means. If NULL calls
+\code{db_create_lcu_table()} parsing argument \code{inv}.}
 
-\item{append}{logical: If TRUE, append to current dsm table file and save.
+\item{append}{logical: If TRUE, append to current DSM table file and save.
 TRUE is default.}
 
-\item{datadir}{character: PIP-Data directory}
+\item{datadir}{character: Path to the PIP-Data directory. Defaults to
+\code{getOption("pip.datadir")}.}
 
-\item{pipedir}{character: Pipeline ingestion directory}
+\item{pipedir}{character: Path to the ingestion pipeline directory. Defaults
+to \code{getOption("pip.pipedir")}.}
 }
 \value{
-
+data.table
 }
 \description{
-Deflate survey mean in LCU to PPP
+Create a table with deflated welfare means for each country and surveyid
+year.
 }
