@@ -3,3 +3,5 @@
 ^pipdm\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^data-raw$
+tmp/
