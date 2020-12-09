@@ -4,11 +4,10 @@
 \alias{db_create_lcu_table}
 \title{Create survey mean table}
 \usage{
-db_create_lcu_table(inv = NULL)
+db_create_lcu_table(svy_id)
 }
 \arguments{
-\item{inv}{character: vector of survey IDs. If NULL the entire repository
-will be used.}
+\item{svy_id}{character: A vector of survey IDs.}
 }
 \value{
 data.table

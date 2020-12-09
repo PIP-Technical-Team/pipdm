@@ -4,10 +4,10 @@
 \alias{calculate_survey_mean}
 \title{Calculate survey mean}
 \usage{
-calculate_survey_mean(inv)
+calculate_survey_mean(svy_id)
 }
 \arguments{
-\item{inv}{character: Survey ID.}
+\item{svy_id}{character: Survey ID.}
 }
 \value{
 data.table

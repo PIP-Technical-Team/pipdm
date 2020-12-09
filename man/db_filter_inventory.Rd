@@ -4,25 +4,14 @@
 \alias{db_filter_inventory}
 \title{Filter inventory}
 \usage{
-db_filter_inventory(
-  raw_inventory = getOption("pip.inventory"),
-  dsm_file = getOption("pip.dsmfile"),
-  datadir = getOption("pip.datadir"),
-  pipedir = getOption("pip.pipedir")
-)
+db_filter_inventory(raw_inventory, dsm_table)
 }
 \arguments{
-\item{raw_inventory}{character: Path to the raw inventory. Defaults to
-\code{getOption("pip.inventory")}.}
+\item{raw_inventory}{data.table: A table with the raw inventory. Output of
+\code{read_inventory()}.}
 
-\item{dsm_file}{character: Path to the DSM file. Defaults to
-\code{getOption("pip.dsmfile")}}
-
-\item{datadir}{character: Path to the PIP-Data directory. Defaults to
-\code{getOption("pip.datadir")}.}
-
-\item{pipedir}{character: Path to the ingestion pipeline directory. Defaults
-to \code{getOption("pip.pipedir")}.}
+\item{dsm_table}{data.table: A table with deflated survey means. Output of
+\code{read_dsm()}.}
 }
 \value{
 data.table

@@ -4,12 +4,12 @@
 \alias{join_dsm_tables}
 \title{Append new and old DSM tables}
 \usage{
-join_dsm_tables(new, old = NULL)
+join_dsm_tables(new, old)
 }
 \arguments{
-\item{new}{data.table: A table from \code{db_create_dsm_table()}.}
+\item{new}{data.table: A table with newly estimated deflated survey means.}
 
-\item{old}{data.table: A table from \code{getOption("pip.dsmfile")}.}
+\item{old}{data.table: The current DSM table. Output of \code{read_dsm()}.}
 }
 \value{
 data.table
