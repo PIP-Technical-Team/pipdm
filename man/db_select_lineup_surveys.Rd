@@ -10,7 +10,7 @@ db_select_lineup_surveys(dt)
 \item{dt}{data.table: Output of \code{\link[=db_get_closest_surveys]{db_get_closest_surveys()}}.}
 }
 \value{
-\code{data.table}
+data.table
 }
 \description{
 Select a single line-up survey when there are multiple line-up surveys

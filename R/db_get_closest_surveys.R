@@ -5,7 +5,7 @@
 #' @param dt data.table: Output of [db_create_lkup_table()].
 #'
 #' @seealso [get_closest_surveys()]
-#' @return `data.table`
+#' @return data.table
 #' @keywords internal
 db_get_closest_surveys <- function(dt){
 
@@ -28,8 +28,7 @@ db_get_closest_surveys <- function(dt){
 #' @param svy_lkup data.frame: Look-up table for survey data.
 #' @param ref_year integer: The selected reference year.
 #'
-#' @return `data.frame`
-#'
+#' @return data.frame
 #' @keywords internal
 get_closest_surveys <- function(svy_lkup, ref_year) {
 

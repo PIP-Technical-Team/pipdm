@@ -12,7 +12,7 @@ db_merge_anchor_nac(svy_anchor, nac_table)
 \item{nac_table}{data.table: Output of \code{\link[=db_create_nac_table]{db_create_nac_table()}}.}
 }
 \value{
-\code{data.table}
+data.table
 }
 \description{
 Create a combined table of survey metadata information and national accounts

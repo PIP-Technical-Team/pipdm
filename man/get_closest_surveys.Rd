@@ -12,7 +12,7 @@ get_closest_surveys(svy_lkup, ref_year)
 \item{ref_year}{integer: The selected reference year.}
 }
 \value{
-\code{data.frame}
+data.frame
 }
 \description{
 For any reference year, retrieves information about the closest surveys.

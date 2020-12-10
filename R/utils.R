@@ -4,8 +4,9 @@
 #' coverage. If any such countries exists the functions returns a character
 #' vector with country codes for those countries.
 #'
-#' @param svy_anchor data.frame: A table with survey metadata information.
+#' @param svy_anchor data.table: A table with survey metadata information.
 #'
+#' @return character
 #' @seealso `db_merge_anchor_nac()` `db_finalize_ref_year_table()`
 #' @noRd
 check_no_national_survey <- function(svy_anchor){
@@ -24,9 +25,10 @@ check_no_national_survey <- function(svy_anchor){
 #' and coverage level.
 #'
 #' @param cc character: A vector with country codes. Output of
-#'   \code{check_no_national_survey}.
-#' @param svy_anchor data.frame: A table with survey metadata information.
+#'   `check_no_national_survey()`.
+#' @inheritParams check_no_national_survey
 #'
+#' @return data.frame
 #' @seealso `db_finalize_ref_year_table()`
 #' @noRd
 find_unique_coverage <- function(cc, svy_anchor){

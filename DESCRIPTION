@@ -1,13 +1,21 @@
 Package: pipdm
-Title: What the Package Does (One Line, Title Case)
+Title: PIP Data Managment
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    c(person(given = "Tony",
+            family = "Fujs",
+            role = c("aut", "cre"),
+            email = "tfujs@worldbank.org"),
+     person(given = "Aleksander",
+            family = "Eilertsen",
+            role = "aut",
+            email = "aeilertsen@worldbank.org"),
+     person(given = "R. Andrés",
+            family = "Castañeda",
+            role = "aut",
+            email = "acastanedaa@worldbank.org"))
+Description: A package for managing the creation of the PIP 
+    database. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -30,9 +38,8 @@ Imports:
     tidyfast,
     magrittr,
     rlang,
-    pipload,
     cli,
     fs,
-    fst, 
+    fst,
     haven
 VignetteBuilder: knitr

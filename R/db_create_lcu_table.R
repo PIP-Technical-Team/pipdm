@@ -12,23 +12,22 @@ if (getRversion() >= '2.15.1')
 #'
 #' Create a table with welfare means in Local Currency Units (LCU) for each survey.
 #'
-#' @param svy_id character: A vector of survey IDs.
+#' The supplied survey datasets  *must* include the following columns;
+#' `survey_id`, `welfare`, `weight`, `cpi_data_level` and `ppp_data_level`.
+#'
+#' @param dl list: A list with survey datasets. See details.
 #'
 #' @return data.table
 #' @export
-db_create_lcu_table <- function(svy_id) {
-
+db_create_lcu_table <- function(dl) {
 
   #--------- Calculate survey mean LCU ---------
 
-  ld <- purrr::map(.x = svy_id,
-                   .f = calculate_survey_mean)
-
+  dl <- purrr::map(.x = dl, .f = calculate_survey_mean)
 
   #--------- Convert to data table ---------
 
-  sm <- data.table::rbindlist(ld,
-                              use.names = TRUE)
+  dt <- data.table::rbindlist(dl, use.names = TRUE)
 
   #--------- Create components of survey ID ---------
 
@@ -45,8 +44,7 @@ db_create_lcu_table <- function(svy_id) {
       "module"
     )
 
-  sm[,
-
+  dt[,
      # Name sections of filename into variables
      (cnames) := tstrsplit(survey_id, "_", fixed = TRUE)
   ][,
@@ -56,8 +54,7 @@ db_create_lcu_table <- function(svy_id) {
     # Change to lower case
     c("vermast", "veralt") := lapply(.SD, tolower),
     .SDcols = c("vermast", "veralt")
-  ][
-    ,
+  ][,
     # Remove unnecessary variables
     c("M", "A", "collection") := NULL
   ][
@@ -66,40 +63,36 @@ db_create_lcu_table <- function(svy_id) {
   ]
 
   data.table::setorder(
-    sm, country_code, surveyid_year,
+    dt, country_code, surveyid_year,
     module, vermast, veralt)
 
-  return(sm)
+  return(dt)
 }
 
 #' Calculate survey mean
 #'
 #' Calculate survey mean in local currency units (LCU) for a single survey.
 #'
-#' @param svy_id character: Survey ID.
+#' @param dt data.table: A survey dataset. See details.
 #'
 #' @return data.table
 #' @keywords internal
-calculate_survey_mean <- function(svy_id) {
+calculate_survey_mean <- function(dt) {
 
   tryCatch(
     expr = {
-
-      dt <- pipload::pip_load_data(survey_id = svy_id,
-                                   noisy     = FALSE)
-      sm <- dt[,
+      # Calculate weighted welfare mean by CPI and PPP
+      # data levels for each survey
+      dt <- dt[,
                .(survey_id = unique(survey_id),
                  svy_mean_lcu = stats::weighted.mean(welfare, weight, na.rm = TRUE)),
                by = .(cpi_data_level, ppp_data_level)
-      ]
+               ]
+      return(dt)
     }, # end of expr section
-
     error = function(e) {
-      sm <- data.table::data.table(
-        survey_id = svy_id,
-        svy_mean_lcu = NA)
+      return(NULL)
     } # end of error
   ) # End of trycatch
 
-  return(sm)
 }

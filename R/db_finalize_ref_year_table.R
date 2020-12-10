@@ -12,7 +12,7 @@ if (getRversion() >= '2.15.1')
 #' @param dt data.table: Output of [db_compute_predicted_means()].
 #' @param svy_anchor data.table: A table with survey metadata information.
 #'
-#' @return `data.table`
+#' @return data.table
 #' @keywords internal
 db_finalize_ref_year_table <- function(dt, svy_anchor) {
 
@@ -50,10 +50,10 @@ db_finalize_ref_year_table <- function(dt, svy_anchor) {
 
   # Select final columns
   cols <- c('region_code', 'country_code', 'reference_year',
-            'data_level', 'domain', 'survey_year',
-            'survey_acronym', 'survey_coverage',
-            'welfare_type', 'svy_mean_ppp',
-            'pred_mean_ppp')
+            'nac_domain', 'nac_data_level', 'cpi_domain',
+            'cpi_data_level', 'ppp_domain', 'ppp_data_level',
+            'survey_year', 'survey_acronym', 'survey_coverage',
+            'welfare_type', 'svy_mean_ppp', 'pred_mean_ppp')
   dt <- dt[, cols, with = FALSE]
 
   return(dt)

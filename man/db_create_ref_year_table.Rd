@@ -30,7 +30,7 @@ db_create_ref_year_table(
 \item{pip_years}{numeric: A vector with calender years used in PIP.}
 }
 \value{
-\code{data.table}
+data.table
 }
 \description{
 Create a table with adjusted welfare means for each reference year.

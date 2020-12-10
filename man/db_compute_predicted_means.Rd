@@ -2,7 +2,7 @@
 % Please edit documentation in R/db_compute_predicted_means.R
 \name{db_compute_predicted_means}
 \alias{db_compute_predicted_means}
-\title{Calculate predicted means}
+\title{Predict welfare means for all reference years.}
 \usage{
 db_compute_predicted_means(dt)
 }
@@ -10,7 +10,7 @@ db_compute_predicted_means(dt)
 \item{dt}{data.table: Output of \code{\link[=db_get_closest_surveys]{db_get_closest_surveys()}}.}
 }
 \value{
-\code{data.table}
+data.table
 }
 \description{
 Predict welfare means for all reference years.

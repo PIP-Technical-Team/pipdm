@@ -14,7 +14,7 @@ db_create_nac_table(gdp_table, pce_table, pip_years)
 \item{pip_years}{numeric: A vector with calender years used in PIP.}
 }
 \value{
-\code{data.table}
+data.table
 }
 \description{
 Create a table with national accounts (NAC) data by merging separate tables

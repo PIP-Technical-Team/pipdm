@@ -61,6 +61,26 @@ db_create_dsm_table <- function(lcu_table,
        welfare_mean = svy_mean_lcu, ppp = ppp, cpi = cpi)
   ]
 
+  #--------- Data transformations ---------
+
+  # Add CPI domain column
+  dt$cpi_domain <- dplyr::recode(
+    dt$cpi_data_level,
+    'national' = 'national',
+    'urban' = 'urban/rural',
+    'rural' = 'urban/rural')
+
+  # Add PPP domain column
+  dt$ppp_domain <- dplyr::recode(
+    dt$ppp_data_level,
+    'national' = 'national',
+    'urban' = 'urban/rural',
+    'rural' = 'urban/rural')
+
+  # Recode surveyid_year to integer
+  dt$surveyid_year <-
+    as.integer(dt$surveyid_year)
+
   #--------- Append to current file ---------
 
   if (append) {

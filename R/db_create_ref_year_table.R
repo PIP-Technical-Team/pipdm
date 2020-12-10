@@ -20,7 +20,7 @@ if (getRversion() >= '2.15.1')
 #' @param ref_years numeric: A vector with reference years.
 #' @param pip_years numeric: A vector with calender years used in PIP.
 #'
-#' @return `data.table`
+#' @return data.table
 #' @export
 db_create_ref_year_table <- function(gdp_table,
                                      pce_table,
@@ -34,11 +34,8 @@ db_create_ref_year_table <- function(gdp_table,
   check_inputs_ref_years(ref_years)
   check_inputs_pip_years(pip_years)
 
-  ### TO BE REMOVED ONCE WE HAVE SOLVED ###
-  ### https://github.com/PIP-Technical-Team/pipaux/issues/7 ###
   # Create Survey Anchor table
   svy_anchor <- db_create_svy_anchor(pfw_table)
-  ### END OF REMOVE ###
 
   # Create National Accounts table
   dt_nac <- db_create_nac_table(
@@ -50,11 +47,18 @@ db_create_ref_year_table <- function(gdp_table,
   dt_svy <- db_merge_anchor_nac(
     nac_table = dt_nac, svy_anchor = svy_anchor)
 
-  # Join with survey mean data
+  # Join with deflated survey mean table
+  # Select necessary columns
+  dsm_cols <- c('country_code', 'surveyid_year', 'cpi_data_level', 'cpi_domain',
+                'ppp_data_level', 'ppp_domain', 'survey_acronym', 'svy_mean_ppp')
+  dsm_table <- dsm_table[, ..dsm_cols]
+
+  # Merge (inner join)
   dt_svy <- data.table::merge.data.table(
     dt_svy, dsm_table, all = FALSE,
     by = c('country_code', 'surveyid_year',
-           'survey_acronym', 'data_level'))
+           'survey_acronym', 'cpi_domain',
+           'ppp_domain'))
 
   # Create reference year table
   dt_ref <-

@@ -12,7 +12,7 @@ select_lineup_survey(df, ref_year)
 \item{ref_year}{numeric: Reference year.}
 }
 \value{
-\code{data.frame}
+data.frame
 }
 \description{
 Prioritize surveys to be used for the line-up. This is needed when multiple
