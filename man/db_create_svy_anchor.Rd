@@ -4,13 +4,13 @@
 \alias{db_create_svy_anchor}
 \title{Create survey anchor}
 \usage{
-db_create_svy_anchor(dt)
+db_create_svy_anchor(pfw_table)
 }
 \arguments{
-\item{dt}{data.table: The price framework file.}
+\item{pfw_table}{data.table: The price framework file.}
 }
 \value{
-\code{data.table}
+data.table
 }
 \description{
 Create survey anchor

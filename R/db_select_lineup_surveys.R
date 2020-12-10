@@ -16,7 +16,7 @@ if (getRversion() >= '2.15.1')
 #' @param dt data.table: Output of [db_get_closest_surveys()].
 #'
 #' @seealso [select_lineup_survey()]
-#' @return `data.table`
+#' @return data.table
 #' @keywords internal
 db_select_lineup_surveys <- function(dt){
 
@@ -44,7 +44,7 @@ db_select_lineup_surveys <- function(dt){
 #' @param df data.frame: Subset of reference_year table.
 #' @param ref_year numeric: Reference year.
 #'
-#' @return `data.frame`
+#' @return data.frame
 #'
 #' @keywords internal
 select_lineup_survey <- function(df, ref_year) {

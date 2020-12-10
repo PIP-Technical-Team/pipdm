@@ -4,14 +4,18 @@
 \alias{db_create_lcu_table}
 \title{Create survey mean table}
 \usage{
-db_create_lcu_table(svy_id)
+db_create_lcu_table(dl)
 }
 \arguments{
-\item{svy_id}{character: A vector of survey IDs.}
+\item{dl}{list: A list with survey datasets. See details.}
 }
 \value{
 data.table
 }
 \description{
 Create a table with welfare means in Local Currency Units (LCU) for each survey.
+}
+\details{
+The supplied survey datasets  \emph{must} include the following columns;
+\code{survey_id}, \code{welfare}, \code{weight}, \code{cpi_data_level} and \code{ppp_data_level}.
 }

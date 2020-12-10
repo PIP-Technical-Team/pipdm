@@ -15,7 +15,7 @@ db_create_lkup_table(dt, nac_table, ref_years)
 \item{ref_years}{numeric: Vector with reference years.}
 }
 \value{
-\code{data.table}
+data.table
 }
 \description{
 Create a look-up table with information on all reference years and surveys

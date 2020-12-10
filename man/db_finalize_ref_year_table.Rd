@@ -12,7 +12,7 @@ db_finalize_ref_year_table(dt, svy_anchor)
 \item{svy_anchor}{data.table: A table with survey metadata information.}
 }
 \value{
-\code{data.table}
+data.table
 }
 \description{
 Finalize the reference year table by subsetting the correct rows and

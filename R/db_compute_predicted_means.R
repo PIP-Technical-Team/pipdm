@@ -1,10 +1,10 @@
-#' Calculate predicted means
+# Calculate predicted means
 #'
 #' Predict welfare means for all reference years.
 #'
 #' @param dt data.table: Output of [db_get_closest_surveys()].
 #'
-#' @return `data.table`
+#' @return data.table
 #' @keywords internal
 db_compute_predicted_means <- function(dt) {
 
@@ -22,6 +22,15 @@ db_compute_predicted_means <- function(dt) {
 
   # Get survey means
   means <- purrr::map(dt$svy_lineup_items, .f = function(x) x$svy_mean_ppp)
+
+  # Check for any non-numeric values
+  na_check <- purrr::map_lgl(means, function(x) !is.numeric(x))
+  if (any(na_check)) {
+    rlang::abort(
+      c('`means` must contain numeric values only.',
+      i = 'Check that `svy_mean_ppp` doesn\'t contain any NA values and has class numeric.')
+      )
+  }
 
   # Calculate predicted request means
   out <- purrr::map2(means, proxy, wbpip:::compute_predicted_mean)

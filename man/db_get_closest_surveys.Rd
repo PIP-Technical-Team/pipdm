@@ -10,7 +10,7 @@ db_get_closest_surveys(dt)
 \item{dt}{data.table: Output of \code{\link[=db_create_lkup_table]{db_create_lkup_table()}}.}
 }
 \value{
-\code{data.table}
+data.table
 }
 \description{
 Retrieve the closest surveys for each reference year.
