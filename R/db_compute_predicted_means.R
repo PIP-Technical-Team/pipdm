@@ -33,7 +33,7 @@ db_compute_predicted_means <- function(dt) {
   }
 
   # Calculate predicted request means
-  out <- purrr::map2(means, proxy, wbpip:::compute_predicted_mean)
+  out <- purrr::map2(means, proxy, compute_predicted_mean)
 
   # Add predicted means to the survey data tables
   dt$req_items <-
@@ -45,3 +45,11 @@ db_compute_predicted_means <- function(dt) {
 
   return(dt)
 }
+
+#' compute_predicted_mean
+#'
+#' Copied from wbpip to avoid notes in R CMD CHECK.
+#'
+#' @noRd
+compute_predicted_mean <-
+  utils::getFromNamespace('compute_predicted_mean', 'wbpip')

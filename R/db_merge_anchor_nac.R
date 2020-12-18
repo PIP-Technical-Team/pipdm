@@ -21,28 +21,14 @@ if (getRversion() >= '2.15.1')
 #' @keywords internal
 db_merge_anchor_nac <- function(svy_anchor, nac_table){
 
-  # Check for countries without any national surveys
-  cc <- check_no_national_survey(svy_anchor)
-
-  # Add national coverage rows for countries without national surveys
-  if (!purrr::is_empty(cc)) {
-    msg <- sprintf('Info: National coverage rows have been added for \'%s\'.',
-                   paste(cc, collapse = '\', \''))
-    rlang::inform(msg)
-    rows_to_add <-
-      svy_anchor[svy_anchor$country_code %in% cc,] %>%
-      transform(survey_coverage = 'National')
-    svy_anchor <- rbind(svy_anchor, rows_to_add)
-  }
-
   # Create nested NAC table
   nac_nested <- nac_table %>%
-    tidyfast::dt_nest(country_code, nac_data_level, nac_domain, .key = 'data')
+    tidyfast::dt_nest(country_code, nac_data_level, .key = 'data')
 
   # Merge svy_anchor with nac_nested (left join)
   dt <- data.table::merge.data.table(
     svy_anchor, nac_nested, all.x = TRUE,
-    by = c('country_code', 'nac_domain'))
+    by = c('country_code', 'nac_data_level'))
 
   # Adjust GDP and PCE values for surveys spanning two calender years
   dt$svy_gdp <- purrr::map2_dbl(dt$survey_year, dt$data,

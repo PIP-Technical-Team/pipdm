@@ -4,12 +4,12 @@
 \alias{db_finalize_ref_year_table}
 \title{Finalize reference year table}
 \usage{
-db_finalize_ref_year_table(dt, svy_anchor)
+db_finalize_ref_year_table(dt, pfw_table)
 }
 \arguments{
 \item{dt}{data.table: Output of \code{\link[=db_compute_predicted_means]{db_compute_predicted_means()}}.}
 
-\item{svy_anchor}{data.table: A table with survey metadata information.}
+\item{pfw_table}{data.table: A table with the price framework file.}
 }
 \value{
 data.table

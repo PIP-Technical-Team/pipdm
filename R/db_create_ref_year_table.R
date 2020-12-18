@@ -24,7 +24,7 @@ if (getRversion() >= '2.15.1')
 #' @export
 db_create_ref_year_table <- function(gdp_table,
                                      pce_table,
-                                     pop_table = NULL, # TBC
+                                     pop_table = NULL,
                                      pfw_table,
                                      dsm_table,
                                      ref_years,
@@ -35,7 +35,8 @@ db_create_ref_year_table <- function(gdp_table,
   check_inputs_pip_years(pip_years)
 
   # Create Survey Anchor table
-  svy_anchor <- db_create_svy_anchor(pfw_table)
+  svy_anchor <- db_create_svy_anchor(
+    dsm_table = dsm_table, pfw_table = pfw_table)
 
   # Create National Accounts table
   dt_nac <- db_create_nac_table(
@@ -47,26 +48,13 @@ db_create_ref_year_table <- function(gdp_table,
   dt_svy <- db_merge_anchor_nac(
     nac_table = dt_nac, svy_anchor = svy_anchor)
 
-  # Join with deflated survey mean table
-  # Select necessary columns
-  dsm_cols <- c('country_code', 'surveyid_year', 'cpi_data_level', 'cpi_domain',
-                'ppp_data_level', 'ppp_domain', 'survey_acronym', 'svy_mean_ppp')
-  dsm_table <- dsm_table[, ..dsm_cols]
-
-  # Merge (inner join)
-  dt_svy <- data.table::merge.data.table(
-    dt_svy, dsm_table, all = FALSE,
-    by = c('country_code', 'surveyid_year',
-           'survey_acronym', 'cpi_domain',
-           'ppp_domain'))
-
   # Create reference year table
   dt_ref <-
-    db_create_lkup_table(dt_svy, dt_nac, ref_years) %>% #
+    db_create_lkup_table(dt_svy, dt_nac, pop_table, ref_years) %>% #
     db_get_closest_surveys() %>% # Select closets surveys
     db_select_lineup_surveys() %>% # Select lineup surveys
     db_compute_predicted_means() %>% # Calculate predicted means
-    db_finalize_ref_year_table(svy_anchor) # Finalize table (select rows and columns)
+    db_finalize_ref_year_table(pfw_table) # Finalize table (select rows and columns)
 
   return(dt_ref)
 

@@ -4,11 +4,11 @@
 \alias{save_dsm}
 \title{Save DSM table}
 \usage{
-save_dsm(new_dsm, path)
+save_dsm(dt, path)
 }
 \arguments{
-\item{new_dsm}{data.table: A data frame containing both the old and newly
-estimated DSM tables. Output of \code{join_dsm_tables()}.}
+\item{dt}{data.table: A data frame containing both the old and newly
+estimated DSM tables.}
 
 \item{path}{character: Path to the DSM file.}
 }

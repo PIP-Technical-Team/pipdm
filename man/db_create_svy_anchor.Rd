@@ -2,17 +2,28 @@
 % Please edit documentation in R/db_create_svy_anchor.R
 \name{db_create_svy_anchor}
 \alias{db_create_svy_anchor}
-\title{Create survey anchor}
+\title{Create a survey anchor table}
 \usage{
-db_create_svy_anchor(pfw_table)
+db_create_svy_anchor(dsm_table, pfw_table)
 }
 \arguments{
-\item{pfw_table}{data.table: The price framework file.}
-}
-\value{
-data.table
+\item{dsm_table}{data.table: A table with deflated survey means.}
+
+\item{pfw_table}{data.table: A table with the price framework file.}
 }
 \description{
-Create survey anchor
+Create a survey anchor table by merging the output of \code{db_create_dsm_table()}
+with the Price Framework file. See details.
+}
+\details{
+This function:
+\itemize{
+\item Adds the columns \code{region_code} and \code{survey_coverage} to the output of
+\code{db_create_dsm_table()}.
+\item Adds national survey coverage rows for countries
+without any national survey coverage (e.g. ARG).
+\item Creates a \code{nac_data_level} column if gdp_data_level and pce_data_level
+are identical (as they should be).
+}
 }
 \keyword{internal}

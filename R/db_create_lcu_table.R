@@ -4,95 +4,54 @@ NULL
 # Add global variables to avoid NSE notes in R CMD check
 if (getRversion() >= '2.15.1')
   utils::globalVariables(
-    c('survey_id', 'welfare', 'weight', 'cpi_data_level', 'ppp_data_level', '.',
-      'lcu_mean', 'survey_id', 'module', 'surveyid_year', 'vermast', 'veralt')
+    c('survey_id', 'welfare', 'weight', 'cpi_data_level', 'ppp_data_level',
+      'gdp_data_level', 'pce_data_level', 'pop_data_level', 'svy_mean_lcu',
+      'surveyid_year', 'survey_acronym', 'gd_type', 'welfare_type')
   )
 
-#' Create survey mean table
+#' Create survey mean table (LCU)
 #'
-#' Create a table with welfare means in Local Currency Units (LCU) for each survey.
+#' Create a table with welfare means in Local Currency Units (LCU) for each
+#' survey.
 #'
-#' The supplied survey datasets  *must* include the following columns;
-#' `survey_id`, `welfare`, `weight`, `cpi_data_level` and `ppp_data_level`.
-#'
-#' @param dl list: A list with survey datasets. See details.
+#' @param dl list: A list with survey mean datasets.
+#' @param pop_table data.table: A table with population data.
 #'
 #' @return data.table
 #' @export
-db_create_lcu_table <- function(dl) {
+db_create_lcu_table <- function(dl, pop_table) {
 
-  #--------- Calculate survey mean LCU ---------
-
-  dl <- purrr::map(.x = dl, .f = calculate_survey_mean)
-
-  #--------- Convert to data table ---------
-
+  # Convert list to data.table
   dt <- data.table::rbindlist(dl, use.names = TRUE)
 
-  #--------- Create components of survey ID ---------
+  #--------- Merge with POP ---------
 
-  cnames <-
-    c(
-      "country_code",
-      "surveyid_year",
-      "survey_acronym",
-      "vermast",
-      "M",
-      "veralt",
-      "A",
-      "collection",
-      "module"
-    )
+  # Create nested POP table
+  pop_table$pop_domain <- NULL
+  pop_nested <- pop_table %>%
+    tidyfast::dt_nest(country_code, pop_data_level, .key = 'data')
 
-  dt[,
-     # Name sections of filename into variables
-     (cnames) := tstrsplit(survey_id, "_", fixed = TRUE)
-  ][,
-    # Create tool and source
-    c("tool", "source") := tstrsplit(module, "-", fixed = TRUE)
-  ][,
-    # Change to lower case
-    c("vermast", "veralt") := lapply(.SD, tolower),
-    .SDcols = c("vermast", "veralt")
-  ][,
-    # Remove unnecessary variables
-    c("M", "A", "collection") := NULL
-  ][
-    # Remove unnecessary rows
-    !(is.na(survey_id))
-  ]
+  # Merge dt with pop_nested (left join)
+  dt <- data.table::merge.data.table(
+    dt, pop_nested, all.x = TRUE,
+    by = c('country_code', 'pop_data_level'))
 
-  data.table::setorder(
-    dt, country_code, surveyid_year,
-    module, vermast, veralt)
+  # Adjust population values for surveys spanning two calender years
+  dt$svy_pop <-
+    purrr::map2_dbl(dt$survey_year, dt$data,
+                    adjust_aux_values, value_var = 'pop')
+
+  # Remove nested data column
+  dt$data <- NULL
+
+  # Sort rows
+  data.table::setorder(dt, country_code, surveyid_year, survey_acronym)
+
+  # Order columns
+  data.table::setcolorder(
+    dt, c('survey_id', 'country_code', 'surveyid_year', 'survey_acronym',
+          'survey_year', 'welfare_type', 'svy_mean_lcu', 'svy_pop'))
 
   return(dt)
 }
 
-#' Calculate survey mean
-#'
-#' Calculate survey mean in local currency units (LCU) for a single survey.
-#'
-#' @param dt data.table: A survey dataset. See details.
-#'
-#' @return data.table
-#' @keywords internal
-calculate_survey_mean <- function(dt) {
-
-  tryCatch(
-    expr = {
-      # Calculate weighted welfare mean by CPI and PPP
-      # data levels for each survey
-      dt <- dt[,
-               .(survey_id = unique(survey_id),
-                 svy_mean_lcu = stats::weighted.mean(welfare, weight, na.rm = TRUE)),
-               by = .(cpi_data_level, ppp_data_level)
-               ]
-      return(dt)
-    }, # end of expr section
-    error = function(e) {
-      return(NULL)
-    } # end of error
-  ) # End of trycatch
-
-}
