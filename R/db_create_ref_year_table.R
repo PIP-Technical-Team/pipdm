@@ -24,7 +24,7 @@ if (getRversion() >= '2.15.1')
 #' @export
 db_create_ref_year_table <- function(gdp_table,
                                      pce_table,
-                                     pop_table = NULL,
+                                     pop_table,
                                      pfw_table,
                                      dsm_table,
                                      ref_years,

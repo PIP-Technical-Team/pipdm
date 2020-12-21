@@ -68,8 +68,8 @@ db_create_dsm_table <- function(lcu_table,
   # Select columns
   dt <- dt[, .SD, .SDcols =
              c('survey_id', 'country_code', 'surveyid_year', 'survey_acronym',
-               'survey_year', 'welfare_type', 'svy_mean_ppp', 'svy_pop',
-               'pop_data_level', 'gdp_data_level', 'pce_data_level',
+               'survey_year', 'welfare_type', 'svy_mean_lcu', 'svy_mean_ppp',
+               'svy_pop', 'pop_data_level', 'gdp_data_level', 'pce_data_level',
                'cpi_data_level', 'ppp_data_level')]
 
   return(dt)

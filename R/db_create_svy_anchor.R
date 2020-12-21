@@ -39,7 +39,7 @@ db_create_svy_anchor <- function(dsm_table, pfw_table) {
     dsm_table, pfw_table, all.x = TRUE,
     by = c('country_code', 'surveyid_year', 'survey_acronym'))
 
-  if (identical(dt$gdp_data_level, dt$gdp_data_level)) {
+  if (identical(dt$gdp_data_level, dt$pce_data_level)) {
     dt$nac_data_level <- dt$gdp_data_level
     dt$gdp_data_level <- NULL
     dt$pce_data_level <- NULL
