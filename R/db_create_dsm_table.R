@@ -19,12 +19,6 @@ db_create_dsm_table <- function(lcu_table,
 
   #--------- Merge with CPI ---------
 
-  # Fix survey acronym for CHN
-  cpi_table$survey_acronym <-
-    ifelse(cpi_table$country_code == 'CHN' &
-             cpi_table$survey_acronym %in% c('CRHS', 'CUHS'),
-           'CRHS-CUHS', cpi_table$survey_acronym)
-
   # Select CPI columns
   cpi_table <-
     cpi_table[, .SD, .SDcols =
