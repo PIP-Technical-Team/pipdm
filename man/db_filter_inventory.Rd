@@ -4,7 +4,7 @@
 \alias{db_filter_inventory}
 \title{Filter inventory}
 \usage{
-db_filter_inventory(raw_inventory, pfw_table)
+db_filter_inventory(raw_inventory, pfw_table, pipedir)
 }
 \arguments{
 \item{raw_inventory}{data.table: A table with the raw inventory. Output of
