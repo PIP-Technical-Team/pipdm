@@ -14,85 +14,72 @@
 #'
 #' @return data.table
 #' @export
-db_filter_inventory <- function(raw_inventory, pfw_table) {
+db_filter_inventory <- function(raw_inventory,
+                                pfw_table,
+                                pipedir) {
 
-  # ---- Filter tool -----
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #---------   parameters   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  dsm_path <- paste0(pipedir, "dsm/deflated_svy_means.fst")
+  pfw      <- data.table::as.data.table(pfw_table)
+  ri       <- data.table::as.data.table(raw_inventory)
 
-  # Select Poverty Calculator datasets
-  dt <- raw_inventory[raw_inventory$tool == 'PC', ]
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #---------   Filter according to PFW   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  # ---- Filter source ----
+  pfw[,
+      surveyid_year := as.character(surveyid_year)]
 
-  # Select by source order;
-  # 1) GPWG, 2) HIST, 3) BIN, 4) GROUP, 5) synth
-  dt = dt %>%
-    tidyfast::dt_nest(country_code, surveyid_year,
-                      survey_acronym, vermast, veralt,
-                      .key = 'data')
-  dt$keep <- purrr::map(dt$data, keep_source)
-  dt$data <- NULL
-  dt <- dt %>% tidyfast::dt_unnest(keep)
+  ri[pfw,
+     on = c('country_code', 'surveyid_year',
+            'survey_acronym'),
+     inpovcal := i.inpovcal
+     ]
 
-  # ---- Filter version ----
+  # dt <- data.table::merge.data.table(
+  #   dt, pfw_table, all.x = TRUE,
+  #   by = c('country_code', 'surveyid_year',
+  #          'survey_acronym'))
+  #
+  # # Select surveys in PovcalNet
+  ri <- ri[inpovcal == 1]
 
-  # Select latest version
-  dt <- dt %>%
-    tidyfast::dt_nest(country_code, surveyid_year,
-                      survey_acronym, module)
-  dt$keep <- purrr::map(dt$data, function(x) {
-    x <- x[order(x$vermast, x$veralt),]
-    x <- x[nrow(x)]
-    return(x)
-  })
-  dt$data <- NULL
-  dt <- dt %>% tidyfast::dt_unnest(keep)
 
-  # ---- Filter for surveys in PovcalNet ----
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #---------   filter according to DSM table   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  dt$surveyid_year <-
-    as.integer(dt$surveyid_year)
+  ri <- ri[,
+           survey_id := gsub("\\.dta", "", filename)
+          ]
 
-  # Select columns
-  pfw_table <- pfw_table[, c('country_code', 'surveyid_year',
-                             'survey_acronym', 'inpovcal')]
+  if (fs::file_exists(dsm_path)) {
+    # Inventory in Use
+    csdm <- fst::read_fst(dsm_path)
+    setDT(csdm)
 
-  # Merge inventory with PFW (left join)
-  dt <- data.table::merge.data.table(
-    dt, pfw_table, all.x = TRUE,
-    by = c('country_code', 'surveyid_year',
-           'survey_acronym'))
+    iu <- csdm[, "survey_id"]
 
-  # Select surveys in PovcalNet
-  dt <- dt[dt$inpovcal == 1,]
+    # Get only those that are not in use
+    ni <- ri[!iu,
+             on = .(survey_id)]
 
-  return(dt)
+  } else {
 
-}
-
-#' keep_source
-#' Copied from pipload to avoid error in R CMD CHECK.
-#' @noRd
-keep_source <- function(df){
-
-  source_order <- c("GPWG", "HIST", "BIN", "GROUP", "synth")
-  source_avail <- df[, unique(source)]
-
-  out         <- FALSE
-  i           <- 0
-  maxi        <- length(source_order)
-  source_keep <- NULL
-  while(out == FALSE && i <= maxi) {
-
-    i <- i + 1
-    if (source_order[i] %in% source_avail) {
-      source_keep <- source_order[i]
-      out         <- TRUE
-    }
-
+    # If deflated svy file does not exist use the whole raw inventory
+    ni <- ri
   }
 
-  if (!is.null(source_keep)) {
-    df <- df[source == (source_keep)]
-  }
-  return(df)
+
+
+
+
+  # To DELETE
+  # ni <- ni[country_code %chin% c("HND", "PER", "PRY", "KGZ", "AGO", "POL")]
+  # ni <- ni[country_code %chin% c("CHL")]
+
+  return(ni)
+
 }
