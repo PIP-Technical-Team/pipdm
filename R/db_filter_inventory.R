@@ -11,13 +11,13 @@
 #' @param raw_inventory data.table: A table with the raw inventory. Output of
 #'   `read_inventory()`.
 #' @param pfw_table data.table: A table with the price framework file.
-#' @param dsm_path character: File path of DSM input data
+#' @param dsm_in character: File path of DSM input data
 #'
 #' @return data.table
 #' @export
 db_filter_inventory <- function(raw_inventory,
                                 pfw_table,
-                                dsm_path) {
+                                dsm_in) {
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #---------   parameters   ---------
@@ -55,9 +55,9 @@ db_filter_inventory <- function(raw_inventory,
            survey_id := gsub("\\.dta", "", filename)
           ]
 
-  if (fs::file_exists(dsm_path)) {
+  if (fs::file_exists(dsm_in)) {
     # Inventory in Use
-    csdm <- fst::read_fst(dsm_path)
+    csdm <- fst::read_fst(dsm_in)
     setDT(csdm)
 
     iu <- csdm[, "survey_id"]
