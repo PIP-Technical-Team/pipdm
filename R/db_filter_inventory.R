@@ -11,17 +11,17 @@
 #' @param raw_inventory data.table: A table with the raw inventory. Output of
 #'   `read_inventory()`.
 #' @param pfw_table data.table: A table with the price framework file.
+#' @param dsm_path character: File path of DSM input data
 #'
 #' @return data.table
 #' @export
 db_filter_inventory <- function(raw_inventory,
                                 pfw_table,
-                                pipedir) {
+                                dsm_path) {
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #---------   parameters   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  dsm_path <- paste0(pipedir, "dsm/deflated_svy_means.fst")
   pfw      <- data.table::as.data.table(pfw_table)
   ri       <- data.table::as.data.table(raw_inventory)
 
