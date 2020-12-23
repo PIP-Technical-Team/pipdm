@@ -4,12 +4,13 @@
 \alias{db_create_lcu_table}
 \title{Create survey mean table (LCU)}
 \usage{
-db_create_lcu_table(dl, pop_table)
+db_create_lcu_table(dlc, pop, maindir)
 }
 \arguments{
-\item{dl}{list: A list with survey mean datasets.}
+\item{dlc}{dataframe with welfare data loaded and clened from
+\code{db_load_and_clean}.}
 
-\item{pop_table}{data.table: A table with population data.}
+\item{pop}{data.table: A table with population data.}
 }
 \value{
 data.table

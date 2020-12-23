@@ -16,12 +16,12 @@ if (getRversion() >= '2.15.1')
 #'
 #' @param dlc dataframe with welfare data loaded and clened from
 #' `db_load_and_clean`.
-#' @param pop_table data.table: A table with population data.
+#' @param pop data.table: A table with population data.
 #'
 #' @return data.table
 #' @export
 db_create_lcu_table <- function(dlc,
-                                pop_table,
+                                pop,
                                 maindir) {
 
 
