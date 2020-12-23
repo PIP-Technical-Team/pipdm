@@ -317,6 +317,18 @@
       "Repository": "CRAN",
       "Hash": "3b3dd89b2ee115a8b54e93a34cd546b4"
     },
+    "pipload": {
+      "Package": "pipload",
+      "Version": "0.0.0.9000",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "pipload",
+      "RemoteUsername": "PIP-Technical-Team",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "5ac949aea764576edfd24c109be232d75671b0f8",
+      "Hash": "acd94e4fc330737fc43fe7e4ba075979"
+    },
     "pkgbuild": {
       "Package": "pkgbuild",
       "Version": "1.2.0",

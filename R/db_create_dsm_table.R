@@ -25,9 +25,6 @@ db_create_dsm_table <- function(lcu_table,
                 c('country_code', 'surveyid_year', 'survey_acronym',
                   'cpi_data_level', 'cpi')]
 
-  # Make sure surveyid_year is integer
-  cpi_table$surveyid_year <- as.integer(cpi_table$surveyid_year)
-
   # Merge survey table with CPI (left join)
   dt <- data.table::merge.data.table(
     lcu_table, cpi_table, all.x = TRUE,
