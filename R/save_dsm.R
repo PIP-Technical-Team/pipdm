@@ -6,51 +6,52 @@ if (getRversion() >= '2.15.1')
 #'
 #' Save the deflated survey mean table to multiple locations.
 #'
-#' @param dt data.table: A data frame containing both the old and newly
+#' @param dsm_out data.table: A data frame containing both the old and newly
 #'   estimated DSM tables.
-#' @param path character: Path to the DSM file.
+#' @param pipedir character: Path to the DSM file.
 #'
 #' @return logical
 #' @export
-save_dsm <- function(dt, path) {
+save_dsm <- function(dsm_out, pipedir) {
 
   # Set time (for vintage)
   time <- format(Sys.time(), "%Y%m%d%H%M%S")
-  attr(dt, "datetime") <- time
+  attr(dsm_out, "datetime") <- time
 
   # Make sure ingestion pipeline directory exists
-  dsm_dir      <- gsub("(.*/)([^/]+)", "\\1", path)
-  fstfile      <- gsub("(.*/)([^/]+)", "\\2", path)
-  dsm_vint_dir <- paste0(dsm_dir, "_vintage/")
+  namef         <-  "deflated_svy_means"
+  dsmdir        <-  paste0(pipedir, "dsm/")
+  dsm_vint_dir  <-  paste0(dsmdir, "_vintage/")
+  vt_output     <-  paste0(namef, "_", time)
+
 
   if (fs::dir_exists(dsm_vint_dir)) {
     fs::dir_create(dsm_vint_dir, recurse = TRUE)
   }
 
-  # Modify output
-  dtafile       <- gsub("\\.fst", ".dta", fstfile)
-  basefile      <- gsub("\\.fst", "", fstfile)
-  vt_output     <- paste0(basefile, "_", time)
 
   #--------- Save files ---------
 
-  fst::write_fst(x    = dt,
-                 path = dsm_file)
+  fst::write_fst(x    = dsm_out,
+                 path = paste0(dsmdir, namef, ".fst"))
 
-  haven::write_dta(data = dt,
-                   path = paste0(dsm_dir, dtafile))
+  fst::write_fst(x    = dsm_out,
+                 path = paste0(dsmdir, namef, "_in.fst"))
+
+  haven::write_dta(data = dsm_out,
+                   path = paste0(dsmdir, namef, ".dta"))
 
   # Vintages and backup
-  fst::write_fst(x    = dt,
+  fst::write_fst(x    = dsm_out,
                  path = paste0(dsm_vint_dir, vt_output, ".fst"))
 
-  haven::write_dta(data = dt,
+  haven::write_dta(data = dsm_out,
                    path = paste0(dsm_vint_dir, vt_output, ".dta"))
 
   cli::cli_alert_info("file {.file {fstfile}} and its vintages
                       have been saved", wrap = TRUE)
 
-  return(invisible(TRUE))
+  return( paste0(dsmdir, namef, ".fst"))
 }
 
 

@@ -4,13 +4,13 @@
 \alias{save_dsm}
 \title{Save DSM table}
 \usage{
-save_dsm(dt, path)
+save_dsm(dsm_out, pipedir)
 }
 \arguments{
-\item{dt}{data.table: A data frame containing both the old and newly
+\item{dsm_out}{data.table: A data frame containing both the old and newly
 estimated DSM tables.}
 
-\item{path}{character: Path to the DSM file.}
+\item{pipedir}{character: Path to the DSM file.}
 }
 \value{
 logical
