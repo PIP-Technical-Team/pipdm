@@ -14,26 +14,76 @@ if (getRversion() >= '2.15.1')
 #' Create a table with welfare means in Local Currency Units (LCU) for each
 #' survey.
 #'
-#' @param dl list: A list with survey mean datasets.
+#' @param dlc dataframe with welfare data loaded and clened from
+#' `db_load_and_clean`.
 #' @param pop_table data.table: A table with population data.
 #'
 #' @return data.table
 #' @export
-db_create_lcu_table <- function(dl, pop_table) {
+db_create_lcu_table <- function(dlc,
+                                pop_table,
+                                maindir) {
 
-  # Convert list to data.table
-  dt <- data.table::rbindlist(dl, use.names = TRUE)
 
-  #--------- Merge with POP ---------
+  data.table::setDT(dlc)
+  #--------- calculate weighted mean ---------
+  dl_vars <- grep(".*data_level", names(dlc), value = TRUE)
 
-  # Create nested POP table
-  pop_table$pop_domain <- NULL
-  pop_nested <- pop_table %>%
+  dlc <-
+    dlc[,
+       .(svy_mean_lcu  = weighted.mean(welfare, weight, na.rm = TRUE)),
+       by = c("survey_id", dl_vars, "survey_year", "welfare_type")
+    ]
+
+  #--------- create components of survey ID ---------
+
+  cnames <-
+    c(
+      "country_code",
+      "surveyid_year",
+      "survey_acronym",
+      "vermast",
+      "M",
+      "veralt",
+      "A",
+      "collection",
+      "module"
+    )
+
+  dlc[,
+
+     # Name sections of filename into variables
+     (cnames) := tstrsplit(survey_id, "_", fixed=TRUE)
+  ][,
+    # create tool and source
+    c("tool", "source") := tstrsplit(module, "-", fixed = TRUE)
+  ][,
+    # change to lower case
+    c("vermast", "veralt") := lapply(.SD, tolower),
+    .SDcols = c("vermast", "veralt")
+  ][
+    ,
+    # Remove unnecessary variables
+    c("M", "A", "collection") := NULL
+  ][
+    # Remove unnecessary rows
+    !(is.na(survey_id))
+  ]
+
+  setorder(dlc, country_code, surveyid_year, module, vermast, veralt)
+
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #---------   Merge with population   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  pop$pop_domain <- NULL
+  pop_nested <- pop %>%
     tidyfast::dt_nest(country_code, pop_data_level, .key = 'data')
 
-  # Merge dt with pop_nested (left join)
+
   dt <- data.table::merge.data.table(
-    dt, pop_nested, all.x = TRUE,
+    dlc, pop_nested, all.x = TRUE,
     by = c('country_code', 'pop_data_level'))
 
   # Adjust population values for surveys spanning two calender years
@@ -49,9 +99,11 @@ db_create_lcu_table <- function(dl, pop_table) {
 
   # Order columns
   data.table::setcolorder(
-    dt, c('survey_id', 'country_code', 'surveyid_year', 'survey_acronym',
+    dt, c('survey_id', 'country_code', 'surveyid_year',
           'survey_year', 'welfare_type', 'svy_mean_lcu', 'svy_pop'))
 
+
   return(dt)
+
 }
 
