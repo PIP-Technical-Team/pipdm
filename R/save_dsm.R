@@ -48,9 +48,6 @@ save_dsm <- function(dsm_out, pipedir) {
   haven::write_dta(data = dsm_out,
                    path = paste0(dsm_vint_dir, vt_output, ".dta"))
 
-  cli::cli_alert_info("file {.file {fstfile}} and its vintages
-                      have been saved", wrap = TRUE)
-
   return( paste0(dsmdir, namef, ".fst"))
 }
 
