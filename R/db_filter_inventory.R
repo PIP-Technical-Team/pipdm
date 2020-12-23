@@ -72,14 +72,10 @@ db_filter_inventory <- function(raw_inventory,
     ni <- ri
   }
 
-
-
-
-
   # To DELETE
   # ni <- ni[country_code %chin% c("HND", "PER", "PRY", "KGZ", "AGO", "POL")]
   # ni <- ni[country_code %chin% c("CHL")]
 
-  return(ni)
+  return(ni[["survey_id"]])
 
 }
