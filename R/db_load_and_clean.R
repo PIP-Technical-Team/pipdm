@@ -10,7 +10,12 @@
 #' @examples
 db_load_and_clean <- function(survey_id, maindir) {
 
-  #--------- Load data ---------
+  # Early returns ------
+  if (is.null(survey_id)) {
+    return(NULL)
+  }
+
+  #--------- Load data --------
   sm <- purrr:::map2(.x = survey_id,
                      .y = maindir,
                      sf_load_clean)

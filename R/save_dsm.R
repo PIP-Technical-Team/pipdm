@@ -29,6 +29,10 @@ save_dsm <- function(dsm_out, pipedir) {
     fs::dir_create(dsm_vint_dir, recurse = TRUE)
   }
 
+  # Early returns ------
+  if (is.null(dsm_out)) {
+    return(paste0(dsmdir, namef, ".fst"))
+  }
 
   #--------- Save files ---------
 

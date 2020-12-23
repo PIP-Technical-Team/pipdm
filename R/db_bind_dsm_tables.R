@@ -9,6 +9,11 @@
 #' @examples
 db_bind_dsm_tables <- function(dsm_in, tmp_dsm) {
 
+  # Early returns ------
+  if (is.null(tmp_dsm)) {
+    return(NULL)
+  }
+
 
   if (fs::file_exists(dsm_in)) {
     # Inventory in Use

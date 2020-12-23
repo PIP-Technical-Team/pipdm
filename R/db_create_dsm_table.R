@@ -17,6 +17,11 @@ db_create_dsm_table <- function(lcu_table,
                                 ppp_table) {
 
 
+  # Early returns ------
+  if (is.null(lcu_table)) {
+    return(NULL)
+  }
+
   #--------- Merge with CPI ---------
 
   # Select CPI columns

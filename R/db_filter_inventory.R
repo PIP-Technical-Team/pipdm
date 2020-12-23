@@ -76,6 +76,13 @@ db_filter_inventory <- function(raw_inventory,
   # ni <- ni[country_code %chin% c("HND", "PER", "PRY", "KGZ", "AGO", "POL")]
   # ni <- ni[country_code %chin% c("CHL")]
 
-  return(ni[["survey_id"]])
+  if (nrow(ni) == 0) {
+    dt <- NULL
+  } else {
+    dt <- ni[["survey_id"]]
+  }
+
+
+  return(dt)
 
 }

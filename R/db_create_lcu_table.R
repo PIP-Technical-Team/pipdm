@@ -24,6 +24,10 @@ db_create_lcu_table <- function(dlc,
                                 pop,
                                 maindir) {
 
+  # Early returns ------
+  if (is.null(dlc)) {
+    return(NULL)
+  }
 
   data.table::setDT(dlc)
   #--------- calculate weighted mean ---------
