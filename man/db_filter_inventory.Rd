@@ -4,13 +4,15 @@
 \alias{db_filter_inventory}
 \title{Filter inventory}
 \usage{
-db_filter_inventory(raw_inventory, pfw_table, pipedir)
+db_filter_inventory(raw_inventory, pfw_table, dsm_in)
 }
 \arguments{
 \item{raw_inventory}{data.table: A table with the raw inventory. Output of
 \code{read_inventory()}.}
 
 \item{pfw_table}{data.table: A table with the price framework file.}
+
+\item{dsm_in}{character: File path of DSM input data}
 }
 \value{
 data.table
