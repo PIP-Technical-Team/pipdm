@@ -14,9 +14,6 @@ if (getRversion() >= '2.15.1')
 #' @export
 save_dsm <- function(dsm_out, pipedir) {
 
-  # Set time (for vintage)
-  time <- format(Sys.time(), "%Y%m%d%H%M%S")
-  attr(dsm_out, "datetime") <- time
 
   # Make sure ingestion pipeline directory exists
   namef         <-  "deflated_svy_means"
@@ -33,6 +30,11 @@ save_dsm <- function(dsm_out, pipedir) {
   if (is.null(dsm_out)) {
     return(paste0(dsmdir, namef, ".fst"))
   }
+
+  # Set time (for vintage)
+  time <- format(Sys.time(), "%Y%m%d%H%M%S")
+  attr(dsm_out, "datetime") <- time
+
 
   #--------- Save files ---------
 
