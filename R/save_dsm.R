@@ -19,7 +19,6 @@ save_dsm <- function(dsm_out, pipedir) {
   namef         <-  "deflated_svy_means"
   dsmdir        <-  paste0(pipedir, "dsm/")
   dsm_vint_dir  <-  paste0(dsmdir, "_vintage/")
-  vt_output     <-  paste0(namef, "_", time)
 
 
   if (fs::dir_exists(dsm_vint_dir)) {
@@ -34,6 +33,7 @@ save_dsm <- function(dsm_out, pipedir) {
   # Set time (for vintage)
   time <- format(Sys.time(), "%Y%m%d%H%M%S")
   attr(dsm_out, "datetime") <- time
+  vt_output     <-  paste0(namef, "_", time)
 
 
   #--------- Save files ---------
