@@ -11,14 +11,16 @@ db_bind_dsm_tables <- function(dsm_in, tmp_dsm) {
 
   # Early returns ------
   if (is.null(tmp_dsm)) {
-    return(NULL)
+    dt <- fst::read_fst(dsm_in)
+    data.table::setDT(dt)
+    return(dt)
   }
 
 
   if (fs::file_exists(dsm_in)) {
     # Inventory in Use
     old <- fst::read_fst(dsm_in)
-    setDT(old)
+    data.table::setDT(old)
 
     new_id <- tmp_dsm[, .(survey_id = unique(survey_id))]
 
