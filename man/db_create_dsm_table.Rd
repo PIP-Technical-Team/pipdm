@@ -4,20 +4,15 @@
 \alias{db_create_dsm_table}
 \title{Create deflated survey mean table}
 \usage{
-db_create_dsm_table(lcu_table, dsm_table, cpi_table, ppp_table, append = TRUE)
+db_create_dsm_table(lcu_table, cpi_table, ppp_table)
 }
 \arguments{
 \item{lcu_table}{data.table: A table with newly estimated LCU survey means.
 Output of \code{db_create_lcu_table()}.}
 
-\item{dsm_table}{data.table: A table with deflated survey means. Output of
-\code{read_dsm()}.}
-
 \item{cpi_table}{data.table: A table with CPI data.}
 
 \item{ppp_table}{data.table: A table with PPP data.}
-
-\item{append}{logical: If TRUE, append to the current DSM table.}
 }
 \value{
 data.table

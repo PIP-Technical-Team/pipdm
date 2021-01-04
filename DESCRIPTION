@@ -41,5 +41,6 @@ Imports:
     cli,
     fs,
     fst,
-    haven
+    haven,
+    utils
 VignetteBuilder: knitr

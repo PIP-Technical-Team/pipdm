@@ -5,7 +5,7 @@
 \alias{pip_paths}
 \title{PIP paths}
 \format{
-An object of class \code{list} of length 5.
+An object of class \code{list} of length 6.
 }
 \usage{
 pip_paths
@@ -15,11 +15,12 @@ A list with default PIP directory and file paths.
 }
 \details{
 \describe{
-\item{dlwdir}{Path to Datalibweb directory}
-\item{datadir}{Path to PIP-data directory}
-\item{pipedir}{Path to PIP ingestion pipeline directory.}
+\item{dlwdir}{Path to Datalibweb directory.}
+\item{production_datadir}{Path to the production PIP-data directory.}
+\item{production_pipedir}{Path to the production ingestion pipeline director.}
+\item{staging_datadir}{Path to the staging PIP-data directory.}
+\item{testing_datadir}{Path to the testing PIP-data directory.}
 \item{dsmfile}{Path to current DSM file.}
-\item{inventory}{Path to raw inventory file.}
 }
 }
 \keyword{datasets}

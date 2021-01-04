@@ -1,16 +1,16 @@
 #' Find countries without national coverage
 #'
-#' Check the survey anchor table for countries without any national survey
+#' Check the PFW table for countries without any national survey
 #' coverage. If any such countries exists the functions returns a character
 #' vector with country codes for those countries.
 #'
-#' @param svy_anchor data.table: A table with survey metadata information.
+#' @param df data.frame: A table with survey metadata information.
 #'
 #' @return character
 #' @seealso `db_merge_anchor_nac()` `db_finalize_ref_year_table()`
 #' @noRd
-check_no_national_survey <- function(svy_anchor){
-  tmp <- table(svy_anchor$country_code, svy_anchor$survey_coverage)
+check_no_national_survey <- function(df){
+  tmp <- table(df$country_code, df$survey_coverage)
   tmp <- as.data.frame(tmp, stringsAsFactors = FALSE)
   names(tmp) <- c('country_code', 'survey_coverage', 'freq')
   cc <- tmp[(tmp$survey_coverage == 'national' & tmp$freq == 0), ][['country_code']]
@@ -19,7 +19,7 @@ check_no_national_survey <- function(svy_anchor){
 
 #' Find countries with only one coverage level
 #'
-#' Check the survey anchor table for countries that only have unique coverage
+#' Check the PFW table for countries that only have unique coverage
 #' level. This is typically used together with the output from
 #' `check_no_national_survey()`. Returns a data frame with the country code
 #' and coverage level.
@@ -31,8 +31,8 @@ check_no_national_survey <- function(svy_anchor){
 #' @return data.frame
 #' @seealso `db_finalize_ref_year_table()`
 #' @noRd
-find_unique_coverage <- function(cc, svy_anchor){
-  x <- unique(svy_anchor[svy_anchor$country_code == cc,]$survey_coverage)
+find_unique_coverage <- function(cc, df){
+  x <- unique(df[df$country_code == cc,]$survey_coverage)
   if (length(x) == 1) {
     out <- data.frame(country_code = cc, survey_coverage = x)
     return(out)

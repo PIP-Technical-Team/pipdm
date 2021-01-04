@@ -2,20 +2,19 @@
 % Please edit documentation in R/db_create_lcu_table.R
 \name{db_create_lcu_table}
 \alias{db_create_lcu_table}
-\title{Create survey mean table}
+\title{Create survey mean table (LCU)}
 \usage{
-db_create_lcu_table(dl)
+db_create_lcu_table(dl, pop_table)
 }
 \arguments{
-\item{dl}{list: A list with survey datasets. See details.}
+\item{dl}{list: A list with survey mean datasets.}
+
+\item{pop_table}{data.table: A table with population data.}
 }
 \value{
 data.table
 }
 \description{
-Create a table with welfare means in Local Currency Units (LCU) for each survey.
-}
-\details{
-The supplied survey datasets  \emph{must} include the following columns;
-\code{survey_id}, \code{welfare}, \code{weight}, \code{cpi_data_level} and \code{ppp_data_level}.
+Create a table with welfare means in Local Currency Units (LCU) for each
+survey.
 }

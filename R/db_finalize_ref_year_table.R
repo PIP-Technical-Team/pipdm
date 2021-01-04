@@ -10,11 +10,11 @@ if (getRversion() >= '2.15.1')
 #' columns.
 #'
 #' @param dt data.table: Output of [db_compute_predicted_means()].
-#' @param svy_anchor data.table: A table with survey metadata information.
+#' @inheritParams db_create_ref_year_table
 #'
 #' @return data.table
 #' @keywords internal
-db_finalize_ref_year_table <- function(dt, svy_anchor) {
+db_finalize_ref_year_table <- function(dt, pfw_table) {
 
   # CHECK inputs
   check_inputs_db_class(dt)
@@ -23,12 +23,12 @@ db_finalize_ref_year_table <- function(dt, svy_anchor) {
   dt <- tidyfast::dt_unnest(dt, req_items)
 
   # Check for countries without any national surveys
-  cc <- check_no_national_survey(svy_anchor)
+  cc <- check_no_national_survey(pfw_table)
 
   # Recode survey coverage for countries without any national surveys
   # and only one coverage level (e.g. ARG)
   if (!purrr::is_empty(cc)) {
-    tmp <- purrr::map_df(cc, find_unique_coverage, svy_anchor)
+    tmp <- purrr::map_df(cc, find_unique_coverage, pfw_table)
     dt$survey_coverage <- ifelse(dt$country_code %in% tmp$country_code,
                                  tmp$survey_coverage, dt$survey_coverage)
     msg <- sprintf('Info: Recoding survey coverage for \'%s\'.',
@@ -37,7 +37,7 @@ db_finalize_ref_year_table <- function(dt, svy_anchor) {
   }
 
   # Remove rows with national survey coverage and missing reference year mean
-  na_check <- dt$survey_coverage == 'National' & is.na(dt$pred_mean_ppp)
+  na_check <- dt$survey_coverage == 'national' & is.na(dt$pred_mean_ppp)
   if (any(na_check)) {
     cc <- dt[na_check]$country_code %>% unique()
     dt <- dt[!na_check]
@@ -50,11 +50,14 @@ db_finalize_ref_year_table <- function(dt, svy_anchor) {
 
   # Select final columns
   cols <- c('region_code', 'country_code', 'reference_year',
-            'nac_domain', 'nac_data_level', 'cpi_domain',
-            'cpi_data_level', 'ppp_domain', 'ppp_data_level',
             'survey_year', 'survey_acronym', 'survey_coverage',
-            'welfare_type', 'svy_mean_ppp', 'pred_mean_ppp')
-  dt <- dt[, cols, with = FALSE]
+            'welfare_type', 'svy_mean_ppp', 'pred_mean_ppp',
+            'pop', 'pop_data_level', 'nac_data_level',
+            'cpi_data_level', 'ppp_data_level')
+  dt <- dt[, .SD, .SDcols = cols]
+
+  # Sort rows
+  data.table::setorder(dt, country_code, reference_year, survey_acronym)
 
   return(dt)
 

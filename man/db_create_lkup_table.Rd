@@ -4,7 +4,7 @@
 \alias{db_create_lkup_table}
 \title{Create reference year look-up table}
 \usage{
-db_create_lkup_table(dt, nac_table, ref_years)
+db_create_lkup_table(dt, nac_table, pop_table, ref_years)
 }
 \arguments{
 \item{dt}{data.table: A table with survey data. See details.}
@@ -12,7 +12,9 @@ db_create_lkup_table(dt, nac_table, ref_years)
 \item{nac_table}{data.table: A table with GDP and PCE data. Output of
 \code{\link[=db_create_nac_table]{db_create_nac_table()}}.}
 
-\item{ref_years}{numeric: Vector with reference years.}
+\item{pop_table}{data.table: A table with population data.}
+
+\item{ref_years}{numeric: A vector with reference years.}
 }
 \value{
 data.table
