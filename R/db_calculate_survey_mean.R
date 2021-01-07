@@ -6,7 +6,7 @@
 #' @param dt data.table: A survey dataset.
 #'
 #' @return data.table
-#' @keywords export
+#' @export
 db_calculate_survey_mean <- function(dt) {
 
   tryCatch(
@@ -29,9 +29,11 @@ db_calculate_survey_mean <- function(dt) {
 
     error = function(e) {
 
-      rlang::warn(
-        sprintf('Survey mean caluclation failed for survey id: %s. Returning NULL.',
-                unique(dt$survey_id)))
+      rlang::warn('Survey mean caluclation failed. Returning NULL.')
+
+      # rlang::warn(
+      #   sprintf('Survey mean caluclation failed for survey id: %s. Returning NULL.',
+      #           unique(dt$survey_id)))
 
       return(NULL)
 
@@ -71,8 +73,8 @@ gd_calculate_survey_mean <- function(dt) {
              welfare_type = unique(welfare_type),
              distribution_type = unique(distribution_type),
              gd_type = unique(gd_type),
-             svy_mean_lcu =
-               stats::weighted.mean(
+             svy_mean_lcu = #stats::weighted.mean
+               collapse::fmean(
                  welfare, weight, na.rm = TRUE)),
          by = .(cpi_data_level, ppp_data_level,
                 gdp_data_level, pce_data_level,
@@ -105,7 +107,7 @@ md_calculate_survey_mean <- function(dt) {
            distribution_type = unique(distribution_type),
            gd_type = unique(gd_type),
            svy_mean_lcu =
-             stats::weighted.mean(
+             collapse::fmean(
                welfare, weight, na.rm = TRUE)),
        by = .(cpi_data_level, ppp_data_level,
               gdp_data_level, pce_data_level,
@@ -121,4 +123,10 @@ md_calculate_survey_mean <- function(dt) {
 #' @noRd
 md_clean_data <-
   utils::getFromNamespace('md_clean_data', 'wbpip')
+
+#' gd_clean_data
+#' Copied from wbpip to avoid notes in R CMD CHECK.
+#' @noRd
+gd_clean_data <-
+  utils::getFromNamespace('gd_clean_data', 'wbpip')
 
