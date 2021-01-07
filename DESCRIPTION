@@ -42,5 +42,6 @@ Imports:
     fs,
     fst,
     haven,
-    utils
+    utils,
+    collapse
 VignetteBuilder: knitr
