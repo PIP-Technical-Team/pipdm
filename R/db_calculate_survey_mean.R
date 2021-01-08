@@ -31,10 +31,6 @@ db_calculate_survey_mean <- function(dt) {
 
       rlang::warn('Survey mean caluclation failed. Returning NULL.')
 
-      # rlang::warn(
-      #   sprintf('Survey mean caluclation failed for survey id: %s. Returning NULL.',
-      #           unique(dt$survey_id)))
-
       return(NULL)
 
     } # end of error
@@ -75,7 +71,8 @@ gd_calculate_survey_mean <- function(dt) {
              gd_type = unique(gd_type),
              svy_mean_lcu = #stats::weighted.mean
                collapse::fmean(
-                 welfare, weight, na.rm = TRUE)),
+                 x = welfare, w = weight,
+                 na.rm = TRUE)),
          by = .(cpi_data_level, ppp_data_level,
                 gdp_data_level, pce_data_level,
                 pop_data_level)]
@@ -108,7 +105,8 @@ md_calculate_survey_mean <- function(dt) {
            gd_type = unique(gd_type),
            svy_mean_lcu =
              collapse::fmean(
-               welfare, weight, na.rm = TRUE)),
+               x = welfare, w = weight,
+               na.rm = TRUE)),
        by = .(cpi_data_level, ppp_data_level,
               gdp_data_level, pce_data_level,
               pop_data_level)

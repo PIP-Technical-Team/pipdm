@@ -19,9 +19,7 @@ db_compute_dist_stats <- function(dt, mean) {
 
     error = function(e) {
 
-      rlang::warn(
-        sprintf('Distributional stat caluclation failed for survey id: %s. Returning NULL.',
-                unique(dt$survey_id)))
+      rlang::warn('Distributional statistics caluclation failed. Returning NULL.')
 
       return(NULL)
 
@@ -38,6 +36,10 @@ compute_dist_stats <- function(dt, mean) {
 
   dist_type <- unique(dt$distribution_type)
   if (dist_type == 'micro') {
+    # Clean data (remove negative values etc.)
+    dt <- md_clean_data(
+      dt, welfare = 'welfare',
+      weight = 'weight')$data
     # Calculate dist stats
     res <- wbpip:::md_compute_dist_stats(
       welfare = dt$welfare, weight = dt$weight)

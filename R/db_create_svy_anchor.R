@@ -35,6 +35,7 @@ db_create_svy_anchor <- function(dsm_table, pfw_table) {
                              'surveyid_year', 'survey_acronym')]
 
   # Merge inventory with PFW (left join)
+  pfw_table$surveyid_year <- as.integer(pfw_table$surveyid_year)
   dt <- data.table::merge.data.table(
     dsm_table, pfw_table, all.x = TRUE,
     by = c('country_code', 'surveyid_year', 'survey_acronym'))
