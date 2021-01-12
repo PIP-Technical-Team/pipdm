@@ -15,6 +15,16 @@ db_create_dist_table <- function(dl) {
   df$survey_id <- row.names(df)
   row.names(df) <- NULL
 
+  # Convert quantiles vectors to matrix
+  deciles <-
+    data.frame(
+      matrix(unlist(df$quantiles),
+             nrow = nrow(df),
+             ncol = 10))
+  names(deciles) <- paste0('decile', 1:10)
+  df <- cbind(df, deciles)
+  df$quantiles <- NULL
+
   # Convert to data table
   dt <- df %>%
     data.table::as.data.table()
