@@ -16,4 +16,3 @@ data.table
 Calculate survey mean in local currency units (LCU) for a single survey
 dataset.
 }
-\keyword{export}

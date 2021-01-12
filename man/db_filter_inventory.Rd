@@ -4,11 +4,10 @@
 \alias{db_filter_inventory}
 \title{Filter inventory}
 \usage{
-db_filter_inventory(raw_inventory, pfw_table)
+db_filter_inventory(dt, pfw_table)
 }
 \arguments{
-\item{raw_inventory}{data.table: A table with the raw inventory. Output of
-\code{read_inventory()}.}
+\item{dt}{data.table: A table with the inventory.}
 
 \item{pfw_table}{data.table: A table with the price framework file.}
 }
@@ -16,12 +15,5 @@ db_filter_inventory(raw_inventory, pfw_table)
 data.table
 }
 \description{
-Filter the PIP-Data inventory to select surveys to be used in the PIP
-ingestion pipeline.
-}
-\details{
-Selects the latest version of surveys in the Price Framework file (with
-\code{inpovcal = 1}) and belong to the Poverty Calculator (PC) module. Also
-selects the right source for each country-survey_id year (e.g. GPWG is
-preferred over BIN).
+Filter the PIP-Data inventory to select surveys in the Price Framework.
 }
