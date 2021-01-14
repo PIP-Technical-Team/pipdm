@@ -34,38 +34,35 @@ db_compute_dist_stats <- function(dt, mean) {
 #' @keywords internal
 compute_dist_stats <- function(dt, mean) {
 
+  # Get distribution type
   dist_type <- unique(dt$distribution_type)
+
+  # Calculate distributional statistics
   if (dist_type == 'micro') {
     # Clean data (remove negative values etc.)
     dt <- md_clean_data(
-      dt, welfare = 'welfare',
-      weight = 'weight')$data
+      dt, welfare = 'welfare', weight = 'weight',
+      quiet = TRUE)$data
     # Calculate dist stats
     res <- wbpip:::md_compute_dist_stats(
       welfare = dt$welfare, weight = dt$weight)
+    res <- list(national = res)
   }
   if (dist_type == 'group') {
-    # Get GD type (1, 2, or 5)
-    gd_type <- as.numeric(sub('T0', '', unique(dt$gd_type)))
-    # Standardize to type 1
-    dt <- gd_clean_data(
-      dt, welfare = 'welfare', population = 'weight',
-      data_type = gd_type)
-    # Compute poverty stats
-    res <- wbpip:::gd_compute_pip_stats(
-      welfare = dt$welfare, population = dt$population,
-      requested_mean = mean, povline = 1.9)
-    # Select dist stats
-    res <- res[c('mean', 'median', 'gini', 'polarization', 'mld', 'deciles')]
-    # Rename deciles to quantiles (for comparability with md_compute_dist_stats)
-    names(res)[length(res)] <- 'quantiles'
+    res <- gd_dist_stats(dt, mean)
+    res <- list(national = res)
   }
   if (dist_type == 'aggregate') {
-    # By area
-    res <- NULL
+    # Split by area
+    dt_rural <- dt[dt$area == 'rural']
+    dt_urban <- dt[dt$area == 'urban']
+    res_rural <- gd_dist_stats(dt_rural, mean[1])
+    res_urban <- gd_dist_stats(dt_urban, mean[2])
+    res <- list(rural = res_rural, urban = res_urban)
   }
   if (dist_type == 'imputed') {
     # TBD
+    rlang::warn('Calculation for imputed distribution type not implemented yet. Returning NULL.' )
     res <- NULL
   }
 
@@ -73,4 +70,24 @@ compute_dist_stats <- function(dt, mean) {
 
 }
 
-
+#' gd_dist_stats
+#' @inheritParams db_compute_dist_stats
+#' @return list
+#' @noRd
+gd_dist_stats <- function(dt, mean){
+  # Get GD type (1, 2, or 5)
+  gd_type <- as.numeric(sub('T0', '', unique(dt$gd_type)))
+  # Standardize to type 1
+  dt <- gd_clean_data(
+    dt, welfare = 'welfare', population = 'weight',
+    gd_type = gd_type, quiet = TRUE)
+  # Compute poverty stats
+  res <- gd_compute_dist_stats(
+    welfare = dt$welfare, population = dt$weight,
+    mean = mean)
+  # Select dist stats
+  res <- res[c('mean', 'median', 'gini', 'polarization', 'mld', 'deciles')]
+  # Rename deciles to quantiles (for comparability with md_compute_dist_stats)
+  names(res)[length(res)] <- 'quantiles'
+  return(res)
+}

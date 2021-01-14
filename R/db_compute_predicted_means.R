@@ -45,11 +45,3 @@ db_compute_predicted_means <- function(dt) {
 
   return(dt)
 }
-
-#' compute_predicted_mean
-#'
-#' Copied from wbpip to avoid notes in R CMD CHECK.
-#'
-#' @noRd
-compute_predicted_mean <-
-  utils::getFromNamespace('compute_predicted_mean', 'wbpip')

@@ -37,6 +37,7 @@ Imports:
     data.table,
     tidyfast,
     magrittr,
+    assertthat,
     rlang,
     utils,
     collapse

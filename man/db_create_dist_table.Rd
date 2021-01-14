@@ -4,10 +4,12 @@
 \alias{db_create_dist_table}
 \title{Create distributional statistics table}
 \usage{
-db_create_dist_table(dl)
+db_create_dist_table(dl, survey_id)
 }
 \arguments{
 \item{dl}{list: A list with distributional statistics datasets.}
+
+\item{survey_id}{character: A vector with survey ids.}
 }
 \value{
 data.table
