@@ -74,10 +74,10 @@
     },
     "cli": {
       "Package": "cli",
-      "Version": "2.1.0",
+      "Version": "2.2.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "0b316487b21d21f99ebf98abe179b1ea"
+      "Hash": "3ef298932294b775fa0a3eeaa3a645b0"
     },
     "clipr": {
       "Package": "clipr",
@@ -85,6 +85,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "ebaa97ac99cc2daf04e77eecc7b781d7"
+    },
+    "collapse": {
+      "Package": "collapse",
+      "Version": "1.5.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a1e0cda93bf56a33c2f50fa745c1b76d"
     },
     "cpp11": {
       "Package": "cpp11",
@@ -109,10 +116,10 @@
     },
     "data.table": {
       "Package": "data.table",
-      "Version": "1.13.2",
+      "Version": "1.13.6",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "907b184e0fd13bc19154a8f322920015"
+      "Hash": "813fa8857aaa949b243e2e0b4abb8592"
     },
     "desc": {
       "Package": "desc",
@@ -277,10 +284,10 @@
     },
     "magrittr": {
       "Package": "magrittr",
-      "Version": "1.5",
+      "Version": "2.0.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "1bb58822a20301cee84a41678e25d9b7"
+      "Hash": "41287f1ac7d28a92f0a286ed507928d3"
     },
     "markdown": {
       "Package": "markdown",
@@ -305,10 +312,10 @@
     },
     "pillar": {
       "Package": "pillar",
-      "Version": "1.4.6",
+      "Version": "1.4.7",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "bdf26e55ccb7df3e49a490150277f002"
+      "Hash": "3b3dd89b2ee115a8b54e93a34cd546b4"
     },
     "pkgbuild": {
       "Package": "pkgbuild",
@@ -389,10 +396,10 @@
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "0.4.8",
+      "Version": "0.4.10",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "843a6af51414bce7f8a8e372f11d6cd0"
+      "Hash": "599df23c40a4fce9c7b4764f28c37857"
     },
     "rmarkdown": {
       "Package": "rmarkdown",
@@ -494,10 +501,10 @@
     },
     "vctrs": {
       "Package": "vctrs",
-      "Version": "0.3.4",
+      "Version": "0.3.6",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "0bc90078aeee42f2520b1d0a33bd6758"
+      "Hash": "5cf1957f93076c19fdc81d01409d240b"
     },
     "waldo": {
       "Package": "waldo",
@@ -512,11 +519,11 @@
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteUsername": "PIP-Technical-Team",
       "RemoteRepo": "wbpip",
-      "RemoteRef": "master",
-      "RemoteSha": "8044143b894cf461a491b82a5961d925c72c4701",
-      "Hash": "64c007e3e7e965ea1533db1fa2e06ed4"
+      "RemoteUsername": "PIP-Technical-Team",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "de8858f8bb7cc81ffc438edd5d93e9ca00cf8822",
+      "Hash": "946bfd38f1e15125a41a06afc547a4f8"
     },
     "whisker": {
       "Package": "whisker",
