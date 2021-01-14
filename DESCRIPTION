@@ -38,10 +38,6 @@ Imports:
     tidyfast,
     magrittr,
     rlang,
-    cli,
-    fs,
-    fst,
-    haven,
     utils,
     collapse
 VignetteBuilder: knitr
