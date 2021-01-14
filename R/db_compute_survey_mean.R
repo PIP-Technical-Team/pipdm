@@ -7,7 +7,7 @@
 #'
 #' @return data.table
 #' @export
-db_calculate_survey_mean <- function(dt) {
+db_compute_survey_mean <- function(dt) {
 
   tryCatch(
     expr = {
@@ -16,7 +16,7 @@ db_calculate_survey_mean <- function(dt) {
       dist_type <- unique(dt$distribution_type)
 
       # Calculate weighted welfare mean
-      dt <- calculate_survey_mean[[dist_type]](dt)
+      dt <- compute_survey_mean[[dist_type]](dt)
 
       # Order columns
       data.table::setcolorder(
@@ -29,7 +29,6 @@ db_calculate_survey_mean <- function(dt) {
 
     error = function(e) {
 
-      rlang::warn('Survey mean caluclation failed. Returning NULL.')
 
       return(NULL)
 
@@ -38,26 +37,25 @@ db_calculate_survey_mean <- function(dt) {
 
 }
 
-#' calculate_survey_mean
+#' compute_survey_mean
 #'
 #' A wrapper for choosing the correct survey mean calculation, depending on the
 #' distribution type.
 #'
-#' @inheritParams db_calculate_survey_mean
+#' @inheritParams db_compute_survey_mean
 #' @return data.table
 #' @noRd
-calculate_survey_mean <- list(
-  micro = function(x) md_calculate_survey_mean(x),
-  group = function(x) gd_calculate_survey_mean(x),
-  aggregate = function(x) gd_calculate_survey_mean(x)
+compute_survey_mean <- list(
+  micro = function(x) md_compute_survey_mean(x),
+  group = function(x) gd_compute_survey_mean(x),
+  aggregate = function(x) gd_compute_survey_mean(x)
 )
 
-#' gd_calculate_survey_mean
-#'
-#' @inheritParams db_calculate_survey_mean
+#' gd_compute_survey_mean
+#' @inheritParams db_compute_survey_mean
 #' @return data.table
 #' @noRd
-gd_calculate_survey_mean <- function(dt) {
+gd_compute_survey_mean <- function(dt) {
 
   if (unique(dt$gd_type) == 'T05') {
     dt <-
@@ -84,12 +82,11 @@ gd_calculate_survey_mean <- function(dt) {
 
 }
 
-#' md_calculate_survey_mean
-#'
-#' @inheritParams db_calculate_survey_mean
+#' md_compute_survey_mean
+#' @inheritParams db_compute_survey_mean
 #' @return data.table
 #' @noRd
-md_calculate_survey_mean <- function(dt) {
+md_compute_survey_mean <- function(dt) {
 
   # Clean data (remove negative values etc.)
   dt <- md_clean_data(dt, welfare = 'welfare', weight = 'weight')$data
@@ -115,16 +112,3 @@ md_calculate_survey_mean <- function(dt) {
   return(dt)
 
 }
-
-#' md_clean_data
-#' Copied from wbpip to avoid notes in R CMD CHECK.
-#' @noRd
-md_clean_data <-
-  utils::getFromNamespace('md_clean_data', 'wbpip')
-
-#' gd_clean_data
-#' Copied from wbpip to avoid notes in R CMD CHECK.
-#' @noRd
-gd_clean_data <-
-  utils::getFromNamespace('gd_clean_data', 'wbpip')
-
