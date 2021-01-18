@@ -9,7 +9,7 @@ compute_dist_stats(dt, mean)
 \arguments{
 \item{dt}{data.table: A survey dataset.}
 
-\item{mean}{numeric: A value with the survey mean. Only used for grouped data.}
+\item{mean}{numeric: A value with the survey mean.}
 }
 \value{
 list
