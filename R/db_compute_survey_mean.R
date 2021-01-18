@@ -111,6 +111,7 @@ gd_compute_survey_mean <- function(dt, gd_mean) {
        by = .(cpi_data_level, ppp_data_level,
               gdp_data_level, pce_data_level,
               pop_data_level)]
+  dt <- unique(dt, by = c('survey_id' , 'survey_mean_lcu'))
   return(dt)
 
 }
