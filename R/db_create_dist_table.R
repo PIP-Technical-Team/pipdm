@@ -32,12 +32,15 @@ db_create_dist_table <- function(dl, survey_id) {
   df <- cbind(df, deciles)
   df$quantiles <- NULL
 
+  # Remove mean column
+  df$mean <- NULL
+
   # Convert to data table
   dt <- df %>%
     data.table::as.data.table()
 
   # Order columns
-  data.table::setcolorder(dt, c('survey_id'))
+  data.table::setcolorder(dt, c('survey_id', 'pop_data_level'))
 
   return(dt)
 }

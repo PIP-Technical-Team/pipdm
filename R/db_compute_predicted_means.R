@@ -21,14 +21,14 @@ db_compute_predicted_means <- function(dt) {
       select_proxy)
 
   # Get survey means
-  means <- purrr::map(dt$svy_lineup_items, .f = function(x) x$svy_mean_ppp)
+  means <- purrr::map(dt$svy_lineup_items, .f = function(x) x$survey_mean_ppp)
 
   # Check for any non-numeric values
   na_check <- purrr::map_lgl(means, function(x) !is.numeric(x))
   if (any(na_check)) {
     rlang::abort(
       c('`means` must contain numeric values only.',
-      i = 'Check that `svy_mean_ppp` doesn\'t contain any NA values and has class numeric.')
+      i = 'Check that `survey_mean_ppp` doesn\'t contain any NA values and has class numeric.')
       )
   }
 
@@ -38,7 +38,7 @@ db_compute_predicted_means <- function(dt) {
   # Add predicted means to the survey data tables
   dt$req_items <-
     purrr::map2(dt$svy_lineup_items, out,
-                .f = function(x, y) base::transform(x, pred_mean_ppp = y))
+                .f = function(x, y) base::transform(x, predicted_mean_ppp = y))
 
   # Remove 'svy_lineup_items'
   dt$svy_lineup_items <- NULL

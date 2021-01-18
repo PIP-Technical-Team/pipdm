@@ -48,16 +48,25 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
     rlang::inform(msg)
   }
 
+  # Add PCE and GDP datalevel columns
+  dt$gdp_data_level <- dt$nac_data_level
+  dt$pce_data_level <- dt$nac_data_level
+  dt$nac_data_level <- NULL
+
   # Select final columns
-  cols <- c('region_code', 'country_code', 'reference_year',
-            'survey_year', 'survey_acronym', 'survey_coverage',
-            'welfare_type', 'svy_mean_ppp', 'pred_mean_ppp',
-            'pop', 'pop_data_level', 'nac_data_level',
-            'cpi_data_level', 'ppp_data_level')
+  cols <- c('survey_id', 'region_code', 'country_code', 'reference_year',
+            'surveyid_year', 'reporting_year', 'survey_acronym', 'survey_coverage', 'survey_year',
+            'welfare_type', 'survey_mean_ppp',  'predicted_mean_ppp',
+            'pop', 'gdp', 'pce', 'pop_data_level', 'gdp_data_level', 'pce_data_level', 'cpi_data_level',
+            'ppp_data_level', 'distribution_type', 'gd_type')
   dt <- dt[, .SD, .SDcols = cols]
 
+  # Rename pop to ref_pop etc
+  dt <- dt %>% dplyr::rename(reference_pop = pop, reference_pce = pce, reference_gdp = gdp)
+
   # Sort rows
-  data.table::setorder(dt, country_code, reference_year, survey_acronym)
+  # data.table::setorder(dt, country_code, reference_year, survey_acronym)
+  data.table::setorder(dt, survey_id)
 
   return(dt)
 

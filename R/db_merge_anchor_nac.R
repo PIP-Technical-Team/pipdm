@@ -31,9 +31,9 @@ db_merge_anchor_nac <- function(svy_anchor, nac_table){
     by = c('country_code', 'nac_data_level'))
 
   # Adjust GDP and PCE values for surveys spanning two calender years
-  dt$svy_gdp <- purrr::map2_dbl(dt$survey_year, dt$data,
+  dt$survey_gdp <- purrr::map2_dbl(dt$survey_year, dt$data,
                                 adjust_aux_values, value_var = 'gdp')
-  dt$svy_pce <- purrr::map2_dbl(dt$survey_year, dt$data,
+  dt$survey_pce <- purrr::map2_dbl(dt$survey_year, dt$data,
                                 adjust_aux_values, value_var = 'pce')
 
   # Remove nested data column

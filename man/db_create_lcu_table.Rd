@@ -4,12 +4,14 @@
 \alias{db_create_lcu_table}
 \title{Create survey mean table (LCU)}
 \usage{
-db_create_lcu_table(dl, pop_table)
+db_create_lcu_table(dl, pop_table, pfw_table)
 }
 \arguments{
 \item{dl}{list: A list with survey mean datasets.}
 
 \item{pop_table}{data.table: A table with population data.}
+
+\item{pfw_table}{data.table: A table with the Price Framwork.}
 }
 \value{
 data.table

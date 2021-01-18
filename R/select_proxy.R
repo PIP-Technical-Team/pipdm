@@ -27,35 +27,35 @@ select_proxy <- function(svy_table, region_code, ref_gdp, ref_pce) {
   # If Sub-Saharan Africa, use GDP
   if (region_code == 'SSA') {
     if (nrow(svy_table) ==  1) {
-      proxy <- list(value0 = svy_table$svy_gdp,
+      proxy <- list(value0 = svy_table$survey_gdp,
                     value1 = NULL,
                     req_value = ref_gdp)
     } else if (nrow(svy_table) == 2) {
-      proxy <- list(value0 = svy_table$svy_gdp[1],
-                    value1 = svy_table$svy_gdp[2],
+      proxy <- list(value0 = svy_table$survey_gdp[1],
+                    value1 = svy_table$survey_gdp[2],
                     req_value = ref_gdp)
     }
   } else {
     # For other countries, use PCE if available
-    if (!anyNA(c(svy_table$svy_pce, ref_pce))) {
+    if (!anyNA(c(svy_table$survey_pce, ref_pce))) {
       if (nrow(svy_table) ==  1) {
-        proxy <- list(value0 = svy_table$svy_pce,
+        proxy <- list(value0 = svy_table$survey_pce,
                       value1 = NULL,
                       req_value = ref_pce)
       } else if (nrow(svy_table) == 2) {
-        proxy <- list(value0 = svy_table$svy_pce[1],
-                      value1 = svy_table$svy_pce[2],
+        proxy <- list(value0 = svy_table$survey_pce[1],
+                      value1 = svy_table$survey_pce[2],
                       req_value = ref_pce)
       }
     } else {
       # If PCE not available, use GDP
       if (nrow(svy_table) ==  1) {
-        proxy <- list(value0 = svy_table$svy_gdp,
+        proxy <- list(value0 = svy_table$survey_gdp,
                       value1 = NULL,
                       req_value = ref_gdp)
       } else if (nrow(svy_table) == 2) {
-        proxy <- list(value0 = svy_table$svy_gdp[1],
-                      value1 = svy_table$svy_gdp[2],
+        proxy <- list(value0 = svy_table$survey_gdp[1],
+                      value1 = svy_table$survey_gdp[2],
                       req_value = ref_gdp)
       }
     }
@@ -72,11 +72,11 @@ check_inputs_select_proxy <- function(svy_table, region_code) {
   if (nrow(svy_table) > 2) {
     rlang::abort('`svy_table` can\'t have more than two rows.')
   }
-  if (!'svy_pce' %in% names(svy_table)) {
-    rlang::abort('Column `svy_pce` not found in `svy_table`.')
+  if (!'survey_pce' %in% names(svy_table)) {
+    rlang::abort('Column `survey_pce` not found in `svy_table`.')
   }
-  if (!'svy_gdp' %in% names(svy_table)) {
-    rlang::abort('Column `svy_gdp` not found in `svy_table`.')
+  if (!'survey_gdp' %in% names(svy_table)) {
+    rlang::abort('Column `survey_gdp` not found in `svy_table`.')
   }
 
   # Check region input

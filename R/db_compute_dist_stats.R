@@ -3,7 +3,7 @@
 #' Calculate distributional statistics  for a single survey dataset.
 #'
 #' @param dt data.table: A survey dataset.
-#' @param mean numeric: A value with the survey mean. Only used for grouped data.
+#' @param mean numeric: A value with the survey mean.
 #' @return list
 #' @export
 db_compute_dist_stats <- function(dt, mean) {
@@ -44,8 +44,10 @@ compute_dist_stats <- function(dt, mean) {
       dt, welfare = 'welfare', weight = 'weight',
       quiet = TRUE)$data
     # Calculate dist stats
-    res <- wbpip:::md_compute_dist_stats(
-      welfare = dt$welfare, weight = dt$weight)
+    res <- md_compute_dist_stats(
+      welfare = dt$welfare,
+      weight = dt$weight,
+      mean = mean)
     res <- list(national = res)
   }
   if (dist_type == 'group') {
@@ -79,11 +81,15 @@ gd_dist_stats <- function(dt, mean){
   gd_type <- as.numeric(sub('T0', '', unique(dt$gd_type)))
   # Standardize to type 1
   dt <- gd_clean_data(
-    dt, welfare = 'welfare', population = 'weight',
-    gd_type = gd_type, quiet = TRUE)
+    dt,
+    welfare = 'welfare',
+    population = 'weight',
+    gd_type = gd_type,
+    quiet = TRUE)
   # Compute poverty stats
   res <- gd_compute_dist_stats(
-    welfare = dt$welfare, population = dt$weight,
+    welfare = dt$welfare,
+    population = dt$weight,
     mean = mean)
   # Select dist stats
   res <- res[c('mean', 'median', 'gini', 'polarization', 'mld', 'deciles')]

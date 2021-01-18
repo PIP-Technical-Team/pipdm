@@ -4,10 +4,11 @@
 #' dataset.
 #'
 #' @param dt data.table: A survey dataset.
+#' @param gd_mean numeric: Mean to use for grouped data surveys.
 #'
 #' @return data.table
 #' @export
-db_compute_survey_mean <- function(dt) {
+db_compute_survey_mean <- function(dt, gd_mean) {
 
   tryCatch(
     expr = {
@@ -16,12 +17,12 @@ db_compute_survey_mean <- function(dt) {
       dist_type <- unique(dt$distribution_type)
 
       # Calculate weighted welfare mean
-      dt <- compute_survey_mean[[dist_type]](dt)
+      dt <- compute_survey_mean[[dist_type]](dt, gd_mean)
 
       # Order columns
       data.table::setcolorder(
         dt, c('survey_id', 'country_code', 'surveyid_year', 'survey_acronym',
-              'survey_year', 'welfare_type', 'svy_mean_lcu'))
+              'survey_year', 'welfare_type', 'survey_mean_lcu'))
 
       return(dt)
 
@@ -46,51 +47,24 @@ db_compute_survey_mean <- function(dt) {
 #' @return data.table
 #' @noRd
 compute_survey_mean <- list(
-  micro = function(x) md_compute_survey_mean(x),
-  group = function(x) gd_compute_survey_mean(x),
-  aggregate = function(x) gd_compute_survey_mean(x)
+  micro = function(dt, gd_mean) md_compute_survey_mean(dt, gd_mean),
+  group = function(dt, gd_mean) gd_compute_survey_mean(dt, gd_mean),
+  aggregate = function(dt, gd_mean) gd_compute_survey_mean(dt, gd_mean)
 )
-
-#' gd_compute_survey_mean
-#' @inheritParams db_compute_survey_mean
-#' @return data.table
-#' @noRd
-gd_compute_survey_mean <- function(dt) {
-
-  if (unique(dt$gd_type) == 'T05') {
-    dt <-
-      dt[, .(survey_id = unique(survey_id),
-             country_code = unique(country_code),
-             surveyid_year = unique(surveyid_year),
-             survey_acronym = unique(survey_acronym),
-             survey_year = unique(survey_year),
-             welfare_type = unique(welfare_type),
-             distribution_type = unique(distribution_type),
-             gd_type = unique(gd_type),
-             svy_mean_lcu = #stats::weighted.mean
-               collapse::fmean(
-                 x = welfare, w = weight,
-                 na.rm = TRUE)),
-         by = .(cpi_data_level, ppp_data_level,
-                gdp_data_level, pce_data_level,
-                pop_data_level)]
-    return(dt)
-  } else if (unique(dt$gd_type) %in% c('T01', 'T02')) {
-    rlang::warn('Calculation for T01/T02 not implmented yet. Returning NULL.' )
-    return(NULL)
-  }
-
-}
 
 #' md_compute_survey_mean
 #' @inheritParams db_compute_survey_mean
 #' @return data.table
 #' @noRd
-md_compute_survey_mean <- function(dt) {
+md_compute_survey_mean <- function(dt, gd_mean = NULL) {
 
   # Clean data (remove negative values etc.)
-  dt <- md_clean_data(dt, welfare = 'welfare', weight = 'weight')$data
+  dt <- md_clean_data(dt,
+                      welfare = 'welfare',
+                      weight = 'weight',
+                      quiet = TRUE)$data
 
+  # Compute mean by data levels
   dt <-
     dt[, .(survey_id = unique(survey_id),
            country_code = unique(country_code),
@@ -100,7 +74,7 @@ md_compute_survey_mean <- function(dt) {
            welfare_type = unique(welfare_type),
            distribution_type = unique(distribution_type),
            gd_type = unique(gd_type),
-           svy_mean_lcu =
+           survey_mean_lcu =
              collapse::fmean(
                x = welfare, w = weight,
                na.rm = TRUE)),
@@ -109,6 +83,34 @@ md_compute_survey_mean <- function(dt) {
               pop_data_level)
     ]
 
+  return(dt)
+
+}
+
+#' gd_compute_survey_mean
+#' @inheritParams db_compute_survey_mean
+#' @return data.table
+#' @noRd
+gd_compute_survey_mean <- function(dt, gd_mean) {
+
+  # Sort rows by pop_data_level to ensure that means are
+  # assigned correctly
+  data.table::setorder(dt, pop_data_level)
+
+  # Assign mean to aggregated dataset
+  dt <-
+    dt[, .(survey_id = unique(survey_id),
+           country_code = unique(country_code),
+           surveyid_year = unique(surveyid_year),
+           survey_acronym = unique(survey_acronym),
+           survey_year = unique(survey_year),
+           welfare_type = unique(welfare_type),
+           distribution_type = unique(distribution_type),
+           gd_type = unique(gd_type),
+           survey_mean_lcu = gd_mean),
+       by = .(cpi_data_level, ppp_data_level,
+              gdp_data_level, pce_data_level,
+              pop_data_level)]
   return(dt)
 
 }

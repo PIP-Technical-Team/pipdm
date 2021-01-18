@@ -40,5 +40,6 @@ Imports:
     assertthat,
     rlang,
     utils,
-    collapse
+    collapse,
+    readxl
 VignetteBuilder: knitr

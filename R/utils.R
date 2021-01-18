@@ -74,11 +74,18 @@ md_clean_data <-
 gd_clean_data <-
   utils::getFromNamespace('gd_clean_data', 'wbpip')
 
+#' md_compute_dist_stats
+#' Copied from wbpip to avoid notes in R CMD CHECK.
+#' @noRd
+md_compute_dist_stats <-
+  utils::getFromNamespace('md_compute_dist_stats', 'wbpip')
+
 #' gd_compute_dist_stats
 #' Copied from wbpip to avoid notes in R CMD CHECK.
 #' @noRd
 gd_compute_dist_stats <-
   utils::getFromNamespace('gd_compute_dist_stats', 'wbpip')
+
 
 #' compute_predicted_mean
 #' Copied from wbpip to avoid notes in R CMD CHECK.
