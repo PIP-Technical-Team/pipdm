@@ -39,16 +39,19 @@ compute_dist_stats <- function(dt, mean) {
 
   # Calculate distributional statistics
   if (dist_type == 'micro') {
-    # Clean data (remove negative values etc.)
-    dt <- md_clean_data(
-      dt, welfare = 'welfare', weight = 'weight',
-      quiet = TRUE)$data
-    # Calculate dist stats
-    res <- md_compute_dist_stats(
-      welfare = dt$welfare,
-      weight = dt$weight,
-      mean = mean)
-    res <- list(national = res)
+    pop_level <- unique(dt$pop_data_level)
+    # Handle U/R split for microdatasets, e.g. IND 2011
+    if(length(mean) == 2 & identical(pop_level, c('rural', 'urban'))) {
+      # Split by area
+      dt_rural <- dt[dt$area == 'rural']
+      dt_urban <- dt[dt$area == 'urban']
+      res_rural <- md_dist_stats(dt_rural, mean[1])
+      res_urban <- md_dist_stats(dt_urban, mean[2])
+      res <- list(rural = res_rural, urban = res_urban)
+    } else {
+      res <- md_dist_stats(dt, mean)
+      res <- list(national = res)
+    }
   }
   if (dist_type == 'group') {
     res <- gd_dist_stats(dt, mean)
@@ -70,6 +73,23 @@ compute_dist_stats <- function(dt, mean) {
 
   return(res)
 
+}
+
+#' md_dist_stats
+#' @inheritParams db_compute_dist_stats
+#' @return list
+#' @noRd
+md_dist_stats <- function(dt, mean){
+  # Clean data (remove negative values etc.)
+  dt <- md_clean_data(
+    dt, welfare = 'welfare', weight = 'weight',
+    quiet = TRUE)$data
+  # Calculate dist stats
+  res <- md_compute_dist_stats(
+    welfare = dt$welfare,
+    weight = dt$weight,
+    mean = mean)
+  return(res)
 }
 
 #' gd_dist_stats
