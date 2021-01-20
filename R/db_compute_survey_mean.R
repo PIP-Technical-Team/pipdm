@@ -58,12 +58,6 @@ compute_survey_mean <- list(
 #' @noRd
 md_compute_survey_mean <- function(dt, gd_mean = NULL) {
 
-  # Clean data (remove negative values etc.)
-  dt <- md_clean_data(dt,
-                      welfare = 'welfare',
-                      weight = 'weight',
-                      quiet = TRUE)$data
-
   # Compute mean by data levels
   dt <-
     dt[, .(survey_id = unique(survey_id),

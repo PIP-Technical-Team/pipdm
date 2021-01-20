@@ -31,7 +31,7 @@ db_compute_dist_stats <- function(dt, mean) {
 #' compute_dist_stats
 #' @inheritParams db_compute_dist_stats
 #' @return list
-#' @keywords internal
+#' @noRd
 compute_dist_stats <- function(dt, mean) {
 
   # Get distribution type
@@ -40,8 +40,8 @@ compute_dist_stats <- function(dt, mean) {
   # Calculate distributional statistics
   if (dist_type == 'micro') {
     pop_level <- unique(dt$pop_data_level)
-    # Handle U/R split for microdatasets, e.g. IND 2011
-    if(length(mean) == 2 & identical(pop_level, c('rural', 'urban'))) {
+    # Handle U/R split for micro datasets, e.g. IND 2011
+    if (length(mean) == 2 & identical(pop_level, c('rural', 'urban'))) {
       # Split by area
       dt_rural <- dt[dt$area == 'rural']
       dt_urban <- dt[dt$area == 'urban']
@@ -80,10 +80,6 @@ compute_dist_stats <- function(dt, mean) {
 #' @return list
 #' @noRd
 md_dist_stats <- function(dt, mean){
-  # Clean data (remove negative values etc.)
-  dt <- md_clean_data(
-    dt, welfare = 'welfare', weight = 'weight',
-    quiet = TRUE)$data
   # Calculate dist stats
   res <- md_compute_dist_stats(
     welfare = dt$welfare,
@@ -97,16 +93,7 @@ md_dist_stats <- function(dt, mean){
 #' @return list
 #' @noRd
 gd_dist_stats <- function(dt, mean){
-  # Get GD type (1, 2, or 5)
-  gd_type <- as.numeric(sub('T0', '', unique(dt$gd_type)))
-  # Standardize to type 1
-  dt <- gd_clean_data(
-    dt,
-    welfare = 'welfare',
-    population = 'weight',
-    gd_type = gd_type,
-    quiet = TRUE)
-  # Compute poverty stats
+  # Calculate dist stats
   res <- gd_compute_dist_stats(
     welfare = dt$welfare,
     population = dt$weight,
