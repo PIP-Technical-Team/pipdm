@@ -16,7 +16,7 @@ db_create_dist_table <- function(dl, survey_id) {
   dl <- purrr::map2(dl, survey_id, function(x, y ) cbind(x, survey_id = y))
   df <- do.call('rbind', dl) %>% as.data.frame()
   df$pop_data_level <- sub('[.].*', '', row.names(df))
-
+  df$survey_id <- unname(unlist(df$survey_id))
   df[1:5] <- purrr::map_df(
     df[1:5], function(x) unname(unlist(x)))
   df$quantiles <- df$quantiles %>% unname()
