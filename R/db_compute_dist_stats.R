@@ -37,6 +37,9 @@ compute_dist_stats <- function(dt, mean) {
   # Get distribution type
   dist_type <- unique(dt$distribution_type)
 
+  # Order by population data level
+  data.table::setorder(dt, pop_data_level)
+
   # Calculate distributional statistics
   if (dist_type == 'micro') {
     pop_level <- unique(dt$pop_data_level)

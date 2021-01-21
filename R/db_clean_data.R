@@ -11,7 +11,11 @@ db_clean_data <- function(dt) {
   tryCatch(
     expr = {
 
+      # Clean dataset
       dt <- clean_data(dt)
+
+      # Order by population data level
+      data.table::setorder(dt, pop_data_level)
 
       return(dt)
 
