@@ -15,6 +15,8 @@ db_filter_inventory <- function(dt, pfw_table) {
   pfw_table <- pfw_table[, c('country_code', 'surveyid_year',
                              'survey_acronym', 'inpovcal')]
 
+  dt$surveyid_year <- as.numeric(dt$surveyid_year)
+
   # Merge inventory with PFW (left join)
   dt <- data.table::merge.data.table(
     dt, pfw_table, all.x = TRUE,
