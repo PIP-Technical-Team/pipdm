@@ -25,9 +25,6 @@ db_create_dsm_table <- function(lcu_table,
                 c('country_code', 'surveyid_year', 'survey_acronym',
                   'cpi_data_level', 'cpi')]
 
-  # Make sure surveyid_year is integer
-  cpi_table$surveyid_year <- as.integer(cpi_table$surveyid_year)
-
   # Merge survey table with CPI (left join)
   dt <- data.table::merge.data.table(
     lcu_table, cpi_table, all.x = TRUE,
@@ -64,9 +61,11 @@ db_create_dsm_table <- function(lcu_table,
              c('survey_id', 'region_code', 'country_code',
                'survey_acronym',  'survey_coverage',
                'surveyid_year', 'reporting_year', 'survey_year', 'welfare_type',
-               'survey_mean_lcu', 'survey_mean_ppp', 'survey_pop', 'ppp',
+               'survey_mean_lcu', 'survey_mean_ppp', 'survey_pop',
+               'reporting_pop', 'ppp',
                'pop_data_level', 'gdp_data_level', 'pce_data_level',
-               'cpi_data_level', 'ppp_data_level', 'distribution_type', 'gd_type')]
+               'cpi_data_level', 'ppp_data_level', 'distribution_type',
+               'gd_type')]
 
   # Sort rows
   data.table::setorder(dt, survey_id)
