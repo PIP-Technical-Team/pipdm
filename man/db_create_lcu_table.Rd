@@ -11,7 +11,7 @@ db_create_lcu_table(dl, pop_table, pfw_table)
 
 \item{pop_table}{data.table: A table with population data.}
 
-\item{pfw_table}{data.table: A table with the Price Framwork.}
+\item{pfw_table}{data.table: A table with the Price Framework.}
 }
 \value{
 data.table
