@@ -30,7 +30,7 @@ db_compute_survey_mean <- function(dt, gd_mean) {
 
     error = function(e) {
 
-
+      rlang::warn('Survey mean caluclation failed. Returning NULL.')
       return(NULL)
 
     } # end of error
@@ -101,11 +101,14 @@ gd_compute_survey_mean <- function(dt, gd_mean) {
            welfare_type = unique(welfare_type),
            distribution_type = unique(distribution_type),
            gd_type = unique(gd_type),
-           survey_mean_lcu = gd_mean),
-       by = .(cpi_data_level, ppp_data_level,
-              gdp_data_level, pce_data_level,
-              pop_data_level)]
-  dt <- unique(dt, by = c('survey_id' , 'survey_mean_lcu'))
+           survey_mean_lcu = gd_mean,
+           cpi_data_level = unique(cpi_data_level),
+           ppp_data_level = unique(ppp_data_level),
+           gdp_data_level = unique(gdp_data_level),
+           pce_data_level = unique(pce_data_level),
+           pop_data_level = unique(pop_data_level))
+    ]
+
   return(dt)
 
 }
