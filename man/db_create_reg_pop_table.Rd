@@ -4,13 +4,15 @@
 \alias{db_create_reg_pop_table}
 \title{Create regional population table}
 \usage{
-db_create_reg_pop_table(pop_table, wb_meta)
+db_create_reg_pop_table(pop_table, wb_meta, pip_years)
 }
 \arguments{
 \item{pop_table}{data.table: A table with population data.}
 
 \item{wb_meta}{data.table: A table with country metadata from WDI. See
-details.
+details.}
+
+\item{pip_years}{numeric: A vector with calender years used in PIP.
 
 Use \code{wbstats::wb_countries()} to retrieve the \code{wb_meta} table.}
 }

@@ -5,12 +5,13 @@
 #' @param pop_table data.table: A table with population data.
 #' @param wb_meta data.table: A table with country metadata from WDI. See
 #'   details.
+#' @param pip_years numeric: A vector with calender years used in PIP.
 #'
 #' Use `wbstats::wb_countries()` to retrieve the `wb_meta` table.
 #'
 #' @return data.table
 #' @export
-db_create_reg_pop_table <- function(pop_table, wb_meta) {
+db_create_reg_pop_table <- function(pop_table, wb_meta, pip_years) {
 
   # Subselect columns
   wb_meta <-
@@ -39,6 +40,9 @@ db_create_reg_pop_table <- function(pop_table, wb_meta) {
   # Aggregate population by region
   dt <- dt[, .(pop = sum(pop)),
            by = .(region_code, year)]
+
+  # Subset to only include years used by PIP
+  dt <- dt[dt$year %in% pip_years, ]
 
   return(dt)
 
