@@ -56,8 +56,8 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
   # Select final columns
   cols <- c('survey_id', 'region_code', 'country_code', 'reference_year',
             'surveyid_year', 'reporting_year', 'survey_acronym',
-            'survey_coverage', 'survey_year', 'welfare_type',
-            'survey_mean_ppp', 'predicted_mean_ppp', 'ppp',
+            'survey_coverage', 'survey_comparability', 'survey_year',
+            'welfare_type', 'survey_mean_ppp', 'predicted_mean_ppp', 'ppp',
             'pop', 'gdp', 'pce', 'pop_data_level', 'gdp_data_level',
             'pce_data_level', 'cpi_data_level', 'ppp_data_level',
             'distribution_type', 'gd_type')

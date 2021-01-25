@@ -31,7 +31,8 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
   pfw_table <-
     pfw_table[, c('region_code', 'country_code',
                   'survey_coverage', 'surveyid_year',
-                  'survey_acronym', 'reporting_year')]
+                  'survey_acronym', 'reporting_year',
+                  'survey_comparability')]
 
   # Merge LCU table with PFW (left join)
   dt <- data.table::merge.data.table(
