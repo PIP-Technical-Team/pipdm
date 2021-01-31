@@ -2,6 +2,7 @@
 
 export(db_clean_data)
 export(db_compute_dist_stats)
+export(db_compute_lorenz)
 export(db_compute_survey_mean)
 export(db_create_dist_table)
 export(db_create_dsm_table)

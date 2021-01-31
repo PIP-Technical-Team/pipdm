@@ -86,6 +86,11 @@ md_compute_dist_stats <-
 gd_compute_dist_stats <-
   utils::getFromNamespace('gd_compute_dist_stats', 'wbpip')
 
+#' md_compute_lorenz
+#' Copied from wbpip to avoid notes in R CMD CHECK.
+#' @noRd
+md_compute_lorenz <-
+  utils::getFromNamespace('md_compute_lorenz', 'wbpip')
 
 #' compute_predicted_mean
 #' Copied from wbpip to avoid notes in R CMD CHECK.
