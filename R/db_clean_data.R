@@ -4,9 +4,10 @@
 #' and `wbpip:::gd_clean_data()`.
 #'
 #' @param dt data.table: A survey dataset.
+#' @param gc logical: If TRUE garbage collection is forced.
 #' @return data.table
 #' @export
-db_clean_data <- function(dt) {
+db_clean_data <- function(dt, gc = FALSE) {
 
   tryCatch(
     expr = {
@@ -17,6 +18,9 @@ db_clean_data <- function(dt) {
       # Order by population data level
       data.table::setorder(dt, pop_data_level)
 
+      # Garbage collection
+      if (gc) gc(verbose = FALSE)
+
       return(dt)
 
     }, # end of expr section
@@ -24,6 +28,9 @@ db_clean_data <- function(dt) {
     error = function(e) {
 
       rlang::warn('Data cleaning failed. Returning NULL.')
+
+      # Garbage collection
+      if (gc) gc(verbose = FALSE)
 
       return(NULL)
 

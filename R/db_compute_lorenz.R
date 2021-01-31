@@ -4,9 +4,9 @@
 #'
 #' Only available for microdata.
 #'
-#' @inheritParams db_compute_survey_mean
+#' @inheritParams db_clean_data
 #' @export
-db_compute_lorenz <- function(dt){
+db_compute_lorenz <- function(dt, gc = FALSE) {
 
   dist_type <- unique(dt$distribution_type)
   if (dist_type == 'micro') {
@@ -17,6 +17,9 @@ db_compute_lorenz <- function(dt){
     rlang::warn('Pre-calculation of Lorenz curves only implemented for microdata. Returning NULL.')
     res <- NULL
   }
+
+  # Garbage collection
+  if (gc) gc(verbose = FALSE)
 
   return(res)
 

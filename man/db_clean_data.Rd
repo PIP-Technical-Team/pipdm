@@ -4,10 +4,12 @@
 \alias{db_clean_data}
 \title{Clean survey data}
 \usage{
-db_clean_data(dt)
+db_clean_data(dt, gc = FALSE)
 }
 \arguments{
 \item{dt}{data.table: A survey dataset.}
+
+\item{gc}{logical: If TRUE garbage collection is forced.}
 }
 \value{
 data.table

@@ -3,12 +3,12 @@
 #' Calculate survey mean in local currency units (LCU) for a single survey
 #' dataset.
 #'
-#' @param dt data.table: A survey dataset.
+#' @inheritParams db_clean_data
 #' @param gd_mean numeric: Mean to use for grouped data surveys.
 #'
 #' @return data.table
 #' @export
-db_compute_survey_mean <- function(dt, gd_mean) {
+db_compute_survey_mean <- function(dt, gd_mean, gc = FALSE) {
 
   tryCatch(
     expr = {
@@ -24,6 +24,9 @@ db_compute_survey_mean <- function(dt, gd_mean) {
         dt, c('survey_id', 'country_code', 'surveyid_year', 'survey_acronym',
               'survey_year', 'welfare_type', 'survey_mean_lcu'))
 
+      # Garbage collection
+      if (gc) gc(verbose = FALSE)
+
       return(dt)
 
     }, # end of expr section
@@ -31,6 +34,10 @@ db_compute_survey_mean <- function(dt, gd_mean) {
     error = function(e) {
 
       rlang::warn('Survey mean caluclation failed. Returning NULL.')
+
+      # Garbage collection
+      if (gc) gc(verbose = FALSE)
+
       return(NULL)
 
     } # end of error

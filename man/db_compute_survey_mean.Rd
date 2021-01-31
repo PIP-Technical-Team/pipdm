@@ -4,12 +4,14 @@
 \alias{db_compute_survey_mean}
 \title{Calculate survey means}
 \usage{
-db_compute_survey_mean(dt, gd_mean)
+db_compute_survey_mean(dt, gd_mean, gc = FALSE)
 }
 \arguments{
 \item{dt}{data.table: A survey dataset.}
 
 \item{gd_mean}{numeric: Mean to use for grouped data surveys.}
+
+\item{gc}{logical: If TRUE garbage collection is forced.}
 }
 \value{
 data.table

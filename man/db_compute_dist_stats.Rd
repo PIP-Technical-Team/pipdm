@@ -4,12 +4,14 @@
 \alias{db_compute_dist_stats}
 \title{Calculate distributional statistics}
 \usage{
-db_compute_dist_stats(dt, mean)
+db_compute_dist_stats(dt, mean, gc = FALSE)
 }
 \arguments{
 \item{dt}{data.table: A survey dataset.}
 
 \item{mean}{numeric: A value with the survey mean.}
+
+\item{gc}{logical: If TRUE garbage collection is forced.}
 }
 \value{
 list

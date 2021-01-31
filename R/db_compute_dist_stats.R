@@ -2,16 +2,20 @@
 #'
 #' Calculate distributional statistics  for a single survey dataset.
 #'
-#' @param dt data.table: A survey dataset.
+#' @inheritParams db_clean_data
 #' @param mean numeric: A value with the survey mean.
 #' @return list
 #' @export
-db_compute_dist_stats <- function(dt, mean) {
+db_compute_dist_stats <- function(dt, mean, gc = FALSE) {
 
   tryCatch(
     expr = {
 
+      # Compute dist stats
       res <- compute_dist_stats(dt, mean)
+
+      # Garbage collection
+      if (gc) gc(verbose = FALSE)
 
       return(res)
 
@@ -20,6 +24,9 @@ db_compute_dist_stats <- function(dt, mean) {
     error = function(e) {
 
       rlang::warn('Distributional statistics caluclation failed. Returning NULL.')
+
+      # Garbage collection
+      if (gc) gc(verbose = FALSE)
 
       return(NULL)
 
