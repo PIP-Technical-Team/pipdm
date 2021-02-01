@@ -25,10 +25,9 @@ db_create_gd_svy_mean_table <- function(pcn_master_path, pfw_table, inventory) {
 
   # Select and rename columns
   df <- df[c('CountryCode', 'SurveyTime', 'DataType', 'Coverage',
-             'SurveyMean_LCU','SurveyMean_PPP', 'DistributionFileName',
-             'SurveyID')]
+             'SurveyMean_LCU', 'DistributionFileName', 'SurveyID')]
   names(df) <- c('country_code', 'survey_year',  'welfare_type',
-                 'survey_coverage', 'survey_mean_lcu', 'survey_mean_ppp',
+                 'survey_coverage', 'survey_mean_lcu',
                  'pcn_source_file', 'pcn_survey_id')
 
   # Recode columns
@@ -87,10 +86,13 @@ db_create_gd_svy_mean_table <- function(pcn_master_path, pfw_table, inventory) {
 
   # Select columns
   df <- df[c('country_code', 'surveyid_year', 'survey_year', 'welfare_type',
-             'survey_mean_lcu','survey_mean_ppp', 'distribution_type',
-             'gd_type', 'pop_data_level', 'pcn_source_file',
+             'survey_mean_lcu', 'distribution_type', 'gd_type',
+             'pop_data_level', 'pcn_source_file',
              'pcn_survey_id', 'survey_id')]
   df$survey_id <- toupper(df$survey_id)
+
+  # Convert LCU means to daily values
+  df$survey_mean_lcu <- df$survey_mean_lcu * (365/12)
 
   # Convert to data.table
   dt <- data.table::as.data.table(df)
