@@ -22,13 +22,13 @@ db_create_dsm_table <- function(lcu_table,
   # Select CPI columns
   cpi_table <-
     cpi_table[, .SD, .SDcols =
-                c('country_code', 'surveyid_year', 'survey_acronym',
+                c('country_code', 'survey_year', 'survey_acronym',
                   'cpi_data_level', 'cpi')]
 
   # Merge survey table with CPI (left join)
   dt <- data.table::merge.data.table(
     lcu_table, cpi_table, all.x = TRUE,
-    by = c('country_code', 'surveyid_year', 'survey_acronym', 'cpi_data_level')
+    by = c('country_code', 'survey_year', 'survey_acronym', 'cpi_data_level')
   )
 
   #--------- Merge with PPP ---------
@@ -62,7 +62,7 @@ db_create_dsm_table <- function(lcu_table,
                'survey_coverage', 'survey_comparability', 'surveyid_year',
                'reporting_year', 'survey_year', 'welfare_type',
                'survey_mean_lcu', 'survey_mean_ppp', 'survey_pop',
-               'reporting_pop', 'ppp', 'pop_data_level',
+               'reporting_pop', 'ppp', 'cpi', 'pop_data_level',
                'gdp_data_level', 'pce_data_level',
                'cpi_data_level', 'ppp_data_level',
                'distribution_type', 'gd_type')]
