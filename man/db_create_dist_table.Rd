@@ -4,16 +4,18 @@
 \alias{db_create_dist_table}
 \title{Create distributional statistics table}
 \usage{
-db_create_dist_table(dl, survey_id)
+db_create_dist_table(dl, survey_id, dsm_table)
 }
 \arguments{
 \item{dl}{list: A list with distributional statistics datasets.}
 
 \item{survey_id}{character: A vector with survey ids.}
+
+\item{dsm_table}{data.table: A table with deflated survey means.}
 }
 \value{
 data.table
 }
 \description{
-Create distributional statistics table
+Create a tablw with distributional statistics, include a deflated median.
 }
