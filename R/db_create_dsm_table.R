@@ -56,16 +56,20 @@ db_create_dsm_table <- function(lcu_table,
 
   #--------- Finalize table ---------
 
+  # Add is_interpolated column
+  dt$is_interpolated <- FALSE
+
   # Select and order columns
   dt <- dt[, .SD, .SDcols =
              c('survey_id', 'region_code', 'country_code', 'survey_acronym',
                'survey_coverage', 'survey_comparability', 'surveyid_year',
                'reporting_year', 'survey_year', 'welfare_type',
-               'survey_mean_lcu', 'survey_mean_ppp', 'survey_pop',
+               'survey_mean_lcu', 'survey_mean_ppp', #'survey_pop',
                'reporting_pop', 'ppp', 'cpi', 'pop_data_level',
                'gdp_data_level', 'pce_data_level',
                'cpi_data_level', 'ppp_data_level',
-               'distribution_type', 'gd_type')]
+               'distribution_type', 'gd_type',
+               'is_interpolated')]
 
   # Sort rows
   data.table::setorder(dt, survey_id)
