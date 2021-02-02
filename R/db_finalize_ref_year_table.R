@@ -72,7 +72,7 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
 
   # Rename variables
   dt <- dt %>% dplyr::rename(
-    reference_year = reporting_year,
+    reporting_year = reference_year,
     reporting_pop = pop,
     reporting_pce = pce,
     reporting_gdp = gdp)
