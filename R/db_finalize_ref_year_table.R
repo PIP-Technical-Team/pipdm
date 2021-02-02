@@ -56,7 +56,7 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
 
   # Add is_interpolated column
   dt$is_interpolated <- data.table::fifelse(
-    dt$survey_year == dt$reference_year, TRUE, FALSE
+    dt$survey_year == dt$reference_year, FALSE, TRUE
   )
 
   # Select final columns
