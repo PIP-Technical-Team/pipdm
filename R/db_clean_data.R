@@ -18,6 +18,9 @@ db_clean_data <- function(dt, gc = FALSE) {
       # Order by population data level
       data.table::setorder(dt, pop_data_level)
 
+      # Remove labels from each column
+      dt[] <- lapply(dt, c)
+
       # Garbage collection
       if (gc) gc(verbose = FALSE)
 
