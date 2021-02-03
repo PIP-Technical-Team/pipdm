@@ -17,5 +17,5 @@ db_create_dist_table(dl, survey_id, dsm_table)
 data.table
 }
 \description{
-Create a tablw with distributional statistics, include a deflated median.
+Create a table with distributional statistics, including a deflated median.
 }

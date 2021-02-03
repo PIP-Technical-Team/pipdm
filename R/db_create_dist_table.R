@@ -1,6 +1,6 @@
 #' Create distributional statistics table
 #'
-#' Create a table with distributional statistics, include a deflated median.
+#' Create a table with distributional statistics, including a deflated median.
 #'
 #' @param dl list: A list with distributional statistics datasets.
 #' @param survey_id character: A vector with survey ids.
