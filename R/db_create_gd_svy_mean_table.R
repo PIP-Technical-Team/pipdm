@@ -92,7 +92,7 @@ db_create_gd_svy_mean_table <- function(pcn_master_path, pfw_table, inventory) {
   df$survey_id <- toupper(df$survey_id)
 
   # Convert LCU means to daily values
-  df$survey_mean_lcu <- df$survey_mean_lcu * (365/12)
+  #df$survey_mean_lcu <- df$survey_mean_lcu * (12/365)
 
   # Convert to data.table
   dt <- data.table::as.data.table(df)
