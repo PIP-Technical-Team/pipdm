@@ -37,10 +37,10 @@ Imports:
     data.table,
     tidyfast,
     magrittr,
+    assertthat,
     rlang,
-    cli,
-    fs,
-    fst,
-    haven,
-    utils
+    utils,
+    collapse,
+    readxl,
+    cli
 VignetteBuilder: knitr

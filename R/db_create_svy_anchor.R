@@ -31,13 +31,16 @@ db_create_svy_anchor <- function(dsm_table, pfw_table) {
   }
 
   # Select columns
-  pfw_table <- pfw_table[, c('region_code', 'country_code', 'survey_coverage',
-                             'surveyid_year', 'survey_acronym')]
+  pfw_table <- pfw_table[,
+                         c('region_code', 'country_code',
+                           'survey_coverage', 'surveyid_year',
+                           'survey_acronym', 'reporting_year')]
 
-  # Merge inventory with PFW (left join)
+  # # Merge DSM table with PFW (left join)
   dt <- data.table::merge.data.table(
     dsm_table, pfw_table, all.x = TRUE,
-    by = c('country_code', 'surveyid_year', 'survey_acronym'))
+    by = c('country_code', 'surveyid_year', 'survey_acronym',
+           'survey_coverage', 'reporting_year', 'region_code'))
 
   if (identical(dt$gdp_data_level, dt$pce_data_level)) {
     dt$nac_data_level <- dt$gdp_data_level
@@ -51,7 +54,7 @@ db_create_svy_anchor <- function(dsm_table, pfw_table) {
   data.table::setcolorder(
     dt, c('survey_id', 'region_code', 'country_code', 'surveyid_year',
           'survey_acronym', 'survey_coverage', 'survey_year',
-          'welfare_type', 'svy_mean_ppp', 'svy_pop'))
+          'welfare_type', 'survey_mean_ppp')) #'survey_pop'
 
   return(dt)
 

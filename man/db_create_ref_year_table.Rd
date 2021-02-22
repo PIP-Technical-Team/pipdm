@@ -7,7 +7,7 @@
 db_create_ref_year_table(
   gdp_table,
   pce_table,
-  pop_table = NULL,
+  pop_table,
   pfw_table,
   dsm_table,
   ref_years,
