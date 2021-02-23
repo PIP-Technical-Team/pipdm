@@ -18,8 +18,6 @@ with the Price Framework file. See details.
 \details{
 This function:
 \itemize{
-\item Adds the columns \code{region_code} and \code{survey_coverage} to the output of
-\code{db_create_dsm_table()}.
 \item Adds national survey coverage rows for countries
 without any national survey coverage (e.g. ARG).
 \item Creates a \code{nac_data_level} column if gdp_data_level and pce_data_level

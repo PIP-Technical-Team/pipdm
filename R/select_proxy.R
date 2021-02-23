@@ -80,7 +80,7 @@ check_inputs_select_proxy <- function(svy_table, region_code) {
   }
 
   # Check region input
-  regions <- c('LAC', 'NAC', 'ECA', 'SSA', 'EAP', 'SAR', 'MNA')
+  regions <- c('LAC', 'NAC', 'ECA', 'SSA', 'EAP', 'SAR', 'MNA', 'OHI')
   if (!region_code %in% regions) {
     msg <- sprintf('`region_code` must be one of \'%s\'.',
                    paste(regions, collapse = "', '"))

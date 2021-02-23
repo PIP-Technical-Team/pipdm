@@ -61,7 +61,7 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
 
   # Select final columns
   # dt$reporting_year <- NULL
-  cols <- c('survey_id', 'region_code', 'country_code',
+  cols <- c('survey_id', 'wb_region_code', 'pcn_region_code', 'country_code',
             'reference_year',  'surveyid_year', 'survey_year',
             'survey_acronym', 'survey_coverage', 'survey_comparability',
             'welfare_type', 'survey_mean_ppp', 'predicted_mean_ppp',
