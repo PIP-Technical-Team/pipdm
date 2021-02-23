@@ -4,7 +4,7 @@
 \alias{db_create_lkup_table}
 \title{Create reference year look-up table}
 \usage{
-db_create_lkup_table(dt, nac_table, pop_table, ref_years)
+db_create_lkup_table(dt, nac_table, pop_table, ref_years, region_code)
 }
 \arguments{
 \item{dt}{data.table: A table with survey data. See details.}
@@ -15,6 +15,9 @@ db_create_lkup_table(dt, nac_table, pop_table, ref_years)
 \item{pop_table}{data.table: A table with population data.}
 
 \item{ref_years}{numeric: A vector with reference years.}
+
+\item{region_code}{character: A value with the region code column to use for
+calculating predicted means. Either 'pcn_region_code' or 'wb_region_code'.}
 }
 \value{
 data.table

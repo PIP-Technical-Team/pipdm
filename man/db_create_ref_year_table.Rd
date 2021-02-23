@@ -11,7 +11,8 @@ db_create_ref_year_table(
   pfw_table,
   dsm_table,
   ref_years,
-  pip_years
+  pip_years,
+  region_code = c("pcn_region_code", "wb_region_code")
 )
 }
 \arguments{
@@ -28,6 +29,9 @@ db_create_ref_year_table(
 \item{ref_years}{numeric: A vector with reference years.}
 
 \item{pip_years}{numeric: A vector with calender years used in PIP.}
+
+\item{region_code}{character: A value with the region code column to use for
+calculating predicted means. Either 'pcn_region_code' or 'wb_region_code'.}
 }
 \value{
 data.table

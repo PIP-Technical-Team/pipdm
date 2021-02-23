@@ -61,9 +61,9 @@ db_create_dsm_table <- function(lcu_table,
 
   # Select and order columns
   dt <- dt[, .SD, .SDcols =
-             c('survey_id', 'region_code', 'country_code', 'survey_acronym',
-               'survey_coverage', 'survey_comparability', 'surveyid_year',
-               'reporting_year', 'survey_year', 'welfare_type',
+             c('survey_id', 'wb_region_code', 'pcn_region_code', 'country_code',
+               'survey_acronym', 'survey_coverage', 'survey_comparability',
+               'surveyid_year', 'reporting_year', 'survey_year', 'welfare_type',
                'survey_mean_lcu', 'survey_mean_ppp', #'survey_pop',
                'reporting_pop', 'ppp', 'cpi', 'pop_data_level',
                'gdp_data_level', 'pce_data_level',

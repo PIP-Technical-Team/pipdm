@@ -32,10 +32,14 @@ if (getRversion() >= '2.15.1')
 #'
 #' @return data.table
 #' @keywords internal
-db_create_lkup_table <- function(dt, nac_table, pop_table, ref_years) {
+db_create_lkup_table <- function(dt, nac_table, pop_table,
+                                 ref_years, region_code) {
 
   # CHECK inputs
   check_inputs_db_class(dt)
+
+  # Add region_code column (based on argument input)
+  dt$region_code <- dt[, .SD, .SDcols = region_code]
 
   # Add reference year column
   dt <- dt %>% tidyr::expand_grid(reference_year = ref_years)

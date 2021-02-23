@@ -13,8 +13,7 @@ db_create_dist_table <- function(dl, survey_id, dsm_table) {
   # Checks
   assertthat::assert_that(
     length(dl) == length(survey_id),
-    msg = '`dl` and `survey_id` must be of equal lengths.' )
-
+    msg = '`dl` and `survey_id` must be of equal lengths.')
 
   # ---- Covert from list to data table ----
 
@@ -51,7 +50,8 @@ db_create_dist_table <- function(dl, survey_id, dsm_table) {
   # Select DSM columns
   dsm_table <-
     dsm_table[, .SD, .SDcols =
-                c('survey_id', 'country_code', 'surveyid_year', 'survey_year',
+                c('survey_id', 'wb_region_code', 'pcn_region_code',
+                  'country_code', 'surveyid_year', 'survey_year',
                   'reporting_year', 'survey_acronym', 'welfare_type',
                   'cpi', 'ppp')]
 
@@ -73,15 +73,14 @@ db_create_dist_table <- function(dl, survey_id, dsm_table) {
 
   # --- Finalize table ----
 
-
   # Order columns
   data.table::setcolorder(
     dt,
-    c('survey_id', 'country_code', 'survey_acronym',
-      'surveyid_year', 'survey_year', 'reporting_year',
-      'welfare_type', 'pop_data_level', 'survey_median_lcu',
+    c('survey_id', 'wb_region_code', 'pcn_region_code',
+      'country_code', 'survey_acronym', 'surveyid_year',
+      'survey_year', 'reporting_year', 'welfare_type',
+      'pop_data_level', 'survey_median_lcu',
       'survey_median_ppp'))
-
 
   # Sort rows
   data.table::setorder(dt, survey_id)
