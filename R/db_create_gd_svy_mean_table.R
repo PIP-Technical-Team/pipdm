@@ -50,7 +50,7 @@ db_create_gd_svy_mean_table <- function(pcn_master_path, pfw_table, inventory) {
 
   # Subset columns
   pfw_table <-
-    pfw_table[, c('region_code', 'country_code', 'welfare_type', 'surveyid_year',
+    pfw_table[, c('country_code', 'welfare_type', 'surveyid_year',
                   'survey_year', 'survey_acronym', 'inpovcal')]
 
   # Merge to add surveyid_year
