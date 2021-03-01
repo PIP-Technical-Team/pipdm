@@ -8,19 +8,34 @@
 #' @export
 db_compute_lorenz <- function(dt, gc = FALSE) {
 
-  dist_type <- unique(dt$distribution_type)
-  if (dist_type == 'micro') {
-    res <- md_compute_lorenz(
-      welfare = dt$welfare, weight = dt$weight
-    )
-  } else {
-    rlang::warn('Pre-calculation of Lorenz curves only implemented for microdata. Returning NULL.')
-    res <- NULL
-  }
+  tryCatch(
+
+    expr = {
+
+      dist_type <- unique(dt$distribution_type)
+      if (dist_type == 'micro') {
+        res <- md_compute_lorenz(
+          welfare = dt$welfare, weight = dt$weight
+        )
+      } else {
+        rlang::info('Pre-calculation of Lorenz curves only implemented for microdata. Returning NULL.')
+        res <- NULL
+      }
+
+      return(res)
+
+    }, # end of expr section
+
+    error = function(e) {
+
+      rlang::warn('Lorenz curve calculation failed. Returning NULL.')
+
+      return(NULL)
+
+    } # end of error
+  ) # End of trycatch
 
   # Garbage collection
   if (gc) gc(verbose = FALSE)
-
-  return(res)
 
 }
