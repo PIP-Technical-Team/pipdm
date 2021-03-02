@@ -19,8 +19,7 @@ if (getRversion() >= '2.15.1')
 #' @param dsm_table data.table: A table with deflated survey means.
 #' @param ref_years numeric: A vector with reference years.
 #' @param pip_years numeric: A vector with calender years used in PIP.
-#' @param region_code character: A value with the region code column to use for
-#'   calculating predicted means. Either 'pcn_region_code' or 'wb_region_code'.
+#' @param region_code character: A value with the region code column to use.
 #'
 #' @return data.table
 #' @export

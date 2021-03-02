@@ -16,8 +16,7 @@ db_create_lkup_table(dt, nac_table, pop_table, ref_years, region_code)
 
 \item{ref_years}{numeric: A vector with reference years.}
 
-\item{region_code}{character: A value with the region code column to use for
-calculating predicted means. Either 'pcn_region_code' or 'wb_region_code'.}
+\item{region_code}{character: A value with the region code column to use.}
 }
 \value{
 data.table

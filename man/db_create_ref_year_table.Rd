@@ -30,8 +30,7 @@ db_create_ref_year_table(
 
 \item{pip_years}{numeric: A vector with calender years used in PIP.}
 
-\item{region_code}{character: A value with the region code column to use for
-calculating predicted means. Either 'pcn_region_code' or 'wb_region_code'.}
+\item{region_code}{character: A value with the region code column to use.}
 }
 \value{
 data.table

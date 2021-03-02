@@ -2,47 +2,43 @@
 #'
 #' Create an aggregated population table by region.
 #'
-#' @param pop_table data.table: A table with population data.
-#' @param wb_meta data.table: A table with country metadata from WDI. See
-#'   details.
-#' @param pip_years numeric: A vector with calender years used in PIP.
-#'
-#' Use `wbstats::wb_countries()` to retrieve the `wb_meta` table.
+#' @inheritParams db_create_ref_year_table
+#' @param cl_table data.table: A table with country metadata.
 #'
 #' @return data.table
 #' @export
-db_create_reg_pop_table <- function(pop_table, wb_meta, pip_years) {
+db_create_reg_pop_table <- function(pop_table,
+                                    cl_table,
+                                    pip_years,
+                                    region_code =
+                                      c('pcn_region_code',
+                                        'region_code')) {
+
+  # Match argument
+  region_code <- match.arg(region_code)
 
   # Subselect columns
-  wb_meta <-
-    wb_meta[, c('iso3c', 'region', 'region_iso3c')]
+  cl_table$region_code_to_use <- cl_table[[region_code]]
+  cl_table <- cl_table[, c('country_code', 'region_code_to_use')]
 
   # Merge POP table w/ WDI meta (left join)
   dt <- data.table::merge.data.table(
-    pop_table, wb_meta, by.x = 'country_code',
-    by.y = 'iso3c', all.x = TRUE)
+    pop_table, cl_table, by = 'country_code',
+    all.x = TRUE)
 
-  # Remove territories with regional classification
+  # Remove territories without regional classification
   # i.e "ESH" "GLP" "GUF" "MTQ" "MYT" "REU"
-  dt <- dt[!is.na(region)]
-
-  # Add region_code column that matches PFW
-  dt$region_code <- dplyr::recode(
-    dt$region_iso3c,
-    LCN = 'LAC',
-    SSF = 'SSA',
-    ECS = 'ECA',
-    MEA = 'MNA',
-    EAS = 'EAP',
-    NAC = 'NAC'
-  )
+  dt <- dt[!is.na(region_code_to_use)]
 
   # Aggregate population by region
   dt <- dt[, .(pop = sum(pop)),
-           by = .(region_code, year)]
+           by = .(region_code_to_use, year)]
 
   # Subset to only include years used by PIP
   dt <- dt[dt$year %in% pip_years, ]
+
+  # Set colnames
+  data.table::setnames(dt, 'region_code_to_use', region_code)
 
   return(dt)
 
