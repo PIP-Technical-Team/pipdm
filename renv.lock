@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.0.3",
+    "Version": "4.0.2",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -67,10 +67,10 @@
     },
     "collapse": {
       "Package": "collapse",
-      "Version": "1.5.1",
+      "Version": "1.4.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "87a95b76874f64c9ab977405259bff84"
+      "Hash": "f25eebef9370980a7f581fe62b4a37f1"
     },
     "cpp11": {
       "Package": "cpp11",
