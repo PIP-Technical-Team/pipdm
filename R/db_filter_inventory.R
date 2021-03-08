@@ -96,6 +96,6 @@ db_filter_inventory <- function(dt, pfw_table) {
   ]
 
 
-  return(cr)
+  return(crr)
 
 }
