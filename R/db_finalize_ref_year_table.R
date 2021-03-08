@@ -53,11 +53,17 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
   dt$pce_data_level <- dt$nac_data_level
   dt$nac_data_level <- NULL
 
-
   # Add is_interpolated column
   dt$is_interpolated <- data.table::fifelse(
     dt$survey_year == dt$reference_year, FALSE, TRUE
   )
+
+  # Add is_used_for_aggregation column
+  # Temporary quick fix for is_used_for_aggregation column,
+  # see issue PIP-Technical-Team/TMP_pipeline#14
+  dt$is_used_for_aggregation <-
+    ifelse(dt$pop_data_level != 'national',
+           TRUE, FALSE)
 
   # Select final columns
   # dt$reporting_year <- NULL
@@ -67,7 +73,8 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
             'welfare_type', 'survey_mean_ppp', 'predicted_mean_ppp',
             'ppp', 'pop', 'gdp', 'pce', 'pop_data_level', 'gdp_data_level',
             'pce_data_level', 'cpi_data_level', 'ppp_data_level',
-            'distribution_type', 'gd_type', 'is_interpolated')
+            'distribution_type', 'gd_type', 'is_interpolated',
+            'is_used_for_aggregation')
   dt <- dt[, .SD, .SDcols = cols]
 
   # Rename variables

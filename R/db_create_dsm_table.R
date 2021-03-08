@@ -59,6 +59,13 @@ db_create_dsm_table <- function(lcu_table,
   # Add is_interpolated column
   dt$is_interpolated <- FALSE
 
+  # Add is_used_for_aggregation column
+  # Temporary quick fix for is_used_for_aggregation column,
+  # see issue PIP-Technical-Team/TMP_pipeline#14
+  dt$is_used_for_aggregation <-
+    ifelse(dt$pop_data_level != 'national',
+           TRUE, FALSE)
+
   # Select and order columns
   dt <- dt[, .SD, .SDcols =
              c('survey_id', 'wb_region_code', 'pcn_region_code', 'country_code',
@@ -69,7 +76,7 @@ db_create_dsm_table <- function(lcu_table,
                'gdp_data_level', 'pce_data_level',
                'cpi_data_level', 'ppp_data_level',
                'distribution_type', 'gd_type',
-               'is_interpolated')]
+               'is_interpolated', 'is_used_for_aggregation')]
 
   # Sort rows
   data.table::setorder(dt, survey_id)
