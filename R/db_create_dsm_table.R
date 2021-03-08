@@ -76,7 +76,7 @@ db_create_dsm_table <- function(lcu_table,
                'gdp_data_level', 'pce_data_level',
                'cpi_data_level', 'ppp_data_level',
                'distribution_type', 'gd_type',
-               'is_interpolated')]
+               'is_interpolated', 'is_used_for_aggregation')]
 
   # Sort rows
   data.table::setorder(dt, survey_id)
