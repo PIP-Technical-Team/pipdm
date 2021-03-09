@@ -22,7 +22,7 @@ db_filter_inventory <- function(dt, pfw_table) {
 
 
   # Get original names + "new_filename_
-  orig_names <- c(names(dt), "new_filename")
+  orig_names <- c(names(dt), "cache_id")
 
   dcols <- c("cpi_domain",
              "ppp_domain",
