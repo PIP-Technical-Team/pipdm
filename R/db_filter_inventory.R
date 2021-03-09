@@ -85,11 +85,12 @@ db_filter_inventory <- function(dt, pfw_table) {
               default = ""
             )
   ][,
-    new_filename := paste(country_code,
+    cache_id := paste(country_code,
                           surveyid_year,
                           survey_acronym,
                           paste0("D",max_domain),
                           wt,
+                          source,
                           sep = "_")
   ][,
     ..orig_names
