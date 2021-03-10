@@ -56,7 +56,8 @@ db_compute_survey_mean <- function(dt, gd_mean, gc = FALSE) {
 compute_survey_mean <- list(
   micro = function(dt, gd_mean) md_compute_survey_mean(dt, gd_mean),
   group = function(dt, gd_mean) gd_compute_survey_mean(dt, gd_mean),
-  aggregate = function(dt, gd_mean) gd_compute_survey_mean(dt, gd_mean)
+  aggregate = function(dt, gd_mean) gd_compute_survey_mean(dt, gd_mean),
+  imputed = function(dt, gd_mean) id_compute_survey_mean(dt, gd_mean)
 )
 
 #' md_compute_survey_mean
@@ -117,5 +118,59 @@ gd_compute_survey_mean <- function(dt, gd_mean) {
     ]
 
   return(dt)
+
+}
+
+#' id_compute_survey_mean
+#' @inheritParams db_compute_survey_mean
+#' @return data.table
+#' @noRd
+id_compute_survey_mean <- function(dt, gd_mean = NULL) {
+
+  # Slit by imputation id
+  dl <- split(dt, f = list(dt$imputation_id))
+
+  # Compute mean by group
+  dl_mean <- purrr::map(dl, function(dt) {
+
+    # Compute mean by data levels
+    dt[, .(survey_id = unique(survey_id),
+             country_code = unique(country_code),
+             surveyid_year = unique(surveyid_year),
+             survey_acronym = unique(survey_acronym),
+             survey_year = unique(survey_year),
+             welfare_type = unique(welfare_type),
+             distribution_type = unique(distribution_type),
+             gd_type = unique(gd_type),
+             survey_mean_lcu =
+               collapse::fmean(
+                 x = welfare, w = weight,
+                 na.rm = TRUE)),
+         by = .(cpi_data_level, ppp_data_level,
+                gdp_data_level, pce_data_level,
+                pop_data_level)
+      ]
+  })
+  dt <- data.table::rbindlist(dl_mean)
+
+  # Compute mean by data levels
+  dt <-
+    dt[, .(survey_id = unique(survey_id),
+         country_code = unique(country_code),
+         surveyid_year = unique(surveyid_year),
+         survey_acronym = unique(survey_acronym),
+         survey_year = unique(survey_year),
+         welfare_type = unique(welfare_type),
+         distribution_type = unique(distribution_type),
+         gd_type = unique(gd_type),
+         survey_mean_lcu =
+           collapse::fmean(survey_mean_lcu)),
+     by = .(cpi_data_level, ppp_data_level,
+            gdp_data_level, pce_data_level,
+            pop_data_level)
+  ]
+
+  return(dt)
+
 
 }
