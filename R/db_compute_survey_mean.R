@@ -8,7 +8,9 @@
 #'
 #' @return data.table
 #' @export
-db_compute_survey_mean <- function(dt, gd_mean, gc = FALSE) {
+db_compute_survey_mean <- function(dt,
+                                   gd_mean = NULL,
+                                   gc = FALSE) {
 
   tryCatch(
     expr = {
