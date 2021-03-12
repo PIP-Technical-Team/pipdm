@@ -76,9 +76,7 @@ compute_dist_stats <- function(dt, mean) {
     res <- list(rural = res_rural, urban = res_urban)
   }
   if (dist_type == 'imputed') {
-    # TBD
-    rlang::warn('Calculation for imputed distribution type not implemented yet. Returning NULL.' )
-    res <- NULL
+    res <- id_dist_stats(dt)
   }
 
   return(res)
@@ -114,3 +112,35 @@ gd_dist_stats <- function(dt, mean){
   names(res)[length(res)] <- 'quantiles'
   return(res)
 }
+
+#' id_dist_stats
+#' @inheritParams db_compute_dist_stats
+#' @return list
+#' @noRd
+id_dist_stats <- function(dt){
+
+  # Slit by imputation id
+  dl <- split(dt, f = list(dt$imputation_id))
+
+  # Compute stats by group
+  dl_stats <- purrr::map(dl, function(x) md_dist_stats(x, mean = NULL))
+
+  # Aggregate quantiles
+  q <- purrr::map(dl_stats, function(x) x$quantiles)
+  qm <- do.call('cbind', q)
+  quantiles <- rowMeans(qm)
+
+  # Aggregate the rest and
+  # combine to list
+  res <- list(
+    mean = mean(purrr::map_dbl(dl_stats, function(x) x$mean)),
+    median = mean(purrr::map_dbl(dl_stats, function(x) x$median)),
+    gini = mean(purrr::map_dbl(dl_stats, function(x) x$gini)),
+    polarization = mean(purrr::map_dbl(dl_stats, function(x) x$polarization)),
+    mld = mean(purrr::map_dbl(dl_stats, function(x) x$mld)),
+    quantiles = quantiles
+  )
+
+  return(res)
+}
+
