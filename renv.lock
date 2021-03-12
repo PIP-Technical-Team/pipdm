@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.0.2",
+    "Version": "4.0.4",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -60,17 +60,17 @@
     },
     "cli": {
       "Package": "cli",
-      "Version": "2.3.0",
+      "Version": "2.3.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "26fb4f0871c8e5b84d77f6dc22f2ee0a"
+      "Hash": "3e3f28efcadfda442cd18651fbcbbecf"
     },
     "collapse": {
       "Package": "collapse",
-      "Version": "1.4.2",
+      "Version": "1.5.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f25eebef9370980a7f581fe62b4a37f1"
+      "Hash": "355486db26369bf9570518051b569fa1"
     },
     "cpp11": {
       "Package": "cpp11",
@@ -95,10 +95,10 @@
     },
     "desc": {
       "Package": "desc",
-      "Version": "1.2.0",
+      "Version": "1.3.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "6c8fe8fa26a23b79949375d372c7b395"
+      "Hash": "b6963166f7f10b970af1006c462ce6cd"
     },
     "diffobj": {
       "Package": "diffobj",
@@ -116,10 +116,10 @@
     },
     "dplyr": {
       "Package": "dplyr",
-      "Version": "1.0.4",
+      "Version": "1.0.5",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "01c82e3b053eb7660a8ace8d932265b8"
+      "Hash": "d0d76c11ec807eb3f000eba4e3eb0f68"
     },
     "ellipsis": {
       "Package": "ellipsis",
@@ -221,10 +221,10 @@
     },
     "pillar": {
       "Package": "pillar",
-      "Version": "1.4.7",
+      "Version": "1.5.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "3b3dd89b2ee115a8b54e93a34cd546b4"
+      "Hash": "24622aa4a0d3de3463c34513edca99b2"
     },
     "pkgbuild": {
       "Package": "pkgbuild",
@@ -242,10 +242,10 @@
     },
     "pkgload": {
       "Package": "pkgload",
-      "Version": "1.1.0",
+      "Version": "1.2.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "b6b150cd4709e0c0c9b5d51ac4376282"
+      "Hash": "cb57de933545960a86f03513e4bd2911"
     },
     "praise": {
       "Package": "praise",
@@ -277,10 +277,10 @@
     },
     "ps": {
       "Package": "ps",
-      "Version": "1.5.0",
+      "Version": "1.6.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "ebaed51a03411fd5cfc1e12d9079b353"
+      "Hash": "32620e2001c1dce1af49c49dccbb9420"
     },
     "purrr": {
       "Package": "purrr",
@@ -312,10 +312,10 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "0.12.2",
+      "Version": "0.13.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "398cc1ea892e1aade66d1ecbb2874d24"
+      "Hash": "9f10d9db5b50400c348920c5c603385e"
     },
     "rlang": {
       "Package": "rlang",
@@ -368,10 +368,10 @@
     },
     "tibble": {
       "Package": "tibble",
-      "Version": "3.0.6",
+      "Version": "3.1.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "9c6c10e594f32096ede0c7d373ccbddd"
+      "Hash": "4d894a114dbd4ecafeda5074e7c538e6"
     },
     "tidyfast": {
       "Package": "tidyfast",
@@ -382,10 +382,10 @@
     },
     "tidyr": {
       "Package": "tidyr",
-      "Version": "1.1.2",
+      "Version": "1.1.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c40b2d5824d829190f4b825f4496dfae"
+      "Hash": "450d7dfaedde58e28586b854eeece4fa"
     },
     "tidyselect": {
       "Package": "tidyselect",
@@ -396,10 +396,10 @@
     },
     "tinytex": {
       "Package": "tinytex",
-      "Version": "0.29",
+      "Version": "0.30",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f0b0ba735febac9a8344253ae6fa93f5"
+      "Hash": "066f49a225dc3215cb1f32bc23535f88"
     },
     "utf8": {
       "Package": "utf8",
@@ -417,22 +417,22 @@
     },
     "waldo": {
       "Package": "waldo",
-      "Version": "0.2.4",
+      "Version": "0.2.5",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "29df52c781e572c967f90de9713423c4"
+      "Hash": "20c45f1d511a3f730b7b469f4d11e104"
     },
     "wbpip": {
       "Package": "wbpip",
       "Version": "0.0.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "PIP-Technical-Team",
       "RemoteRepo": "wbpip",
-      "RemoteRef": "master",
-      "RemoteSha": "cdaa416f6541f929b16a7a11ff58a3ac99db64aa",
-      "Hash": "7b10d9c6d025315636b74bdf04a35700"
+      "RemoteRef": "HEAD",
+      "RemoteSha": "01ad43eec3823d86aa87865c381bd883172b9d76",
+      "RemoteHost": "api.github.com",
+      "Hash": "a12865989ec03bc28200be8470c23244"
     },
     "withr": {
       "Package": "withr",
@@ -443,10 +443,10 @@
     },
     "xfun": {
       "Package": "xfun",
-      "Version": "0.21",
+      "Version": "0.22",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f3ddcca198959a42e8cb6b06c30d4f1e"
+      "Hash": "eab2f8ba53809c321813e72ecbbd19ba"
     },
     "yaml": {
       "Package": "yaml",
