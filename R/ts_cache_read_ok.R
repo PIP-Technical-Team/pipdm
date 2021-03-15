@@ -21,6 +21,9 @@ ts_cache_read_ok <- function() {
   inv[, status := df]
   inv[is.na(status), cache_id]
 
-  pushoverr::pushover("Finish testing loading")
+  if (requireNamespace("pushoverr", quietly = TRUE)) {
+    pushoverr::pushover("Finish testing loading")
+  }
 
 }
+
