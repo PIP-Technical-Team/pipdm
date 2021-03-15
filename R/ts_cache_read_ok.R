@@ -1,0 +1,26 @@
+ts_cache_read_ok <- function() {
+  inv_path  <- "//w1wbgencifs01/pip/PIP-Data/_testing/pip_ingestion_pipeline/pc_data/cache/alt_clean_survey_data/_crr_inventory/crr_inventory.fst"
+
+  inv <- fst::read_fst(inv_path, as.data.table = TRUE)
+  # inv <- inv[grepl("ARG.+201[7-9]", filename)]
+
+  cch <- inv$cache_file
+  status_fst <- function(x) {
+    fst::read_fst(x)
+    "good"
+  }
+
+
+  safe_fst <- purrr::possibly(.f = status_fst,
+                              otherwise = NA)
+
+  df <- purrr::map(.x = cch,
+                   .f = safe_fst
+  )
+  df <- unlist(df)
+  inv[, status := df]
+  inv[is.na(status), cache_id]
+
+  pushoverr::pushover("Finish testing loading")
+
+}
