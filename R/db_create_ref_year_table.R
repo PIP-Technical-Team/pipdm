@@ -19,6 +19,7 @@ if (getRversion() >= '2.15.1')
 #' @param dsm_table data.table: A table with deflated survey means.
 #' @param ref_years numeric: A vector with reference years.
 #' @param pip_years numeric: A vector with calender years used in PIP.
+#' @param region_code character: A value with the region code column to use.
 #'
 #' @return data.table
 #' @export
@@ -28,7 +29,10 @@ db_create_ref_year_table <- function(gdp_table,
                                      pfw_table,
                                      dsm_table,
                                      ref_years,
-                                     pip_years) {
+                                     pip_years,
+                                     region_code =
+                                       c('pcn_region_code',
+                                         'wb_region_code')) {
 
   # CHECKS
   check_inputs_ref_years(ref_years)
@@ -50,7 +54,7 @@ db_create_ref_year_table <- function(gdp_table,
 
   # Create reference year table
   dt_ref <-
-    db_create_lkup_table(dt_svy, dt_nac, pop_table, ref_years) %>% #
+    db_create_lkup_table(dt_svy, dt_nac, pop_table, ref_years, region_code) %>% #
     db_get_closest_surveys() %>% # Select closets surveys
     db_select_lineup_surveys() %>% # Select lineup surveys
     db_compute_predicted_means() %>% # Calculate predicted means
