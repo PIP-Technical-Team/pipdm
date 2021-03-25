@@ -38,9 +38,6 @@ db_create_ref_year_table <- function(gdp_table,
   check_inputs_ref_years(ref_years)
   check_inputs_pip_years(pip_years)
 
-  # Match argument
-  region_code <- match.arg(region_code)
-
   # Create Survey Anchor table
   svy_anchor <- db_create_svy_anchor(
     dsm_table = dsm_table, pfw_table = pfw_table)

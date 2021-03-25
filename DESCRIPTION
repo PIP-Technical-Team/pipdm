@@ -24,7 +24,8 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    pushoverr
 URL: https://github.com/PovcalNet-Team/pipdm
 BugReports: https://github.com/PovcalNet-Team/pipdm/issues
 Depends: 

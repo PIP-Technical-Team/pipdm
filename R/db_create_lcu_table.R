@@ -54,6 +54,9 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
     dt, pop_nested, all.x = TRUE,
     by = c('country_code', 'pop_data_level'))
 
+  dt[,
+     survey_year := as.numeric(survey_year)]
+
   # Adjust population values for surveys spanning two calender years
   dt$survey_pop <-
     purrr::map2_dbl(dt$survey_year, dt$data,
