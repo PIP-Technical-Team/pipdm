@@ -15,6 +15,8 @@ db_create_lkup_table(dt, nac_table, pop_table, ref_years, region_code)
 \item{pop_table}{data.table: A table with population data.}
 
 \item{ref_years}{numeric: A vector with reference years.}
+
+\item{region_code}{character: A value with the region code column to use.}
 }
 \value{
 data.table

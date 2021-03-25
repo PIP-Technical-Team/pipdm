@@ -17,6 +17,8 @@ db_create_reg_pop_table(
 \item{cl_table}{data.table: A table with country metadata.}
 
 \item{pip_years}{numeric: A vector with calender years used in PIP.}
+
+\item{region_code}{character: A value with the region code column to use.}
 }
 \value{
 data.table
