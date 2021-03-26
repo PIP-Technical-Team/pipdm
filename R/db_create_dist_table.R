@@ -26,6 +26,12 @@ db_create_dist_table <- function(dl,
 
   names(dl) <- cache_id
 
+  if (data.table::is.data.table(crr_inv)) {
+    crr_inv <- data.table::copy(crr_inv)
+  } else {
+    crr_inv <- data.table::as.data.table(crr_inv)
+  }
+
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #                   Treatment of quantiles   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,6 +102,12 @@ db_create_dist_table <- function(dl,
                          ) %>%
     data.table::as.data.table()
 
+  # Merge with corespondence inventory to get survey_id
+  df[crr_inv,
+     on = "cache_id",
+     survey_id := i.survey_id
+     ]
+
   # ---- Merge with DSM ----
 
   # Select DSM columns
@@ -108,19 +120,22 @@ db_create_dist_table <- function(dl,
 
   # Merge dist stats with DSM (left join)
   dt <- data.table::merge.data.table(
-    dt, dsm_table, all.x = TRUE,
+    df, dsm_table, all.x = TRUE,
     by = c('survey_id', 'pop_data_level'))
 
   # ---- Deflate median ----
 
   # survey_median_ppp = median / cpi / ppp
-  dt$survey_median_lcu <- dt$median
-  dt$median <- NULL
-  dt$survey_median_ppp <-
-    wbpip::deflate_welfare_mean(
-      welfare_mean = dt$survey_median_lcu, ppp = dt$ppp, cpi = dt$cpi)
-  dt$cpi <- NULL
-  dt$ppp <- NULL
+  dt[,
+     survey_median_ppp := wbpip::deflate_welfare_mean(
+       welfare_mean = survey_median_lcu,
+       ppp          = ppp,
+       cpi          = cpi)
+     ][,
+       c("cpi", "ppp") := NULL
+       ]
+
+  data.table::setnames(dt, "median", "survey_median_lcu")
 
   # --- Finalize table ----
 
@@ -134,7 +149,7 @@ db_create_dist_table <- function(dl,
       'survey_median_ppp'))
 
   # Sort rows
-  data.table::setorder(dt, survey_id)
+  data.table::setorder(dt, cache_id)
 
   return(dt)
 }
