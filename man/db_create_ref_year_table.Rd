@@ -39,7 +39,7 @@ data.table
 Create a table with adjusted welfare means for each reference year.
 }
 \details{
-\code{db_create_ref_year_table()} creates a table for with interpolated or
+\code{db_create_ref_year_table()} creates a table with interpolated or
 extrapolated welfare means for all specified reference years based on the
 provided survey, GDP and PCE data.
 }

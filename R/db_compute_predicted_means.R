@@ -32,7 +32,7 @@ db_compute_predicted_means <- function(dt) {
       )
   }
 
-  # Calculate predicted request means
+  # Calculate predicted means
   out <- purrr::map2(means, proxy, compute_predicted_mean)
 
   # Add predicted means to the survey data tables
