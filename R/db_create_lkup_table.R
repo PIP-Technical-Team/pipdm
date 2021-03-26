@@ -49,6 +49,8 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
     base::transform(
       region_code_index = region_code,
       country_code_index = country_code,
+      # welfare_type_index = welfare_type,
+      survey_coverage_index = survey_coverage,
       nac_data_level_index = nac_data_level,
       pop_data_level_index = pop_data_level,
       ppp_data_level_index = ppp_data_level,
@@ -72,6 +74,8 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
   # Order column
   data.table::setcolorder(
     dt, c('country_code_index', 'reference_year_index',
+          # 'welfare_type_index',
+          'survey_coverage_index',
           'nac_data_level_index', 'pop_data_level_index',
           'cpi_data_level_index', 'ppp_data_level_index'))
 
@@ -84,6 +88,8 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
       pop_data_level_index,
       ppp_data_level_index,
       cpi_data_level_index,
+      # welfare_type_index,
+      survey_coverage_index,
       reference_year_index,
       gdp, pce, pop,
       .key = 'data')
