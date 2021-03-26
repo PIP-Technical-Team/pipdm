@@ -4,10 +4,7 @@
 \alias{ts_cache_read_ok}
 \title{Check that all cache files load correctly}
 \usage{
-ts_cache_read_ok(
- 
-    inv_path = "//w1wbgencifs01/pip/PIP-Data/_testing/pip_ingestion_pipeline/pc_data/cache/alt_clean_survey_data/_crr_inventory/crr_inventory.fst"
-)
+ts_cache_read_ok(inv_path)
 }
 \arguments{
 \item{inv_path}{character: directory path where cache files are stores}

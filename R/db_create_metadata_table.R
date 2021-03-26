@@ -32,7 +32,7 @@ db_create_metadata_table <- function(pfw_table, lcu_table) {
 
   # Order columns
   dt %>% data.table::setcolorder(
-    c('survey_id', 'wb_region_code', 'pcn_region_code',
+    c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
       'country_code', 'survey_acronym', 'survey_coverage',
       'surveyid_year', 'reporting_year', 'survey_year',
       'welfare_type'))

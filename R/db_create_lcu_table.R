@@ -80,7 +80,7 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
 
   # Order columns
   data.table::setcolorder(
-    dt, c('survey_id', 'country_code', 'surveyid_year', 'survey_acronym',
+    dt, c('survey_id', 'cache_id', 'country_code', 'surveyid_year', 'survey_acronym',
           'survey_year', 'welfare_type', 'survey_mean_lcu', 'survey_pop',
           'reporting_pop'))
 

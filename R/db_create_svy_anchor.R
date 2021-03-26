@@ -54,10 +54,10 @@ db_create_svy_anchor <- function(dsm_table, pfw_table) {
 
   # Order columns
   data.table::setcolorder(
-    dt, c('survey_id', 'wb_region_code', 'pcn_region_code',
+    dt, c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
           'country_code', 'surveyid_year', 'survey_acronym',
           'survey_coverage', 'survey_year', 'welfare_type',
-          'survey_mean_ppp')) #'survey_pop'
+          'survey_mean_ppp'))
 
   return(dt)
 

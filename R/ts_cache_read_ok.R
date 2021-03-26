@@ -4,10 +4,7 @@
 #'
 #' @return data.table
 #' @export
-#'
-#' @examples
-ts_cache_read_ok <- function(inv_path = "//w1wbgencifs01/pip/PIP-Data/_testing/pip_ingestion_pipeline/pc_data/cache/alt_clean_survey_data/_crr_inventory/crr_inventory.fst"
-                             ) {
+ts_cache_read_ok <- function(inv_path) {
 
   inv <- fst::read_fst(inv_path, as.data.table = TRUE)
   # inv <- inv[grepl("ARG.+201[7-9]", filename)]

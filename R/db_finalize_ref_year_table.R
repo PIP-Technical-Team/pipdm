@@ -19,8 +19,25 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
   # CHECK inputs
   check_inputs_db_class(dt)
 
-  # Unnest 'req_items'
+  # nrows in 'req_items'
+  n <- purrr::map_int(dt$req_items, nrow)
+
+  # Add estimation type column
+  dt$estimation_type <-
+    data.table::fifelse(
+      n == 1,
+      'extrapolation',
+      'interpolation')
+
+    # Unnest 'req_items'
   dt <- tidyfast::dt_unnest(dt, req_items)
+
+  # Add survey as category to estimation_type
+  dt$estimation_type <-
+    data.table::fifelse(
+      dt$survey_year == dt$reference_year,
+      'survey',
+      dt$estimation_type)
 
   # Check for countries without any national surveys
   cc <- check_no_national_survey(pfw_table)
@@ -66,15 +83,14 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
            TRUE, FALSE)
 
   # Select final columns
-  # dt$reporting_year <- NULL
-  cols <- c('survey_id', 'wb_region_code', 'pcn_region_code', 'country_code',
+  cols <- c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code', 'country_code',
             'reference_year',  'surveyid_year', 'survey_year',
             'survey_acronym', 'survey_coverage', 'survey_comparability',
             'welfare_type', 'survey_mean_ppp', 'predicted_mean_ppp',
             'ppp', 'pop', 'gdp', 'pce', 'pop_data_level', 'gdp_data_level',
             'pce_data_level', 'cpi_data_level', 'ppp_data_level',
             'distribution_type', 'gd_type', 'is_interpolated',
-            'is_used_for_aggregation')
+            'is_used_for_aggregation', 'estimation_type')
   dt <- dt[, .SD, .SDcols = cols]
 
   # Rename variables

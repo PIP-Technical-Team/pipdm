@@ -8,7 +8,7 @@ if (getRversion() >= '2.15.1')
 #'
 #' Create a table with adjusted welfare means for each reference year.
 #'
-#' `db_create_ref_year_table()` creates a table for with interpolated or
+#' `db_create_ref_year_table()` creates a table with interpolated or
 #' extrapolated welfare means for all specified reference years based on the
 #' provided survey, GDP and PCE data.
 #'

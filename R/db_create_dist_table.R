@@ -50,15 +50,15 @@ db_create_dist_table <- function(dl, survey_id, dsm_table) {
   # Select DSM columns
   dsm_table <-
     dsm_table[, .SD, .SDcols =
-                c('survey_id', 'wb_region_code', 'pcn_region_code',
+                c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
                   'country_code', 'surveyid_year', 'survey_year',
                   'reporting_year', 'survey_acronym', 'welfare_type',
-                  'cpi', 'ppp')]
+                  'cpi', 'ppp', 'pop_data_level')]
 
-  # Merge survey table with CPI (left join)
+  # Merge dist stats with DSM (left join)
   dt <- data.table::merge.data.table(
     dt, dsm_table, all.x = TRUE,
-    by = 'survey_id')
+    by = c('survey_id', 'pop_data_level'))
 
   # ---- Deflate median ----
 
@@ -76,7 +76,7 @@ db_create_dist_table <- function(dl, survey_id, dsm_table) {
   # Order columns
   data.table::setcolorder(
     dt,
-    c('survey_id', 'wb_region_code', 'pcn_region_code',
+    c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
       'country_code', 'survey_acronym', 'surveyid_year',
       'survey_year', 'reporting_year', 'welfare_type',
       'pop_data_level', 'survey_median_lcu',
