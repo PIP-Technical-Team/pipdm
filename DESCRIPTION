@@ -43,5 +43,6 @@ Imports:
     utils,
     collapse,
     readxl,
-    cli
+    cli,
+    tibble
 VignetteBuilder: knitr
