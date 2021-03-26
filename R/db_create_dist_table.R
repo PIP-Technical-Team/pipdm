@@ -97,20 +97,29 @@ db_create_dist_table <- function(dl,
     # unnest the quantile tible so that I have only a tiblle wit no lists
     tidyr::unnest(diststats)
 
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  #           Merges and clean data   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## merge quantiles with other dist stats --------
   df <- dplyr::full_join(qt, ds,
                          by = c("cache_id", "pop_data_level")
                          ) %>%
     data.table::as.data.table()
 
-  # Merge with corespondence inventory to get survey_id
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## Merge with corespondence inventory to get survey_id --------
+
   df[crr_inv,
      on = "cache_id",
      survey_id := i.survey_id
      ]
 
-  # ---- Merge with DSM ----
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ##           Merge with DSM --------
 
-  # Select DSM columns
   dsm_table <-
     dsm_table[, .SD, .SDcols =
                 c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
@@ -123,9 +132,7 @@ db_create_dist_table <- function(dl,
     df, dsm_table, all.x = TRUE,
     by = c('survey_id', 'pop_data_level'))
 
-  # ---- Deflate median ----
-
-  # survey_median_ppp = median / cpi / ppp
+  ## ---- Deflate median ----
   dt[,
      survey_median_ppp := wbpip::deflate_welfare_mean(
        welfare_mean = survey_median_lcu,
@@ -137,7 +144,7 @@ db_create_dist_table <- function(dl,
 
   data.table::setnames(dt, "median", "survey_median_lcu")
 
-  # --- Finalize table ----
+  ## --- Finalize table ----
 
   # Order columns
   data.table::setcolorder(
