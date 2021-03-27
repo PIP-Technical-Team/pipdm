@@ -3,14 +3,12 @@
 #' Create a table with distributional statistics, including a deflated median.
 #'
 #' @param dl list: A list with distributional statistics datasets.
-#' @param cache_id character: A vector with cache  ids.
 #' @param crr_inv data frame with correspondence inventory
 #' @inheritParams db_create_ref_year_table
 #'
 #' @return data.table
 #' @export
 db_create_dist_table <- function(dl,
-                                 cache_id,
                                  dsm_table,
                                  crr_inv) {
 
@@ -20,8 +18,10 @@ db_create_dist_table <- function(dl,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   # Checks
+  cache_id <- crr_inv$cache_id
+
   assertthat::assert_that(
-    length(dl) == length(survey_id),
+    length(dl) == length(cache_id),
     msg = '`dl` and `survey_id` must be of equal lengths.')
 
   names(dl) <- cache_id
