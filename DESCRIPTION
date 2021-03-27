@@ -10,7 +10,7 @@ Authors@R:
             family = "Eilertsen",
             role = "aut",
             email = "aeilertsen@worldbank.org"),
-     person(given = "R. Andrés",
+     person(given = "R.Andrés",
             family = "Castañeda",
             role = "aut",
             email = "acastanedaa@worldbank.org"))
@@ -44,5 +44,6 @@ Imports:
     collapse,
     readxl,
     cli,
-    tibble
+    tibble,
+    joyn
 VignetteBuilder: knitr
