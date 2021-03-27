@@ -133,6 +133,8 @@ db_create_dist_table <- function(dl,
     by = c('survey_id', 'pop_data_level'))
 
   ## ---- Deflate median ----
+  data.table::setnames(dt, "median", "survey_median_lcu")
+
   dt[,
      survey_median_ppp := wbpip::deflate_welfare_mean(
        welfare_mean = survey_median_lcu,
@@ -142,7 +144,6 @@ db_create_dist_table <- function(dl,
        c("cpi", "ppp") := NULL
        ]
 
-  data.table::setnames(dt, "median", "survey_median_lcu")
 
   ## --- Finalize table ----
 
