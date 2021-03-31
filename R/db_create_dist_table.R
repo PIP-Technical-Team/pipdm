@@ -109,7 +109,8 @@ db_create_dist_table <- function(dl,
                     match_type = "1:1")
 
   if (nrow(df[report != "x & y"]) > 0) {
-    msg     <- "quantiles and othes-dist-stats tables should have the very same observations"
+    msg     <- "quantiles and othes-dist-stats tables should have the
+    very same observations"
     hint    <- "There is something wrong with the code above"
     rlang::abort(c(
       msg,
@@ -164,7 +165,8 @@ db_create_dist_table <- function(dl,
     cli::cli_rule(right = "end")
 
     msg     <- "We should no have surveys without deflated means"
-    hint    <- "Check calculation of means in `db_create_dsm_table` or `db_create_lcu_table`"
+    hint    <- "Check calculation of means in `db_create_dsm_table` or
+    `db_create_lcu_table`"
 
     rlang::abort(c(
       msg,
