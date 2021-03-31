@@ -32,17 +32,34 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
     pfw_table[, c('wb_region_code', 'pcn_region_code',
                   'country_code', 'survey_coverage',
                   'surveyid_year', 'survey_acronym',
-                  'reporting_year',
+                  'reporting_year',"welfare_type",
                   'survey_comparability')]
 
   # Merge LCU table with PFW (left join)
   dt <- joyn::merge(dt, pfw_table,
-                    by         = c("country_code", "surveyid_year", "survey_acronym"),
-                    match_type = "m:1",
-                    keep       = "left",
-                    reportvar  = FALSE)
+                    by         = c("country_code",
+                                   "surveyid_year",
+                                   "survey_acronym",
+                                   "welfare_type"),
+                    match_type = "m:1")
+
+  if (nrow(dt[report == "x"]) > 0 ) {
+    msg     <- "We should not have NOT matching observations from survey-mean tables"
+    hint    <- "Make sure PFW table is up to date"
+    rlang::abort(c(
+                  msg,
+                  i = hint,
+                  i = "Make sure .dta data is up to date by running pipdp"
+                  ),
+                  class = "pipdm_error"
+                  )
+
+  }
+
+  dt <- dt[report != "y"  # THis requires explanation
+           ][, report := NULL]
   # NOTE AE: We have 21 obs in pfw that do not have surveyid. should we remove
-  # them from the table?
+  # them from the table? Also, why is this m:1? because of the welfare type in dt?
 
 
   #--------- Merge with POP ---------
@@ -53,9 +70,26 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
     tidyfast::dt_nest(country_code, pop_data_level, .key = 'data')
 
   # Merge dt with pop_nested (add survey_pop)
-  dt <- data.table::merge.data.table(
-    dt, pop_nested, all.x = TRUE,
-    by = c('country_code', 'pop_data_level'))
+  dt <- joyn::merge(dt, pop_nested,
+                    by = c("country_code", "pop_data_level"),
+                    match_type = "m:1")
+
+  if (nrow(dt[report == "x"]) > 0 ) {
+    msg     <- "We should not have NOT matching observations from survey-mean tables"
+    hint    <- "Make sure POP data includes all the countries and pop data levels"
+    rlang::abort(c(
+      msg,
+      i = hint
+    ),
+    class = "pipdm_error"
+    )
+
+  }
+  dt <- dt[report != "y"  # THis requires explanation
+           ][, report := NULL]
+  # NOTE AE: We have 470 obs in pop with no info. Is this ok? Also, why is this
+  # m:1? because of the welfare type in dt?
+
 
   dt[,
      survey_year := as.numeric(survey_year)]
@@ -69,10 +103,27 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
   dt$data <- NULL
 
   # Merge with pop_table (add reporting_pop)
-  dt <- data.table::merge.data.table(
-    dt, pop_table, all.x = TRUE,
-    by.x = c('country_code', 'reporting_year', 'pop_data_level'),
-    by.y = c('country_code', 'year', 'pop_data_level'))
+  dt <- joyn::merge(dt, pop_table,
+                    by         = c("country_code",
+                                   "reporting_year = year",
+                                   "pop_data_level"),
+                    match_type = "m:1")
+
+  if (nrow(dt[report == "x"]) > 0 ) {
+    msg     <- "We should not have NOT matching observations from survey-mean tables"
+    hint    <- "Make sure POP data includes all the countries and pop data levels"
+    rlang::abort(c(
+      msg,
+      i = hint
+    ),
+    class = "pipdm_error"
+    )
+
+  }
+  dt <- dt[report != "y"  # All country/years for which we don't have data... its ox.
+  ][, report := NULL]
+
+
   data.table::setnames(dt, 'pop', 'reporting_pop')
 
 
