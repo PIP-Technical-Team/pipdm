@@ -43,7 +43,7 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
                     match_type = "m:1")
 
   if (nrow(dt[report == "x"]) > 0 ) {
-    msg     <- "We should not have NOT matching observations from survey-mean tables"
+    msg     <- "We should not have NOT-matching observations from survey-mean tables"
     hint    <- "Make sure PFW table is up to date"
     rlang::abort(c(
                   msg,
@@ -74,7 +74,7 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
                     match_type = "m:1")
 
   if (nrow(dt[report == "x"]) > 0 ) {
-    msg     <- "We should not have NOT matching observations from survey-mean tables"
+    msg     <- "We should not have NOT-matching observations from survey-mean tables"
     hint    <- "Make sure POP data includes all the countries and pop data levels"
     rlang::abort(c(
       msg,
@@ -109,7 +109,7 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
                     match_type = "m:1")
 
   if (nrow(dt[report == "x"]) > 0 ) {
-    msg     <- "We should not have NOT matching observations from survey-mean tables"
+    msg     <- "We should not have NOT-matching observations from survey-mean tables"
     hint    <- "Make sure POP data includes all the countries and pop data levels"
     rlang::abort(c(
       msg,

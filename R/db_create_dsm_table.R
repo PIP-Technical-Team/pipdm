@@ -26,10 +26,27 @@ db_create_dsm_table <- function(lcu_table,
                   'cpi_data_level', 'cpi')]
 
   # Merge survey table with CPI (left join)
-  dt <- data.table::merge.data.table(
-    lcu_table, cpi_table, all.x = TRUE,
-    by = c('country_code', 'survey_year', 'survey_acronym', 'cpi_data_level')
-  )
+  dt <- joyn::merge(lcu_table, cpi_table,
+                    by = c("country_code", "survey_year",
+                           "survey_acronym", "cpi_data_level"),
+                    match_type = "m:1")
+
+  if (nrow(dt[report == "x"]) > 0 ) {
+    msg     <- "We should not have NOT-matching observations from survey-mean tables"
+    hint    <- "Make sure CPI table is up to date"
+    rlang::abort(c(
+      msg,
+      i = hint
+    ),
+    class = "pipdm_error"
+    )
+
+  }
+
+  dt <- dt[report != "y"  # This is unnecessary data in cpi table... should we have it?
+  ][, report := NULL]
+  # NOTE AE: I just asked Minh about why we have some obs in CPI that we don't use.
+
 
   #--------- Merge with PPP ---------
 
@@ -42,10 +59,57 @@ db_create_dsm_table <- function(lcu_table,
                 c('country_code', 'ppp_data_level', 'ppp')]
 
   # Merge survey table with PPP (left join)
-  dt <- data.table::merge.data.table(
-    dt, ppp_table, all.x = TRUE,
-    by = c('country_code', 'ppp_data_level')
-  )
+  jn <- joyn::merge(dt, ppp_table,
+                    by = c("country_code", "ppp_data_level"),
+                    match_type = "m:1")
+
+  if (nrow(jn[report == "x"]) > 0 ) {
+    msg     <- "We should not have NOT-matching observations from survey-mean tables"
+    hint    <- "Make sure PPP table is up to date"
+    rlang::abort(c(
+      msg,
+      i = hint
+    ),
+    class = "pipdm_error"
+    )
+
+  }
+
+  # Only CHN, IND and IDN could be left behind for national ppp_data_level
+  cdt  <- dt[, unique(country_code)]
+  cppp <- jn[report == "y", unique(country_code)]
+
+  if (!identical(c("CHN", "IDN", "IND"), intersect(cdt, cppp))) {
+
+    miss <- setdiff(intersect(cdt, cppp), c("CHN", "IDN", "IND"))
+    extr <- setdiff(c("CHN", "IDN", "IND"), intersect(cdt, cppp))
+
+    if (length(miss) > 0) {
+
+      cli::cli_alert_danger("{.field {miss}} should be present in 'right'
+                            observations of joining table.", wrap = TRUE)
+
+    }
+
+    if (length(extr) > 0) {
+
+      cli::cli_alert_danger("{.field {extr}} should be present in 'inner'
+                            observations of joining table.", wrap = TRUE)
+
+      msg     <- "missing countries in resulting table."
+      hint    <- "All countries in survey-mean should have a corresponding PPP value"
+      rlang::abort(c(
+        msg,
+        i = hint
+      ),
+      class = "pipdm_error"
+      )
+    }
+  }
+
+
+  dt <- jn[report != "y"  # Countries in PPP table for which we don't have data
+  ][, report := NULL]
 
   #--------- Deflate welfare mean ---------
 
