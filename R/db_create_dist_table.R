@@ -130,10 +130,7 @@ db_create_dist_table <- function(dl,
   # Merge dist stats with DSM (left join)
   dt <- joyn::merge(df, dsm_table,
                     by            = c("cache_id", "pop_data_level"),
-                    join_type     = "1:1",
-                    update_values = FALSE,
-                    reportvar     = NULL,
-                    verbose       = FALSE,
+                    match_type     = "1:1",
                     keep          = "left") # I am not sure this is OK.
 
   ## ---- Deflate median ----
