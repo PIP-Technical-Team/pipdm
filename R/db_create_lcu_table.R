@@ -36,10 +36,13 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
                   'survey_comparability')]
 
   # Merge LCU table with PFW (left join)
-  dt <- data.table::merge.data.table(
-    dt, pfw_table, all.x = TRUE,
-    by = c('country_code', 'surveyid_year',
-           'survey_acronym'))
+  dt <- joyn::merge(dt, pfw_table,
+                    by         = c("country_code", "surveyid_year", "survey_acronym"),
+                    match_type = "m:1",
+                    keep       = "left",
+                    reportvar  = FALSE)
+  # NOTE AE: We have 21 obs in pfw that do not have surveyid. should we remove
+  # them from the table?
 
 
   #--------- Merge with POP ---------
