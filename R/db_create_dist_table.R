@@ -81,7 +81,7 @@ db_create_dist_table <- function(dl,
     # Extract quantiles list
     purrr::map(`[`, dsnames) %>%
     # create a list with several tibbles for the deciles
-    purrr::map(as_tibble)
+    purrr::map(tibble::as_tibble)
 
 
   ds <-
