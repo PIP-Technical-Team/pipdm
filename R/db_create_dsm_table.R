@@ -46,6 +46,8 @@ db_create_dsm_table <- function(lcu_table,
   dt <- dt[report != "y"  # This is unnecessary data in cpi table... should we have it?
   ][, report := NULL]
   # NOTE AE: I just asked Minh about why we have some obs in CPI that we don't use.
+  # NOTE AC: Yes, I saw the email thread. So that should be okay. In general my understanding is that there will be 
+  # some discrepancies between PFW, CPI and DLW. 
 
 
   #--------- Merge with PPP ---------
@@ -76,6 +78,10 @@ db_create_dsm_table <- function(lcu_table,
   }
 
   # Only CHN, IND and IDN could be left behind for national ppp_data_level
+  # Note AC: Not sure why we would need to hardcode CHN, IDN, IND here. 
+  # This should preferrably be handlded "automatically" by the data level columns.  
+  # If we want this to be a validation check than I think it should be in the 
+  # validation repo.   
   cdt  <- dt[, unique(country_code)]
   cppp <- jn[report == "y", unique(country_code)]
 

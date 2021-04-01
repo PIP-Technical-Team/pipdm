@@ -151,6 +151,7 @@ db_create_dist_table <- function(dl,
   if (nrow(dy) > 0) {
     # NOTE AE: should this be an error to abort or just to notify? I made it to
     # notify
+    # NOTE AC: Sorry I don't understand what this code catches. 
     cli::cli_rule(left = "error on dist stats in the following")
     cli::cli_ul(dy)
     cli::cli_rule(right = "end")
@@ -159,6 +160,10 @@ db_create_dist_table <- function(dl,
   if (nrow(dx) > 0) {
     # NOTE AE: should this be an error to abort or just to notify? I made it
     # to abort
+    # NOTE AC: The column survey_mean_ppp should not a part of the dist stat table, 
+    # so that's not really an issue. But if you mean survey_median_lcu, then yes you are 
+    # right. All observations should have a non-missing median. In that case the problem
+    # would lie in db_compute_dist_stats() or in the underlying wbpip functions. 
 
     cli::cli_rule(left = "error on deflated means in the following")
     cli::cli_ul(dx)

@@ -59,7 +59,18 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
            ][, report := NULL]
   # NOTE AE: We have 21 obs in pfw that do not have surveyid. should we remove
   # them from the table? Also, why is this m:1? because of the welfare type in dt?
-
+  # 
+  # Note AC: There are some surveys in PFW that are not in the PIP-folder because 
+  # they haven't been dowloaded. I know that some US surveys haven't been 
+  # downloaded because I don't have access to the files in DLW. Additionally 
+  # there were some cases of surveys that were added to PFW, but are not relevant 
+  # for this update (i.e they are not in DLW yet).
+  #
+  # Regarding welfare_type: If I remember correctly I decided to just merge on
+  # Country, Acronym and Year because of cases like PHL. This should be sufficent 
+  # since other cases that have mulitiple welfare types for the same year aslo
+  # have different survey acronyms (e.g POL). But the whole handling of multiple
+  # welfare types in the same survey is probably something we could discuss.    
 
   #--------- Merge with POP ---------
 
@@ -88,7 +99,10 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
            ][, report := NULL]
   # NOTE AE: We have 470 obs in pop with no info. Is this ok? Also, why is this
   # m:1? because of the welfare type in dt?
-
+  #
+  # NOTE AC: If we are missing population information in the final output data,
+  # then yes that is a problem. But there will probably be more datapoints in 
+  # the population table then in the survey data. 
 
   dt[,
      survey_year := as.numeric(survey_year)]
