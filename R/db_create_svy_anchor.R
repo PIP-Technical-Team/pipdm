@@ -37,12 +37,27 @@ db_create_svy_anchor <- function(dsm_table, pfw_table) {
                 'reporting_year')]
 
   # # Merge DSM table with PFW (left join)
-  dt <- data.table::merge.data.table(
-    dsm_table, pfw_table, all.x = TRUE,
-    by = c('country_code', 'surveyid_year',
-           'survey_acronym', 'survey_coverage',
-           'reporting_year', 'wb_region_code',
-           'pcn_region_code'))
+  dt <- joyn::merge(dsm_table, pfw_table,
+                    by = c("country_code", "surveyid_year",
+                           "survey_acronym", "survey_coverage", "reporting_year",
+                           "wb_region_code", "pcn_region_code"),
+                    match_type = "m:1")
+
+  if (nrow(dt[report == "x"]) > 0 ) {
+    msg     <- "We should not have NOT-matching observations from survey-mean table"
+    hint    <- "Make sure survey IDs are correct"
+    rlang::abort(c(
+      msg,
+      i = hint
+    ),
+    class = "pipdm_error"
+    )
+
+  }
+
+  dt <- dt[report != "y"  # This is unnecessary data in PFW table... should we have it?
+          ][, report := NULL]
+
 
   if (identical(dt$gdp_data_level, dt$pce_data_level)) {
     dt$nac_data_level <- dt$gdp_data_level
