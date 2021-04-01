@@ -17,15 +17,17 @@ db_create_nac_table <- function(gdp_table, pce_table, pip_years){
   names(gdp_table) <- sub('^gdp[_]', 'nac_', names(gdp_table))
 
   # Merge GDP and PCE by country, year, data_level and domain (full join)
-  dt <- data.table::merge.data.table(
-    gdp_table, pce_table, all = TRUE,
-    by = c('country_code', 'year', 'nac_data_level', 'nac_domain'))
+  dt <- joyn::merge(gdp_table, pce_table,
+                    by = c("country_code", "year", "nac_data_level",
+                           "nac_domain"),
+                    match_type = "1:1",
+                    reportvar = FALSE)
 
   # Remove domain column
   dt$nac_domain <- NULL
 
   # Subset to only include years used by PIP
-  dt <- dt[dt$year %in% pip_years, ]
+  dt <- dt[year %in% pip_years]
 
   return(dt)
 }
