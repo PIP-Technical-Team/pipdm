@@ -26,9 +26,11 @@ db_merge_anchor_nac <- function(svy_anchor, nac_table){
     tidyfast::dt_nest(country_code, nac_data_level, .key = 'data')
 
   # Merge svy_anchor with nac_nested (left join)
-  dt <- data.table::merge.data.table(
-    svy_anchor, nac_nested, all.x = TRUE,
-    by = c('country_code', 'nac_data_level'))
+  dt <- joyn::merge(svy_anchor, nac_nested,
+                    by = c("country_code", "nac_data_level"),
+                    match_type = "m:1",
+                    keep = "left",
+                    reportvar = FALSE)
 
   # Adjust GDP and PCE values for surveys spanning two calender years
   dt$survey_gdp <- purrr::map2_dbl(dt$survey_year, dt$data,

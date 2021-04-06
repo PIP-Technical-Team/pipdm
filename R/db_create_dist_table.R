@@ -104,10 +104,23 @@ db_create_dist_table <- function(dl,
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ## merge quantiles with other dist stats --------
-  df <- dplyr::full_join(qt, ds,
-                         by = c("cache_id", "pop_data_level")
-                         ) %>%
-    data.table::as.data.table()
+  df <- joyn::merge(qt, ds,
+                    by = c("cache_id", "pop_data_level"),
+                    match_type = "1:1")
+
+  if (nrow(df[report != "x & y"]) > 0) {
+    msg     <- "quantiles and othes-dist-stats tables should have the
+    very same observations"
+    hint    <- "There is something wrong with the code above"
+    rlang::abort(c(
+      msg,
+      i = hint
+    ),
+    class = "pipdm_error"
+    )
+
+  }
+
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ## Merge with corespondence inventory to get survey_id --------
@@ -130,11 +143,47 @@ db_create_dist_table <- function(dl,
   # Merge dist stats with DSM (left join)
   dt <- joyn::merge(df, dsm_table,
                     by            = c("cache_id", "pop_data_level"),
-                    join_type     = "1:1",
-                    update_values = FALSE,
-                    reportvar     = NULL,
-                    verbose       = FALSE,
-                    keep          = "left") # I am not sure this is OK.
+                    match_type     = "1:1")
+
+  dy <- dt[report == "y", cache_id]
+  dx <- dt[report == "x", cache_id]
+
+  if (nrow(dy) > 0) {
+    # NOTE AE: should this be an error to abort or just to notify? I made it to
+    # notify
+    # NOTE AC: Sorry I don't understand what this code catches. 
+    cli::cli_rule(left = "error on dist stats in the following")
+    cli::cli_ul(dy)
+    cli::cli_rule(right = "end")
+  }
+
+  if (nrow(dx) > 0) {
+    # NOTE AE: should this be an error to abort or just to notify? I made it
+    # to abort
+    # NOTE AC: The column survey_mean_ppp should not a part of the dist stat table, 
+    # so that's not really an issue. But if you mean survey_median_lcu, then yes you are 
+    # right. All observations should have a non-missing median. In that case the problem
+    # would lie in db_compute_dist_stats() or in the underlying wbpip functions. 
+
+    cli::cli_rule(left = "error on deflated means in the following")
+    cli::cli_ul(dx)
+    cli::cli_rule(right = "end")
+
+    msg     <- "We should no have surveys without deflated means"
+    hint    <- "Check calculation of means in `db_create_dsm_table` or
+    `db_create_lcu_table`"
+
+    rlang::abort(c(
+      msg,
+      i = hint
+    ),
+    class = "pipdm_error"
+    )
+
+  }
+
+  dt <- dt[report == "x & y"
+           ][, report := NULL]
 
   ## ---- Deflate median ----
   data.table::setnames(dt, "median", "survey_median_lcu")

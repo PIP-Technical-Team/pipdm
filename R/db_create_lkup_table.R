@@ -56,18 +56,28 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
       reference_year_index = reference_year)
 
   # Merge with GDP and PCE data (left join)
-  dt <- merge(dt, nac_table, all.x = TRUE,
-              by.x = c('country_code', 'nac_data_level_index',
-                       'reference_year_index'),
-              by.y = c('country_code', 'nac_data_level',
-                       'year'))
+  dt <- joyn::merge(dt, nac_table,
+                    by = c("country_code",
+                           "nac_data_level_index = nac_data_level",
+                           "reference_year_index = year"),
+                    match_type = "m:1")
+  # NOTE AE: Originally, you have left join, but there are 569 obs from table
+  # dt that do not have match with nac_table. For those observations there is
+  # national accounts. Should we leave them in the sample or remove them?
+  # you were keeping them but I am not sure. I'll leave them for now
+
+  dt <- dt[report != "y"
+           ][, report := NULL]
 
   # Merge with POP data (left join)
-  dt <- merge(dt, pop_table, all.x = TRUE,
-              by.x = c('country_code', 'pop_data_level_index',
-                       'reference_year_index'),
-              by.y = c('country_code', 'pop_data_level',
-                       'year'))
+  dt <- joyn::merge(dt, pop_table,
+                    by = c("country_code",
+                           "pop_data_level_index = pop_data_level",
+                           "reference_year_index = year"),
+                    match_type = "m:1")
+
+  dt <- dt[report != "y"  # I found NO "x" in the report
+          ][, report := NULL]
 
   # Order column
   data.table::setcolorder(

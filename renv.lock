@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.0.3",
+    "Version": "4.0.4",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -53,10 +53,10 @@
     },
     "callr": {
       "Package": "callr",
-      "Version": "3.5.1",
+      "Version": "3.4.3",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "b7d7f1e926dfcd57c74ce93f5c048e80"
+      "Hash": "643163a00cb536454c624883a10ae0bc"
     },
     "cellranger": {
       "Package": "cellranger",
@@ -204,6 +204,18 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "a525aba14184fec243f9eaec62fbed43"
+    },
+    "joyn": {
+      "Package": "joyn",
+      "Version": "0.1.0",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "joyn",
+      "RemoteUsername": "randrescastaneda",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "556b17db570eefb56a942f6fef1e8d88bfd4530c",
+      "Hash": "cad8e55cbb532fb8525d4033de09462b"
     },
     "jsonlite": {
       "Package": "jsonlite",
@@ -480,8 +492,8 @@
       "RemoteRepo": "wbpip",
       "RemoteUsername": "PIP-Technical-Team",
       "RemoteRef": "HEAD",
-      "RemoteSha": "01ad43eec3823d86aa87865c381bd883172b9d76",
-      "Hash": "a12865989ec03bc28200be8470c23244"
+      "RemoteSha": "4f101fdac7f9e0d920e092a16e0b066253bf6d18",
+      "Hash": "8f09dd18f03eee9f89f61e23fae4e5e5"
     },
     "withr": {
       "Package": "withr",
