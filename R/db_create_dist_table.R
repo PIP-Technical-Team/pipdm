@@ -150,7 +150,7 @@ db_create_dist_table <- function(dl,
   dy <- dt[report == "y", cache_id]
   dx <- dt[report == "x", cache_id]
 
-  if (nrow(dy) > 0) {
+  if (length(dy) > 0) {
     # NOTE AE: should this be an error to abort or just to notify? I made it to
     # notify
     # NOTE AC: Sorry I don't understand what this code catches.
@@ -159,7 +159,7 @@ db_create_dist_table <- function(dl,
     cli::cli_rule(right = "end")
   }
 
-  if (nrow(dx) > 0) {
+  if (length(dx) > 0) {
     # NOTE AE: should this be an error to abort or just to notify? I made it
     # to abort
     # NOTE AC: The column survey_mean_ppp should not a part of the dist stat table,
