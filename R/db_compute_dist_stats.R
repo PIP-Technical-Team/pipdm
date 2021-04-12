@@ -52,11 +52,14 @@ compute_dist_stats <- function(dt, mean) {
     pop_level <- unique(dt$pop_data_level)
     # Handle U/R split for micro datasets, e.g. IND 2011
     if (length(mean) == 2 & identical(pop_level, c('rural', 'urban'))) {
+
       # Split by area
       dt_rural <- dt[dt$area == 'rural']
       dt_urban <- dt[dt$area == 'urban']
       res_rural <- md_dist_stats(dt_rural, mean[1])
       res_urban <- md_dist_stats(dt_urban, mean[2])
+
+      # results
       res <- list(rural = res_rural, urban = res_urban)
     } else {
       res <- md_dist_stats(dt, mean)
@@ -73,7 +76,46 @@ compute_dist_stats <- function(dt, mean) {
     dt_urban <- dt[dt$area == 'urban']
     res_rural <- gd_dist_stats(dt_rural, mean[1])
     res_urban <- gd_dist_stats(dt_urban, mean[2])
-    res <- list(rural = res_rural, urban = res_urban)
+
+    # create synthetic vector
+    pop <- pipload::pip_load_aux("pop")
+    ccode     <- dt[, unique(country_code)]
+    svid_year <- dt[, unique(surveyid_year)]
+
+    pop_r <- pop[country_code     == ccode
+                 & year           == svid_year
+                 & pop_data_level == "rural",
+                 pop]
+
+    pop_u <- pop[country_code     == ccode
+                 & year           == svid_year
+                 & pop_data_level == "urban",
+                 pop]
+
+    wf_rural <-wbpip:::st_create_synth_vector(dt_rural$welfare,
+                                              dt_rural$weight,
+                                              mean = mean[1],
+                                              pop  = pop_r)
+
+    wf_urban <-wbpip:::st_create_synth_vector(dt_urban$welfare,
+                                              dt_urban$weight,
+                                              mean = mean[2],
+                                              pop  = pop_u)
+
+
+    wf <- data.table::rbindlist(list(wf_rural, wf_urban),
+                                use.names = TRUE,
+                                fill = TRUE)
+    # national mean
+    nat_mean <- collapse::fmean(x = wf$welfare,
+                                w = wf$weight)
+
+    res_national <- md_dist_stats(wf, nat_mean)
+
+
+    res <- list(national = res_national,
+                rural    = res_rural,
+                urban    = res_urban)
   }
   if (dist_type == 'imputed') {
     res <- id_dist_stats(dt)
