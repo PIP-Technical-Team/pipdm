@@ -4,15 +4,16 @@
 #'
 #' @inheritParams db_clean_data
 #' @param mean numeric: A value with the survey mean.
+#' @param pop dataframe with population data
 #' @return list
 #' @export
-db_compute_dist_stats <- function(dt, mean, gc = FALSE) {
+db_compute_dist_stats <- function(dt, mean, pop, gc = FALSE) {
 
   tryCatch(
     expr = {
 
       # Compute dist stats
-      res <- compute_dist_stats(dt, mean)
+      res <- compute_dist_stats(dt, mean, pop)
 
       # Garbage collection
       if (gc) gc(verbose = FALSE)
@@ -39,7 +40,7 @@ db_compute_dist_stats <- function(dt, mean, gc = FALSE) {
 #' @inheritParams db_compute_dist_stats
 #' @return list
 #' @noRd
-compute_dist_stats <- function(dt, mean) {
+compute_dist_stats <- function(dt, mean, pop) {
 
   # Get distribution type
   dist_type <- unique(dt$distribution_type)
@@ -78,14 +79,28 @@ compute_dist_stats <- function(dt, mean) {
     res_urban <- gd_dist_stats(dt_urban, mean[2])
 
     # create synthetic vector
+    ccode     <- dt[, unique(country_code)]
+    svid_year <- dt[, unique(surveyid_year)]
+
+    pop_r <- pop[country_code     == ccode
+                 & year           == svid_year
+                 & pop_data_level == "rural",
+                 pop]
+
+    pop_u <- pop[country_code     == ccode
+                 & year           == svid_year
+                 & pop_data_level == "urban",
+                 pop]
 
     wf_rural <-wbpip:::sd_create_synth_vector(dt_rural$welfare,
                                               dt_rural$weight,
-                                              mean = mean[1])
+                                              mean = mean[1],
+                                              pop  = pop_r)
 
     wf_urban <-wbpip:::sd_create_synth_vector(dt_urban$welfare,
                                               dt_urban$weight,
-                                              mean = mean[2])
+                                              mean = mean[2],
+                                              pop  = pop_u)
 
 
     wf <- data.table::rbindlist(list(wf_rural, wf_urban),
