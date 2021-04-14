@@ -78,29 +78,14 @@ compute_dist_stats <- function(dt, mean) {
     res_urban <- gd_dist_stats(dt_urban, mean[2])
 
     # create synthetic vector
-    pop <- pipload::pip_load_aux("pop")
-    ccode     <- dt[, unique(country_code)]
-    svid_year <- dt[, unique(surveyid_year)]
 
-    pop_r <- pop[country_code     == ccode
-                 & year           == svid_year
-                 & pop_data_level == "rural",
-                 pop]
-
-    pop_u <- pop[country_code     == ccode
-                 & year           == svid_year
-                 & pop_data_level == "urban",
-                 pop]
-
-    wf_rural <-wbpip:::st_create_synth_vector(dt_rural$welfare,
+    wf_rural <-wbpip:::sd_create_synth_vector(dt_rural$welfare,
                                               dt_rural$weight,
-                                              mean = mean[1],
-                                              pop  = pop_r)
+                                              mean = mean[1])
 
-    wf_urban <-wbpip:::st_create_synth_vector(dt_urban$welfare,
+    wf_urban <-wbpip:::sd_create_synth_vector(dt_urban$welfare,
                                               dt_urban$weight,
-                                              mean = mean[2],
-                                              pop  = pop_u)
+                                              mean = mean[2])
 
 
     wf <- data.table::rbindlist(list(wf_rural, wf_urban),
