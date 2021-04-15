@@ -16,7 +16,7 @@ db_clean_data <- function(dt, gc = FALSE) {
       dt <- clean_data(dt)
 
       # Order by population data level
-      data.table::setorder(dt, max_domain)
+      data.table::setorder(dt, pop_data_level)
 
       # Remove labels from each column
       dt[] <- lapply(dt, c)
