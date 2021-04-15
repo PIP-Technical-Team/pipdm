@@ -75,24 +75,38 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
     dt$survey_year == dt$reference_year, FALSE, TRUE
   )
 
+  # Set predicted_mean_ppp to NA for
+  # interpolated rows that are based on
+  # aggregated numbers
+  dt$predicted_mean_ppp <- data.table::fifelse(
+    dt$is_interpolated &
+      dt$pop_data_level == 'national' &
+      dt$is_used_for_aggregation
+    , NA_real_,
+    dt$predicted_mean_ppp
+  )
+
   # Add is_used_for_aggregation column
   # Temporary quick fix for is_used_for_aggregation column,
   # see issue PIP-Technical-Team/TMP_pipeline#14
-  dt$is_used_for_aggregation <-
-    ifelse(dt$pop_data_level != 'national',
+  dt$is_used_for_aggregation <- data.table::fifelse(
+    dt$pop_data_level != 'national',
            TRUE, FALSE)
 
   # Select final columns
-  cols <- c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
-            'country_code',  'reference_year',  'surveyid_year',
-            'survey_year', 'survey_acronym', 'survey_coverage',
-            'survey_comparability', 'welfare_type', 'survey_mean_lcu',
+  cols <- c('survey_id', 'cache_id', 'wb_region_code',
+            'pcn_region_code', 'country_code', 'reference_year',
+            'surveyid_year', 'survey_year', 'survey_acronym',
+            'survey_coverage', 'survey_comparability',
+            'welfare_type', 'survey_mean_lcu',
             'survey_mean_ppp', 'predicted_mean_ppp',
             'ppp', 'pop', 'gdp', 'pce',
             'pop_data_level', 'gdp_data_level',
-            'pce_data_level', 'cpi_data_level', 'ppp_data_level',
-            'distribution_type', 'gd_type', 'is_interpolated',
-            'is_used_for_aggregation', 'estimation_type')
+            'pce_data_level', 'cpi_data_level',
+            'ppp_data_level', 'distribution_type',
+            'gd_type', 'is_interpolated',
+            'is_used_for_aggregation',
+            'estimation_type')
   dt <- dt[, .SD, .SDcols = cols]
 
   # Rename variables
