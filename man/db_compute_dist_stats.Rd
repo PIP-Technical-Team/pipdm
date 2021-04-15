@@ -4,12 +4,16 @@
 \alias{db_compute_dist_stats}
 \title{Calculate distributional statistics}
 \usage{
-db_compute_dist_stats(dt, mean, gc = FALSE)
+db_compute_dist_stats(dt, mean, pop, cache_id, gc = FALSE)
 }
 \arguments{
 \item{dt}{data.table: A survey dataset.}
 
 \item{mean}{numeric: A value with the survey mean.}
+
+\item{pop}{dataframe with population data}
+
+\item{cache_id}{character: cache id to identify the right process}
 
 \item{gc}{logical: If TRUE garbage collection is forced.}
 }
