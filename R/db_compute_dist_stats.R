@@ -75,7 +75,7 @@ compute_dist_stats <- function(dt, mean, pop, cache_id) {
 
 
     res <- append(list(res_national), res)
-    names(res) <- c("nationial", pop_level)
+    names(res) <- c("national", pop_level)
 
   }
 
@@ -158,7 +158,7 @@ id_dist_stats <- function(dt){
 #' @noRd
 get_synth_vector <- function(dt, pop, mean, level) {
 
-  df <- dt[area == level]
+  df <- dt[max_domain == level]
   ccode     <- dt[, unique(country_code)]
   svid_year <- dt[, unique(surveyid_year)]
 
@@ -184,7 +184,7 @@ get_synth_vector <- function(dt, pop, mean, level) {
 #' @noRd
 get_dist_stats_by_level <- function(dt, mean, source, level) {
 
-  df  <- dt[area == level]
+  df  <- dt[max_domain == level]
 
   if (source == "GROUP") {
     res <- gd_dist_stats(df, mean[level])
