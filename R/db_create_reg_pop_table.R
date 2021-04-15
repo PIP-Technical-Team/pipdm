@@ -31,14 +31,15 @@ db_create_reg_pop_table <- function(pop_table,
   dt <- dt[!is.na(region_code_to_use)]
 
   # Aggregate population by region
-  dt <- dt[, .(pop = sum(pop)),
+  dt <- dt[, .(pop = sum(pop, na.rm = TRUE)),
            by = .(region_code_to_use, year)]
 
   # Subset to only include years used by PIP
-  dt <- dt[dt$year %in% pip_years, ]
+  dt <- dt[year %in% pip_years]
+  dt[, grouping_type := "WB"]
 
   # Set colnames
-  data.table::setnames(dt, 'region_code_to_use', region_code)
+  data.table::setnames(dt, 'region_code_to_use', "region_code")
 
   return(dt)
 
