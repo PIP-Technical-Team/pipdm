@@ -56,20 +56,18 @@ clean_data <- function(dt) {
   # Calculate distributional statistics
   if (dist_type == 'micro') {
     # Clean data (remove negative values etc.)
-    dt <- md_clean_data(
+    df <- md_clean_data(
       dt, welfare = 'welfare', weight = 'weight',
       quiet = TRUE)$data
-  }
-  if (dist_type == 'group') {
+  } else if (dist_type == 'group') {
     # Standardize to type 1
-    dt <- gd_clean_data(
+    df <- gd_clean_data(
       dt,
       welfare = 'welfare',
       population = 'weight',
       gd_type = gd_type,
       quiet = TRUE)
-  }
-  if (dist_type == 'aggregate') {
+  } else if (dist_type == 'aggregate') {
     # Split by area
     dt_rural <- dt[dt$area == 'rural']
     dt_urban <- dt[dt$area == 'urban']
@@ -88,24 +86,25 @@ clean_data <- function(dt) {
       gd_type = gd_type,
       quiet = TRUE)
     # Bind back together
-    dt <- rbind(dt_rural, dt_urban)
-  }
-  if (dist_type == 'imputed') {
+    df <- rbind(dt_rural, dt_urban)
+  } else if (dist_type == 'imputed') {
     # Clean data (remove negative values etc.)
-    dt <- md_clean_data(
+    df <- md_clean_data(
       dt, welfare = 'welfare', weight = 'weight',
       quiet = TRUE)$data
+  } else {
+    stop("`dist_type` not valid")
   }
 
   # add max data level variable
-  dl_var <- grep("data_level", names(dt), value = TRUE) #data_level vars
+  dl_var <- grep("data_level", names(df), value = TRUE) #data_level vars
 
-  ordered_level <- purrr::map_dbl(dl_var, ~get_ordered_level(dt, .x))
+  ordered_level <- purrr::map_dbl(dl_var, ~get_ordered_level(df, .x))
   select_var    <- dl_var[which.max(ordered_level)]
 
-  dt[, max_domain := get(select_var)]
+  df[, max_domain := get(select_var)]
 
-  return(dt)
+  return(df)
 
 }
 
