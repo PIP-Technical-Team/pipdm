@@ -16,6 +16,11 @@ test_that("national microdata", {
   dt        <- pipload::pip_load_cache("PRY", 2017)
   pipload::pip_load_data("PRY", 2017, tool = "pc")
   pipload::pip_load_data("CHN", 2015, tool = "pc")
+
+  PHL_2018_FIES_D1_CON_GPWG
+  names(pipload::pip_load_cache("PHL", 2018, welfare_type = "CON"))
+
+
   cache_id  <- dt[, unique(cache_id)]
   survey_id <- cch[cache_id == get("cache_id", envir = -2)
                    ][, survey_id]
