@@ -4,14 +4,14 @@
 \alias{db_create_dist_table}
 \title{Create distributional statistics table}
 \usage{
-db_create_dist_table(dl, survey_id, dsm_table)
+db_create_dist_table(dl, dsm_table, crr_inv)
 }
 \arguments{
 \item{dl}{list: A list with distributional statistics datasets.}
 
-\item{survey_id}{character: A vector with survey ids.}
-
 \item{dsm_table}{data.table: A table with deflated survey means.}
+
+\item{crr_inv}{data frame with correspondence inventory}
 }
 \value{
 data.table
