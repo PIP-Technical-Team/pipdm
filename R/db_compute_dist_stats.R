@@ -142,7 +142,6 @@ id_dist_stats <- function(dt){
     mld          = mean(purrr::map_dbl(dl_stats, function(x) x$mld)),
     quantiles    = quantiles
   )
-  res <- list(national = res) # Assuming it is only nations. Need to check
   return(res)
 }
 

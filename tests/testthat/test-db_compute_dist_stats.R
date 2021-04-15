@@ -101,8 +101,9 @@ test_that("Imputed Data", {
   ll <- ld$ld
   ln <- ld$ldnames
 
-  expect_equal(names(ll), c("national", ln))
+  expect_equal(names(ll), ln)
   expect_equal(names(ll[[1]]), dnames)
 
 })
+
 
