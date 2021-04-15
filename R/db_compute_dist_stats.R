@@ -189,7 +189,13 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
   if (source == "GROUP") {
     res <- gd_dist_stats(df, mean[level])
   } else {
-    res <- md_dist_stats(dt_rural, mean[level])
+
+    is_imputed <- length(unique(df$imputation_id)) > 1
+    if (is_imputed) {
+      res <- id_dist_stats(df)
+    } else {
+      res <- md_dist_stats(df, mean[level])
+    }
   }
   return(res)
 
