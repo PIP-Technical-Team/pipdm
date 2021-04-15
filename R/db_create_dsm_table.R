@@ -46,8 +46,8 @@ db_create_dsm_table <- function(lcu_table,
   dt <- dt[report != "y"  # This is unnecessary data in cpi table... should we have it?
   ][, report := NULL]
   # NOTE AE: I just asked Minh about why we have some obs in CPI that we don't use.
-  # NOTE AC: Yes, I saw the email thread. So that should be okay. In general my understanding is that there will be 
-  # some discrepancies between PFW, CPI and DLW. 
+  # NOTE AC: Yes, I saw the email thread. So that should be okay. In general my understanding is that there will be
+  # some discrepancies between PFW, CPI and DLW.
 
 
   #--------- Merge with PPP ---------
@@ -78,10 +78,10 @@ db_create_dsm_table <- function(lcu_table,
   }
 
   # Only CHN, IND and IDN could be left behind for national ppp_data_level
-  # Note AC: Not sure why we would need to hardcode CHN, IDN, IND here. 
-  # This should preferrably be handlded "automatically" by the data level columns.  
-  # If we want this to be a validation check than I think it should be in the 
-  # validation repo.   
+  # Note AC: Not sure why we would need to hardcode CHN, IDN, IND here.
+  # This should preferrably be handlded "automatically" by the data level columns.
+  # If we want this to be a validation check than I think it should be in the
+  # validation repo.
   cdt  <- dt[, unique(country_code)]
   cppp <- jn[report == "y", unique(country_code)]
 
@@ -138,9 +138,10 @@ db_create_dsm_table <- function(lcu_table,
 
   # Select and order columns
   dt <- dt[, .SD, .SDcols =
-             c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code', 'country_code',
-               'survey_acronym', 'survey_coverage', 'survey_comparability',
-               'surveyid_year', 'reporting_year', 'survey_year', 'welfare_type',
+             c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
+               'country_code', 'survey_acronym', 'survey_coverage',
+               'survey_comparability','surveyid_year', 'reporting_year',
+               'survey_year', 'welfare_type',
                'survey_mean_lcu', 'survey_mean_ppp', #'survey_pop',
                'reporting_pop', 'ppp', 'cpi', 'pop_data_level',
                'gdp_data_level', 'pce_data_level',
@@ -148,8 +149,68 @@ db_create_dsm_table <- function(lcu_table,
                'distribution_type', 'gd_type',
                'is_interpolated', 'is_used_for_aggregation')]
 
+  # Add aggregated mean for surveys split by Urban/Rural
+  dt <- add_aggregated_mean(dt)
+
   # Sort rows
   data.table::setorder(dt, survey_id)
 
   return(dt)
+}
+
+#' add_aggregated_mean
+#'
+#' Compute and add aggregated (national) rows for surveys where the mean
+#' calculation is split by urban / rural population level.
+#'
+#' @param dt data.table: A table with deflated survey means.
+#' @return data.table
+#' @noRd
+add_aggregated_mean <- function(dt) {
+
+  # Select rows w/ non-national pop_data_level
+  dt_sub <- dt[pop_data_level != 'national',]
+
+  # Compute aggregated mean (weighted population average)
+  dt_agg <-
+    dt_sub[, .(
+      # survey_id       = unique(survey_id),
+      # cache_id        = unique(cache_id),
+      wb_region_code    = unique(wb_region_code),
+      pcn_region_code   = unique(pcn_region_code),
+      country_code      = unique(country_code),
+      survey_acronym    = unique(survey_acronym),
+      survey_coverage   = unique(survey_coverage),
+      survey_comparability = unique(survey_comparability),
+      surveyid_year     = unique(surveyid_year),
+      reporting_year    = unique(reporting_year),
+      survey_year       = unique(survey_year),
+      welfare_type      = unique(welfare_type),
+      survey_mean_lcu   = collapse::fmean(
+        x = survey_mean_lcu,
+        w = reporting_pop),
+      survey_mean_ppp   = collapse::fmean(
+        x = survey_mean_ppp,
+        w = reporting_pop),
+      reporting_pop     = sum(reporting_pop),
+      ppp               = NA,
+      cpi               = NA,
+      pop_data_level    = 'national',
+      gdp_data_level    = 'national',
+      pce_data_level    = 'national',
+      cpi_data_level    = 'national',
+      ppp_data_level    = 'national',
+      distribution_type = unique(distribution_type),
+      gd_type           = unique(gd_type),
+      is_interpolated   = FALSE,
+      is_used_for_aggregation = TRUE
+    ),
+    by = .(survey_id, cache_id)
+    ]
+
+  dt <- rbind(dt_agg, dt)
+
+  # Sort rows
+  data.table::setorder(dt, survey_id)
+
 }
