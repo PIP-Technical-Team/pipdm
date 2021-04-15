@@ -1,4 +1,4 @@
-# pipdm (development version)
+# pipdm 0.0.1
 
 # pipdm 0.0.0.9000
 
