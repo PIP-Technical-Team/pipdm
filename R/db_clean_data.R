@@ -96,37 +96,9 @@ clean_data <- function(dt) {
     stop("`dist_type` not valid")
   }
 
-  # add max data level variable
-  dl_var <- grep("data_level", names(df), value = TRUE) #data_level vars
-
-  ordered_level <- purrr::map_dbl(dl_var, ~get_ordered_level(df, .x))
-  select_var    <- dl_var[which.max(ordered_level)]
-
-  df[, max_domain := get(select_var)]
-
   return(df)
 
 }
 
 
 
-#' get ordered level of data_level variables
-#'
-#' @param dt cleaned dataframe
-#' @param x data_level variable name
-#'
-#' @return integer
-#' @noRd
-get_ordered_level <- function(dt, x) {
-  x_level <- unique(dt[[x]])
-  d1 <- c("national")
-  d2 <- c("rural", "urban")
-
-  if (identical(x_level, d1)) {
-    1
-  } else if (identical(x_level, d2)) {
-    2
-  } else {
-    3
-  }
-}
