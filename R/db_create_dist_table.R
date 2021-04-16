@@ -140,21 +140,26 @@ db_create_dist_table <- function(dl,
                 c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
                   'country_code', 'surveyid_year', 'survey_year',
                   'reporting_year', 'survey_acronym', 'welfare_type',
-                  'cpi', 'ppp', 'pop_data_level')]
+                  'cpi', 'ppp', 'pop_data_level', "survey_mean_lcu",
+                  "survey_mean_ppp" )]
 
   # Merge dist stats with DSM (left join)
   dt <- joyn::merge(df, dsm_table,
                     by            = c("cache_id", "pop_data_level"),
                     match_type     = "1:1")
+  dt_p <- dt[, problem := paste(cache_id, pop_data_level, sep = "-")
+            ][,  .(report, problem)
+            ]
 
-  dy <- dt[report == "y", cache_id]
-  dx <- dt[report == "x", cache_id]
+  dy <- dt_p[report == "y", problem]
+  dx <- dt_p[report == "x", problem]
 
   if (length(dy) > 0) {
     # NOTE AE: should this be an error to abort or just to notify? I made it to
     # notify
     # NOTE AC: Sorry I don't understand what this code catches.
-    cli::cli_rule(left = "error on dist stats in the following")
+    cli::cli_rule(left = "The following obs from deflated means table do not have
+                  correspondence with dist stats table")
     cli::cli_ul(dy)
     cli::cli_rule(right = "end")
   }
