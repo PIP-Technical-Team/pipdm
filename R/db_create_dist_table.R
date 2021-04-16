@@ -140,8 +140,7 @@ db_create_dist_table <- function(dl,
                 c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
                   'country_code', 'surveyid_year', 'survey_year',
                   'reporting_year', 'survey_acronym', 'welfare_type',
-                  'cpi', 'ppp', 'pop_data_level', "survey_mean_lcu",
-                  "survey_mean_ppp" )]
+                  'cpi', 'ppp', 'pop_data_level')]
 
   # Merge dist stats with DSM (left join)
   dt <- joyn::merge(df, dsm_table,
