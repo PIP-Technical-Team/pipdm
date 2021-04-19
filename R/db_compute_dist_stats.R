@@ -61,21 +61,27 @@ compute_dist_stats <- function(dt, mean, pop, cache_id) {
 
   names(res) <- pop_level
 
-  if (source == "GROUP" & data_level != "D1") { # Group data
 
-    # create synthetic vector
-    wf <- purrr::map_df(.x = pop_level,
-                        .f = ~get_synth_vector(dt, pop, mean, level = .x))
+  if (data_level != "D1") { # Urban/rural or subnat level
 
-    # national mean
-    nat_mean <- collapse::fmean(x = wf$welfare,
-                                w = wf$weight)
+    if (source == "GROUP") { # Group data
 
-    res_national <- md_dist_stats(wf, nat_mean)
+      # create synthetic vector
+      wf <- purrr::map_df(.x = pop_level,
+                          .f = ~get_synth_vector(dt, pop, mean, level = .x))
 
 
-    res <- append(list(res_national), res)
-    names(res) <- c("national", pop_level)
+    } else { # microdata
+
+      wf <- data.table::copy(dt)
+
+    }
+
+      # national mean
+      res_national <- md_dist_stats(wf)
+
+      res <- append(list(res_national), res)
+      names(res) <- c("national", pop_level)
 
   }
 
@@ -87,7 +93,7 @@ compute_dist_stats <- function(dt, mean, pop, cache_id) {
 #' @inheritParams db_compute_dist_stats
 #' @return list
 #' @noRd
-md_dist_stats <- function(dt, mean){
+md_dist_stats <- function(dt, mean = NULL){
   # Calculate dist stats
   res <- md_compute_dist_stats(
     welfare = dt$welfare,
