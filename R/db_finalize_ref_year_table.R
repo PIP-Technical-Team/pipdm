@@ -86,13 +86,6 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
     dt$predicted_mean_ppp
   )
 
-  # Add is_used_for_aggregation column
-  # Temporary quick fix for is_used_for_aggregation column,
-  # see issue PIP-Technical-Team/TMP_pipeline#14
-  dt$is_used_for_aggregation <- data.table::fifelse(
-    dt$pop_data_level != 'national',
-           TRUE, FALSE)
-
   # Select final columns
   cols <- c('survey_id', 'cache_id', 'wb_region_code',
             'pcn_region_code', 'country_code', 'reference_year',
