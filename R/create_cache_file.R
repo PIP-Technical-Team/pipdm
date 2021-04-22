@@ -145,18 +145,21 @@ create_cache_file <- function(pipeline_inventory = NULL,
   df <- purrr::map2_df(.x = new_svy_ids$svy_ids,
                        .y = new_svy_ids$cache_id,
                        .f = ~ {
+
                          id_what <- gsub("([A-Z]+_[0-9]+)(.+)", "\\1", .x)
                          pb$tick(tokens = list(what = id_what))
-                         process_data(survey_id     = .x,
-                                      chh_filename  = .y,
-                                      pip_data_dir  = pip_data_dir,
-                                      cache_svy_dir = cache_svy_dir,
-                                      compress      = 100)
+
+                         process_svy_data_to_cache(survey_id     = .x,
+                                                   chh_filename  = .y,
+                                                   pip_data_dir  = pip_data_dir,
+                                                   cache_svy_dir = cache_svy_dir,
+                                                   compress      = 100)
                        })
 
   #--------- Save correspondence file ---------
-  crr_status <- pipdm::pip_update_cache_inventory(pipeline_inventory,
-                                                  cache_svy_dir)
+  crr_status <- pip_update_cache_inventory(pipeline_inventory = pipeline_inventory,
+                                           cache_svy_dir      = cache_svy_dir,
+                                           tool               = tool)
   if (verbose && crr_status) {
 
     cli::cli_alert_success('Correspondence inventory file saved')
@@ -169,8 +172,8 @@ create_cache_file <- function(pipeline_inventory = NULL,
   }
 
   # load correspondence file
-  crr          <- fst::read_fst(crr_filename,
-                                as.data.table = TRUE)
+  crr    <- fst::read_fst(crr_filename,
+                          as.data.table = TRUE)
 
   #--------- DONE ---------
   if (verbose) {
