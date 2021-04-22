@@ -10,16 +10,68 @@
 #' console.
 #' @param force logical: if TRUE, all files will be generate again.
 #'
-create_cache_file <- function(pipeline_inventory,
-                              # pip_data_dir = getOption("pip.maindir"),
-                              tool       = c("PC", "TB"),
-                              cache_svy_dir,
-                              compress   = 100,
-                              verbose    = TRUE,
-                              force      = FALSE) {
+create_cache_file <- function(pipeline_inventory = NULL,
+                              pip_data_dir       = getOption("pip.maindir"),
+                              tool               = c("PC", "TB"),
+                              cache_svy_dir      = NULL,
+                              compress           = 100,
+                              verbose            = TRUE,
+                              force              = FALSE) {
 
 
-  #--------- Parameters ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Parameters   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## Tool --------
+  tool <- match.arg(tool)
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## pipeline_inventory --------
+  if (is.null(pipeline_inventory)) {
+    # Load PIP inventory
+    if (tool == "PC") {
+
+      fil <- list(filter_to_pc = TRUE)
+
+    } else {
+
+      fil <- list(filter_to_tb = TRUE)
+
+    }
+
+    pip_inventory <-
+      do.call(pipload::pip_find_data,
+              c(
+                inv_file = paste0(getOption("pip.maindir"),
+                                  '_inventory/inventory.fst'),
+                fil,
+                maindir = getOption("pip.maindir")
+              )
+      )
+
+    # Create pipeline inventory
+    pipeline_inventory <-
+      db_filter_inventory(pip_inventory,
+                          pfw_table = pipload::pip_load_aux("pfw")
+      )
+  }
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## cache directory --------
+  if (is.null(cache_svy_dir)) {
+    if (tool == "PC") {
+
+      cache_svy_dir <- getOption("pip.cachedir.pc")
+
+    } else {
+
+      cache_svy_dir <- getOption("pip.cachedir.tb")
+
+    }
+  }
+
 
   # correspondence file
   crr_dir      <- glue::glue("{cache_svy_dir}_crr_inventory/")
@@ -35,8 +87,10 @@ create_cache_file <- function(pipeline_inventory,
   # real new files
   if (isFALSE(force)) {
 
-    new_svy_ids <- find_new_data(pipeline_inventory,
-                                 cache_svy_dir)
+    new_svy_ids <- find_new_svy_data(cache_id      = pipeline_inventory$cache_id,
+                                     filename      = pipeline_inventory$filename,
+                                     tool          = tool,
+                                     cache_svy_dir = cache_svy_dir)
     if (verbose) {
       cli::cli_alert("Found {.field {nrow(new_svy_ids)}} new survey(s)...")
     }
@@ -46,9 +100,9 @@ create_cache_file <- function(pipeline_inventory,
     new_svy_ids <-
       pipeline_inventory[,
                          .(filename, cache_id)
-      ][,
-        svy_ids := gsub('(.+)(\\.dta)', '\\1', filename)
-      ]
+                        ][,
+                          svy_ids := gsub('(.+)(\\.dta)', '\\1', filename)
+                        ]
     if (verbose) {
       cli::cli_alert("Since {.code force = TRUE}, {.field {nrow(new_svy_ids)}}
                      cache files will be recreated.", wrap = TRUE)
@@ -67,8 +121,9 @@ create_cache_file <- function(pipeline_inventory,
                            It will be created",
                            wrap = TRUE)
 
-      pipdm::pip_update_cache_inventory(pipeline_inventory,
-                                        cache_svy_dir)
+      pip_update_cache_inventory(pipeline_inventory = pipeline_inventory,
+                                 cache_svy_dir      = cache_svy_dir,
+                                 tool               = tool)
     }
 
     crr    <- fst::read_fst(crr_filename,
@@ -81,7 +136,7 @@ create_cache_file <- function(pipeline_inventory,
 
   #--------- Process data: Load, clean, and save ---------
   if (verbose) {
-    cli::cli_alert("Processing raw PIP data...")
+    cli::cli_alert("Processing raw PIP data for {.fiedl {tool}}...")
   }
 
   pb <- progress::progress_bar$new(format = ":what [:bar] :percent eta: :eta",
