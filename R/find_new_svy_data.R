@@ -1,19 +1,33 @@
 #' Find which data is not available in cache folder or has changed SVY ID
 #'
-#' @param pipeline_inventory data.table: Pipeline inventory table.
 #' @param cache_svy_dir character: Output folder for the cached survey data.
+#' @param cache_id  character: vector with cache Ids from pipeline inventory
+#' @param filename charater: vector with original dta file names
+#' @param tool character: Either "PC" or "TB" for poverty calculator and Table
+#'   Baker, repectively
 #'
 #' @return
 #' @export
-#'
-#' @examples
-find_new_svy_data <- function(pipeline_inventory,
-                          cache_svy_dir) {
-  # get svy id available in PFW
-  cch_ids <- pipeline_inventory$cache_id # Cache ID
+find_new_svy_data <- function(cache_id,
+                              filename,
+                              tool = c("PC", "TB"),
+                              cache_svy_dir = NULL) {
 
-  # Svy ID
-  svy_ids <- pipeline_inventory$filename
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## scheck parameters --------
+  tool <- match.arg(tool)
+
+  if (is.null(cache_svy_dir)) {
+    if (tool == "PC") {
+
+      cache_svy_dir <- getOption("pip.cachedir.pc")
+
+    } else {
+
+      cache_svy_dir <- getOption("pip.cachedir.tb")
+
+    }
+  }
 
   # Get existing survey ids
   existing_chh_ids <- gsub('(.+)(\\.fst)', '\\1', list.files(cache_svy_dir))
@@ -21,7 +35,15 @@ find_new_svy_data <- function(pipeline_inventory,
   #--------- Identify new Surveys ---------
 
   # Select new surveys
-  new_svy_ids <- svy_ids[!(cch_ids %in% existing_chh_ids)]
+  new_svy_ids <- filename[!(cache_id %in% existing_chh_ids)]
+
+
+  # working data.table
+  pipe <- data.table::data.table(
+    cache_id = get("cache_id"),
+    filename = get("filename")
+  )
+
 
   #--------- find data whose SVY id has changed ---------
   # load correspondence inventory
@@ -32,27 +54,30 @@ find_new_svy_data <- function(pipeline_inventory,
     crr_inv <- fst::read_fst(glue::glue("{crr_dir}crr_inventory.fst"))
     data.table::setDT(crr_inv)
 
+
+
     chd_svy <-
-      crr_inv[pipeline_inventory,
+      crr_inv[pipe,
               on = "cache_id",
               filename_svy := i.filename
-      ][
-        filename_svy != filename
-      ][,
-        filename
-      ]
+              ][
+                filename_svy != filename
+              ][,
+                filename
+              ]
 
     if (length(chd_svy) > 0) {
       new_svy_ids <- c(new_svy_ids, chd_svy)
     }
+  } else {
+    pip_update_cache_inventory(cache_svy_dir = cache_svy_dir,
+                               tool          = tool)
   }
 
-  df <- pipeline_inventory[filename %chin% new_svy_ids
-  ][,
-    .(filename, cache_id)
-  ][,
-    svy_ids := gsub('(.+)(\\.dta)', '\\1', filename)
-  ]
+  df <- pipe[filename %chin% new_svy_ids
+            ][,
+              svy_ids := gsub('(.+)(\\.dta)', '\\1', filename)
+            ]
 
   return(df)
 }

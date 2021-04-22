@@ -1,15 +1,15 @@
 #' Update correspondence inventory file
 #'
 #' @param pipeline_inventory data.table: Pipeline inventory table.
-#' @param cache_svy_dir character: Output folder for the cached survey data.
+#' @inheritParams find_new_svy_data
 #'
-#' @return TRUE
+#' @return TRUE if file is update. FALSE If no data is in directory
 #' @export
 #'
 #' @examples
 pip_update_cache_inventory <- function(pipeline_inventory = NULL,
-                                       cache_svy_dir = paste0(getOption("pip.pipedir"),
-                                                              "pc_data/cache/clean_survey_data/")
+                                       cache_svy_dir      = NULL,
+                                       tool               = c("PC", "TB")
                                        ) {
 
 
@@ -17,15 +17,43 @@ pip_update_cache_inventory <- function(pipeline_inventory = NULL,
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # If pipeline inventor not provided   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  tool <- match.arg(tool)
 
+  # CAche directory
+
+  if (is.null(cache_svy_dir)) {
+    if (tool == "PC") {
+
+      cache_svy_dir <- getOption("pip.cachedir.pc")
+
+    } else {
+
+      cache_svy_dir <- getOption("pip.cachedir.tb")
+
+    }
+  }
+
+  # pipeliine inventory
   if (is.null(pipeline_inventory)) {
     # Load PIP inventory
+    if (tool == "PC") {
+
+      fil <- list(filter_to_pc = TRUE)
+
+    } else {
+
+      fil <- list(filter_to_tb = TRUE)
+
+    }
+
     pip_inventory <-
-      pipload::pip_find_data(
-        inv_file = paste0(getOption("pip.maindir"), '_inventory/inventory.fst'),
-        filter_to_pc = TRUE,
-        maindir = getOption("pip.maindir")
-        )
+      do.call(pipload::pip_find_data,
+               c(
+                 inv_file = paste0(getOption("pip.maindir"), '_inventory/inventory.fst'),
+                 fil,
+                 maindir = getOption("pip.maindir")
+                 )
+      )
 
     # Create pipeline inventory
     pipeline_inventory <-
@@ -38,9 +66,18 @@ pip_update_cache_inventory <- function(pipeline_inventory = NULL,
   # get surveys available in cache dir   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  cch  <- data.table(cache_file = list.files(cache_svy_dir,
-                                             full.names = TRUE,
-                                             pattern = "\\.fst$"))
+  cch  <- data.table::data.table(cache_file =
+                                   list.files(path       = cache_svy_dir,
+                                              full.names = TRUE,
+                                              pattern    = "\\.fst$"))
+
+  if (nrow(cch) == 0) {
+    cli::cli_alert_warning("There is no data in directory {.field {cache_svy_dir}}\n
+                           Cache inventory not created",
+                           wrap = TRUE)
+    return(invisible(FALSE))
+  }
+
   cch[, cache_id := gsub('(.+/)([^/]+)(\\.fst)', '\\2', cache_file)]
   cch <- cch[!grepl("^_", cache_id)]
 
@@ -50,9 +87,9 @@ pip_update_cache_inventory <- function(pipeline_inventory = NULL,
   crr   <- cch[pipeline_inventory,
                on = "cache_id",
                (cols) := mget(icols)
-  ][,
-    survey_id := gsub("\\.dta", "", filename)
-  ]
+                ][,
+                  survey_id := gsub("\\.dta", "", filename)
+                ]
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Save   ---------

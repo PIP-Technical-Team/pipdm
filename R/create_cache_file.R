@@ -8,10 +8,11 @@
 #' @param compress numeric: Compression level used in `fst::write_fst()`.
 #' @param verbose boolean: If TRUE additional messages are printed to the
 #' console.
-#' @param force logical: if TRUE, all files will be generates again.
+#' @param force logical: if TRUE, all files will be generate again.
 #'
 create_cache_file <- function(pipeline_inventory,
-                              pip_data_dir,
+                              # pip_data_dir = getOption("pip.maindir"),
+                              tool       = c("PC", "TB"),
                               cache_svy_dir,
                               compress   = 100,
                               verbose    = TRUE,
