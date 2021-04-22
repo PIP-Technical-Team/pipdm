@@ -10,6 +10,8 @@
 #' console.
 #' @param force logical: if TRUE, all files will be generate again.
 #'
+#' @return list: creation status and cache data availability
+#' @export
 create_cache_file <- function(pipeline_inventory = NULL,
                               pip_data_dir       = getOption("pip.maindir"),
                               tool               = c("PC", "TB"),

@@ -5,8 +5,6 @@
 #'
 #' @return TRUE if file is update. FALSE If no data is in directory
 #' @export
-#'
-#' @examples
 pip_update_cache_inventory <- function(pipeline_inventory = NULL,
                                        cache_svy_dir      = NULL,
                                        tool               = c("PC", "TB")
