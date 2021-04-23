@@ -2,6 +2,7 @@
 #'
 #' Save a cleaned version of the survey data in the cache survey data directory.
 #'
+#' @inheritParams process_svy_data_to_cache
 #' @param pipeline_inventory data.table: Pipeline inventory table.
 #' @param pip_data_dir character: Input folder for the raw survey data.
 #' @param cache_svy_dir character: Output folder for the cached survey data.
@@ -18,7 +19,9 @@ create_cache_file <- function(pipeline_inventory = NULL,
                               cache_svy_dir      = NULL,
                               compress           = 100,
                               verbose            = TRUE,
-                              force              = FALSE) {
+                              force              = FALSE,
+                              cpi_dt             = NULL,
+                              ppp_dt             = NULL) {
 
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -155,7 +158,9 @@ create_cache_file <- function(pipeline_inventory = NULL,
                                                    chh_filename  = .y,
                                                    pip_data_dir  = pip_data_dir,
                                                    cache_svy_dir = cache_svy_dir,
-                                                   compress      = 100)
+                                                   compress      = 100,
+                                                   cpi_dt        = cpi_dt,
+                                                   ppp_dt        = cpi_dt)
                        })
 
   #--------- Save correspondence file ---------

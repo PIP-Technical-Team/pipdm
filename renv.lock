@@ -53,17 +53,17 @@
     },
     "brio": {
       "Package": "brio",
-      "Version": "1.1.1",
+      "Version": "1.1.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "36758510e65a457efeefa50e1e7f0576"
+      "Hash": "2f01e16ff9571fe70381c7b9ae560dc4"
     },
     "callr": {
       "Package": "callr",
-      "Version": "3.6.0",
+      "Version": "3.7.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "25da2c6fba6a13b5da94e37acdb3f532"
+      "Hash": "461aa75a11ce2400245190ef5d3995df"
     },
     "cellranger": {
       "Package": "cellranger",
@@ -235,17 +235,17 @@
     },
     "haven": {
       "Package": "haven",
-      "Version": "2.3.1",
+      "Version": "2.4.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "221d0ad75dfa03ebf17b1a4cc5c31dfc"
+      "Hash": "55b52e83c1262f764d750b8e731fa771"
     },
     "highr": {
       "Package": "highr",
-      "Version": "0.8",
+      "Version": "0.9",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "4dc5bb88961e347a0f4d8aad597cbfac"
+      "Hash": "8eb36c8125038e648e5d111c0d7b2ed4"
     },
     "hms": {
       "Package": "hms",
@@ -277,15 +277,15 @@
     },
     "joyn": {
       "Package": "joyn",
-      "Version": "0.1.1.9000",
+      "Version": "0.1.2.9001",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteUsername": "randrescastaneda",
-      "RemoteRepo": "joyn",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "c592e29fe329934ac503b6480cb20db6e91a0f14",
       "RemoteHost": "api.github.com",
-      "Hash": "1f94f3aff0fb63f9717acb9846e24dc1"
+      "RemoteRepo": "joyn",
+      "RemoteUsername": "randrescastaneda",
+      "RemoteRef": "HEAD",
+      "RemoteSha": "4e63056345522b7465c8ed4ee1df7050cf58c65d",
+      "Hash": "4855e3b31efcdae84e9e87b9e77d9cf6"
     },
     "jsonlite": {
       "Package": "jsonlite",
@@ -296,10 +296,10 @@
     },
     "knitr": {
       "Package": "knitr",
-      "Version": "1.31",
+      "Version": "1.32",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c3994c036d19fc22c5e2a209c8298bfb"
+      "Hash": "c9e3c0fffd678c847d9b274c068ca46b"
     },
     "lifecycle": {
       "Package": "lifecycle",
@@ -352,8 +352,8 @@
       "RemoteRepo": "pipload",
       "RemoteUsername": "PIP-Technical-Team",
       "RemoteRef": "development",
-      "RemoteSha": "115595e31688d8c68c8d33cd7ebc219609adae38",
-      "Hash": "ffc15b913e07173ecf3eddd21dcb19dd"
+      "RemoteSha": "c34e5f79154f3d9208b65391ca815dc5aa9d3fea",
+      "Hash": "8e8f70580afca8c3f5ab5d442696e38b"
     },
     "pkgconfig": {
       "Package": "pkgconfig",
@@ -518,10 +518,10 @@
     },
     "tibble": {
       "Package": "tibble",
-      "Version": "3.1.0",
+      "Version": "3.1.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "4d894a114dbd4ecafeda5074e7c538e6"
+      "Hash": "fbbca141541ee9242233ba50b0fcb843"
     },
     "tidyfast": {
       "Package": "tidyfast",
@@ -600,10 +600,10 @@
     },
     "withr": {
       "Package": "withr",
-      "Version": "2.4.1",
+      "Version": "2.4.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "caf4781c674ffa549a4676d2d77b13cc"
+      "Hash": "ad03909b44677f930fa156d47d7a3aeb"
     },
     "xfun": {
       "Package": "xfun",
