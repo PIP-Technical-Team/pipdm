@@ -160,7 +160,7 @@ create_cache_file <- function(pipeline_inventory = NULL,
                                                    cache_svy_dir = cache_svy_dir,
                                                    compress      = 100,
                                                    cpi_dt        = cpi_dt,
-                                                   ppp_dt        = cpi_dt)
+                                                   ppp_dt        = ppp_dt)
                        })
 
   #--------- Save correspondence file ---------
