@@ -97,7 +97,8 @@ process_svy_data_to_cache <- function(survey_id,
                           match_type = "m:1",
                           yvars      = 'ppp',
                           keep       = "left",
-                          reportvar  = FALSE)
+                          reportvar  = FALSE,
+                          verbose    = FALSE)
 
         # Merge survey table with CPI (left join)
         df <- joyn::merge(df, cpi_dt,
@@ -106,7 +107,8 @@ process_svy_data_to_cache <- function(survey_id,
                           match_type = "m:1",
                           yvars      = 'cpi',
                           keep       = "left",
-                          reportvar  = FALSE)
+                          reportvar  = FALSE,
+                          verbose    = FALSE)
 
 
         setnames(df, "welfare", "welfare_lcu")
