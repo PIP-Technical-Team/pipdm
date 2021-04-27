@@ -11,7 +11,9 @@ create_cache_file(
   cache_svy_dir = NULL,
   compress = 100,
   verbose = TRUE,
-  force = FALSE
+  force = FALSE,
+  cpi_dt = NULL,
+  ppp_dt = NULL
 )
 }
 \arguments{
@@ -27,6 +29,10 @@ create_cache_file(
 console.}
 
 \item{force}{logical: if TRUE, all files will be generate again.}
+
+\item{cpi_dt}{data frame with CPI data to deflate welfare in TB data}
+
+\item{ppp_dt}{data frame with PPP data to deflate welfare in TB data}
 }
 \value{
 list: creation status and cache data availability

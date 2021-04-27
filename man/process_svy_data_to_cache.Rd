@@ -8,9 +8,11 @@ process_svy_data_to_cache(
   survey_id,
   chh_filename,
   pip_data_dir,
-  cols = NULL,
   cache_svy_dir,
-  compress
+  compress,
+  cols = NULL,
+  cpi_dt = NULL,
+  ppp_dt = NULL
 )
 }
 \arguments{
@@ -20,11 +22,15 @@ process_svy_data_to_cache(
 
 \item{pip_data_dir}{character: Input folder for the raw survey data.}
 
-\item{cols}{character: vector of variables to keep. Default is NULL.}
-
 \item{cache_svy_dir}{character: Output directory}
 
 \item{compress}{numeric: Compression level used in \code{fst::write_fst()}.}
+
+\item{cols}{character: vector of variables to keep. Default is NULL.}
+
+\item{cpi_dt}{data frame with CPI data to deflate welfare in TB data}
+
+\item{ppp_dt}{data frame with PPP data to deflate welfare in TB data}
 }
 \value{
 
