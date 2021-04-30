@@ -118,6 +118,8 @@ process_svy_data_to_cache <- function(survey_id,
           cpi          = cpi)
         ]
 
+      } else {
+        df
       }
 
 
