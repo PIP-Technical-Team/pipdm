@@ -59,6 +59,8 @@ clean_data <- function(dt) {
     df <- md_clean_data(
       dt, welfare = 'welfare', weight = 'weight',
       quiet = TRUE)$data
+
+    df <- as_pipmd(df)
   } else if (dist_type == 'group') {
     # Standardize to type 1
     df <- gd_clean_data(
@@ -67,6 +69,9 @@ clean_data <- function(dt) {
       population = 'weight',
       gd_type = gd_type,
       quiet = TRUE)
+
+    df <- as_pipgd(df)
+
   } else if (dist_type == 'aggregate') {
     # Split by area
     dt_rural <- dt[dt$area == 'rural']
@@ -87,11 +92,17 @@ clean_data <- function(dt) {
       quiet = TRUE)
     # Bind back together
     df <- rbind(dt_rural, dt_urban)
+
+    df <- as_pipgd(df)
+
   } else if (dist_type == 'imputed') {
     # Clean data (remove negative values etc.)
     df <- md_clean_data(
       dt, welfare = 'welfare', weight = 'weight',
       quiet = TRUE)$data
+
+    df <- as_pipid(df)
+
   } else {
     stop("`dist_type` not valid")
   }

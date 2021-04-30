@@ -1,6 +1,6 @@
 Package: pipdm
 Title: PIP Data Managment
-Version: 0.0.1.9009
+Version: 0.0.1.9010
 Authors@R: 
     c(person(given = "Tony",
             family = "Fujs",
@@ -46,5 +46,6 @@ Imports:
     cli,
     tibble,
     joyn,
-    pipload
+    pipload,
+    vctrs
 VignetteBuilder: knitr
