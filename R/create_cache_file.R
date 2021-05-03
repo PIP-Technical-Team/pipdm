@@ -155,7 +155,7 @@ create_cache_file <- function(pipeline_inventory = NULL,
                          pb$tick(tokens = list(what = id_what))
 
                          process_svy_data_to_cache(survey_id     = .x,
-                                                   chh_filename  = .y,
+                                                   cache_id      = .y,
                                                    pip_data_dir  = pip_data_dir,
                                                    cache_svy_dir = cache_svy_dir,
                                                    compress      = 100,
