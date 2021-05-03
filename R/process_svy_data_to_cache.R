@@ -2,7 +2,6 @@
 #'
 #' @param survey_id character: Original Survey ID
 #' @param cache_id  character: cache id vector
-#' @param chh_filename character: Cache filename
 #' @param pip_data_dir character: Input folder for the raw survey data.
 #' @param cols character: vector of variables to keep. Default is NULL.
 #' @param cache_svy_dir character: Output directory
@@ -14,7 +13,6 @@
 #' @export
 process_svy_data_to_cache <- function(survey_id,
                                       cache_id,
-                                      chh_filename,
                                       pip_data_dir,
                                       cache_svy_dir,
                                       compress,
