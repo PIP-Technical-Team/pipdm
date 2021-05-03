@@ -1,7 +1,8 @@
 #' Process survey data to cache file
 #'
-#' @param chh_filename character: Cache filename
 #' @param survey_id character: Original Survey ID
+#' @param cache_id  character: cache id vector
+#' @param chh_filename character: Cache filename
 #' @param pip_data_dir character: Input folder for the raw survey data.
 #' @param cols character: vector of variables to keep. Default is NULL.
 #' @param cache_svy_dir character: Output directory
@@ -9,9 +10,10 @@
 #' @param cpi_dt data frame with CPI data to deflate welfare in TB data
 #' @param ppp_dt data frame with PPP data to deflate welfare in TB data
 #'
-#' @return
+#' @return data frame with status of process
 #' @export
 process_svy_data_to_cache <- function(survey_id,
+                                      cache_id,
                                       chh_filename,
                                       pip_data_dir,
                                       cache_svy_dir,
@@ -22,11 +24,9 @@ process_svy_data_to_cache <- function(survey_id,
 
 
   #--------- Load data ---------
-  chh_filename <- fifelse(!grepl("\\.fst$", chh_filename),
-                          paste0(chh_filename, ".fst"),
-                          chh_filename)
-
-  cache_id     <- gsub("\\.fst", "", chh_filename)
+  chh_filename <- fifelse(grepl("\\.fst$", cache_id),
+                          cache_id,
+                          paste0(cache_id, ".fst"))
 
   df <- tryCatch(
     expr = {
