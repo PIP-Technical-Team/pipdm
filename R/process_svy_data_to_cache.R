@@ -86,42 +86,36 @@ process_svy_data_to_cache <- function(survey_id,
       data.table::setorder(df, max_domain)
 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      ## Only for TB data --------
-      if (grepl("ALL$", cache_id)) {
+      ## Deflate data --------
+      ppp_dt <- ppp_dt[ppp_default == TRUE]
 
-        ppp_dt <- ppp_dt[ppp_default == TRUE]
+      # Merge survey table with PPP (left join)
+      df <- joyn::merge(df, ppp_dt,
+                        by         = c("country_code", "ppp_data_level"),
+                        match_type = "m:1",
+                        yvars      = 'ppp',
+                        keep       = "left",
+                        reportvar  = FALSE,
+                        verbose    = FALSE)
 
-        # Merge survey table with PPP (left join)
-        df <- joyn::merge(df, ppp_dt,
-                          by         = c("country_code", "ppp_data_level"),
-                          match_type = "m:1",
-                          yvars      = 'ppp',
-                          keep       = "left",
-                          reportvar  = FALSE,
-                          verbose    = FALSE)
+      # Merge survey table with CPI (left join)
+      df <- joyn::merge(df, cpi_dt,
+                        by         = c("country_code", "survey_year",
+                                       "survey_acronym", "cpi_data_level"),
+                        match_type = "m:1",
+                        yvars      = 'cpi',
+                        keep       = "left",
+                        reportvar  = FALSE,
+                        verbose    = FALSE)
 
-        # Merge survey table with CPI (left join)
-        df <- joyn::merge(df, cpi_dt,
-                          by         = c("country_code", "survey_year",
-                                 "survey_acronym", "cpi_data_level"),
-                          match_type = "m:1",
-                          yvars      = 'cpi',
-                          keep       = "left",
-                          reportvar  = FALSE,
-                          verbose    = FALSE)
-
-
-        setnames(df, "welfare", "welfare_lcu")
-        df[, welfare_ppp := wbpip::deflate_welfare_mean(
-          welfare_mean = welfare_lcu,
-          ppp          = ppp,
-          cpi          = cpi)
-        ]
-
-      } else {
-        df
-      }
-
+      df[,
+         welfare_lcu := welfare
+         ][,
+           welfare_ppp := wbpip::deflate_welfare_mean(
+           welfare_mean = welfare_lcu,
+           ppp          = ppp,
+           cpi          = cpi)
+           ]
 
     }, # end of expr section
 
