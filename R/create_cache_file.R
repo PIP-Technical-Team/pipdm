@@ -167,15 +167,17 @@ create_cache_file <- function(pipeline_inventory = NULL,
   crr_status <- pip_update_cache_inventory(pipeline_inventory = pipeline_inventory,
                                            cache_svy_dir      = cache_svy_dir,
                                            tool               = tool)
-  if (verbose && crr_status) {
+  if (verbose) {
+    if (crr_status) {
 
     cli::cli_alert_success('Correspondence inventory file saved')
 
-  } else {
+    } else {
 
     cli::cli_alert_danger('Correspondence inventory file
                           {.strong {col_red("NOT")}} saved',
                           wrap = TRUE)
+    }
   }
 
   # load correspondence file
