@@ -145,7 +145,9 @@ create_cache_file <- function(pipeline_inventory = NULL,
   }
 
   pb <- progress::progress_bar$new(format = ":what [:bar] :percent eta: :eta",
-                                   clear = , total = nrow(new_svy_ids), width = 80)
+                                   clear = FALSE,
+                                   total = nrow(new_svy_ids),
+                                   width = 80)
 
   df <- purrr::map2_df(.x = new_svy_ids$svy_ids,
                        .y = new_svy_ids$cache_id,
