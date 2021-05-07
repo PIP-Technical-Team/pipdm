@@ -60,6 +60,8 @@ pip_update_cache_inventory <- function(pipeline_inventory = NULL,
                           )
   }
 
+
+
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # get surveys available in cache dir   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,23 +83,44 @@ pip_update_cache_inventory <- function(pipeline_inventory = NULL,
 
   # Filter pipeline inventory and select relevant variables
   cols  <- c("orig", "filename", "survey_id")
-  icols <- paste0("i.", cols)
-  crr   <- cch[pipeline_inventory,
-               on = "cache_id",
-               (cols) := mget(icols)
-                ][,
-                  survey_id := gsub("\\.dta", "", filename)
-                ]
+
+  crr   <- joyn::merge(cch, pipeline_inventory,
+                       by         = "cache_id",
+                       match_type = "1:1",
+                       keep       = "inner",
+                       reportvar  = FALSE,
+                       yvars      = cols,
+                       verbose    = FALSE)
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Save   ---------
+  # Stamps   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
   time <- format(Sys.time(), "%Y%m%d%H%M%S") # find a way to account for time zones
 
   crr_dir      <- glue::glue("{cache_svy_dir}_crr_inventory/")
   crr_filename <- glue::glue("{crr_dir}crr_inventory")
   crr_vintage  <- glue::glue("{crr_dir}vintage/crr_inventory_{time}")
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Current inventory   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  if (file.exists(glue::glue("{crr_filename}.fst"))) {
+    cci <- fst::read_fst(glue::glue("{crr_filename}.fst"),
+                         as.data.table = TRUE)
+
+    crr <- joyn::merge(cci, crr,
+                       by            = "cache_id",
+                       match_type    = "1:1",
+                       update_values = TRUE,
+                       reportvar     = FALSE,
+                       verbose       = FALSE)
+  }
+
+
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Save   ---------
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   # FST
   fst::write_fst(crr, glue::glue("{crr_filename}.fst"))

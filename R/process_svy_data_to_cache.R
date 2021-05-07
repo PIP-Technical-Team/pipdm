@@ -1,7 +1,7 @@
 #' Process survey data to cache file
 #'
-#' @param chh_filename character: Cache filename
 #' @param survey_id character: Original Survey ID
+#' @param cache_id  character: cache id vector
 #' @param pip_data_dir character: Input folder for the raw survey data.
 #' @param cols character: vector of variables to keep. Default is NULL.
 #' @param cache_svy_dir character: Output directory
@@ -9,10 +9,10 @@
 #' @param cpi_dt data frame with CPI data to deflate welfare in TB data
 #' @param ppp_dt data frame with PPP data to deflate welfare in TB data
 #'
-#' @return
+#' @return data frame with status of process
 #' @export
 process_svy_data_to_cache <- function(survey_id,
-                                      chh_filename,
+                                      cache_id,
                                       pip_data_dir,
                                       cache_svy_dir,
                                       compress,
@@ -22,11 +22,9 @@ process_svy_data_to_cache <- function(survey_id,
 
 
   #--------- Load data ---------
-  chh_filename <- fifelse(!grepl("\\.fst$", chh_filename),
-                          paste0(chh_filename, ".fst"),
-                          chh_filename)
-
-  cache_id     <- gsub("\\.fst", "", chh_filename)
+  chh_filename <- fifelse(grepl("\\.fst$", cache_id),
+                          cache_id,
+                          paste0(cache_id, ".fst"))
 
   df <- tryCatch(
     expr = {
@@ -86,42 +84,36 @@ process_svy_data_to_cache <- function(survey_id,
       data.table::setorder(df, max_domain)
 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      ## Only for TB data --------
-      if (grepl("ALL$", cache_id)) {
+      ## Deflate data --------
+      ppp_dt <- ppp_dt[ppp_default == TRUE]
 
-        ppp_dt <- ppp_dt[ppp_default == TRUE]
+      # Merge survey table with PPP (left join)
+      df <- joyn::merge(df, ppp_dt,
+                        by         = c("country_code", "ppp_data_level"),
+                        match_type = "m:1",
+                        yvars      = 'ppp',
+                        keep       = "left",
+                        reportvar  = FALSE,
+                        verbose    = FALSE)
 
-        # Merge survey table with PPP (left join)
-        df <- joyn::merge(df, ppp_dt,
-                          by         = c("country_code", "ppp_data_level"),
-                          match_type = "m:1",
-                          yvars      = 'ppp',
-                          keep       = "left",
-                          reportvar  = FALSE,
-                          verbose    = FALSE)
+      # Merge survey table with CPI (left join)
+      df <- joyn::merge(df, cpi_dt,
+                        by         = c("country_code", "survey_year",
+                                       "survey_acronym", "cpi_data_level"),
+                        match_type = "m:1",
+                        yvars      = 'cpi',
+                        keep       = "left",
+                        reportvar  = FALSE,
+                        verbose    = FALSE)
 
-        # Merge survey table with CPI (left join)
-        df <- joyn::merge(df, cpi_dt,
-                          by         = c("country_code", "survey_year",
-                                 "survey_acronym", "cpi_data_level"),
-                          match_type = "m:1",
-                          yvars      = 'cpi',
-                          keep       = "left",
-                          reportvar  = FALSE,
-                          verbose    = FALSE)
-
-
-        setnames(df, "welfare", "welfare_lcu")
-        df[, welfare_ppp := wbpip::deflate_welfare_mean(
-          welfare_mean = welfare_lcu,
-          ppp          = ppp,
-          cpi          = cpi)
-        ]
-
-      } else {
-        df
-      }
-
+      df[,
+         welfare_lcu := welfare
+         ][,
+           welfare_ppp := wbpip::deflate_welfare_mean(
+           welfare_mean = welfare_lcu,
+           ppp          = ppp,
+           cpi          = cpi)
+           ]
 
     }, # end of expr section
 

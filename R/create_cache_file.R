@@ -145,7 +145,9 @@ create_cache_file <- function(pipeline_inventory = NULL,
   }
 
   pb <- progress::progress_bar$new(format = ":what [:bar] :percent eta: :eta",
-                                   clear = , total = nrow(new_svy_ids), width = 80)
+                                   clear = FALSE,
+                                   total = nrow(new_svy_ids),
+                                   width = 80)
 
   df <- purrr::map2_df(.x = new_svy_ids$svy_ids,
                        .y = new_svy_ids$cache_id,
@@ -155,7 +157,7 @@ create_cache_file <- function(pipeline_inventory = NULL,
                          pb$tick(tokens = list(what = id_what))
 
                          process_svy_data_to_cache(survey_id     = .x,
-                                                   chh_filename  = .y,
+                                                   cache_id      = .y,
                                                    pip_data_dir  = pip_data_dir,
                                                    cache_svy_dir = cache_svy_dir,
                                                    compress      = 100,
@@ -167,15 +169,17 @@ create_cache_file <- function(pipeline_inventory = NULL,
   crr_status <- pip_update_cache_inventory(pipeline_inventory = pipeline_inventory,
                                            cache_svy_dir      = cache_svy_dir,
                                            tool               = tool)
-  if (verbose && crr_status) {
+  if (verbose) {
+    if (crr_status) {
 
     cli::cli_alert_success('Correspondence inventory file saved')
 
-  } else {
+    } else {
 
     cli::cli_alert_danger('Correspondence inventory file
                           {.strong {col_red("NOT")}} saved',
                           wrap = TRUE)
+    }
   }
 
   # load correspondence file

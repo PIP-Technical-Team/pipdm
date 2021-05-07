@@ -16,7 +16,7 @@ as_pipmd <- function(x) {
 #' @return data frame with new class pipgd
 #' @export
 as_pipgd <- function(x) {
-  class(x) <- pipmgd_class
+  class(x) <- pipgd_class
   x
 }
 
@@ -33,7 +33,7 @@ as_pipid <- function(x) {
 
 }
 
-pipmd_class <- c("pipdm", "data.table", "data.frame")
+pipmd_class <- c("pipmd", "data.table", "data.frame")
 pipgd_class <- c("pipgd", "data.table", "data.frame")
 pipid_class <- c("pipid", "data.table", "data.frame")
 
