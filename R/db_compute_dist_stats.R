@@ -43,7 +43,6 @@ db_compute_dist_stats <- function(dt, mean, pop, cache_id, gc = FALSE) {
 #' @noRd
 compute_dist_stats <- function(dt, mean, pop, cache_id) {
 
-
   # identify procedure
   source      <- gsub("(.*_)([A-Z]+$)", "\\2", cache_id)
   data_level  <- gsub("(.*_)(D[123])(.+$)", "\\2", cache_id)
@@ -61,15 +60,13 @@ compute_dist_stats <- function(dt, mean, pop, cache_id) {
 
   names(res) <- pop_level
 
-
   if (data_level != "D1") { # Urban/rural or subnat level
 
     if (source == "GROUP") { # Group data
 
       # create synthetic vector
       wf <- purrr::map_df(.x = pop_level,
-                          .f = ~wbpip::get_synth_vector(dt, pop, mean, level = .x))
-
+                          .f = ~get_synth_vector(dt, pop, mean, level = .x))
 
     } else { # microdata
 
@@ -175,4 +172,33 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
   }
   return(res)
 
+}
+
+#' Get synthetic vector based on data level
+#'
+#' @param dt data.table: data frame with grouped data
+#' @param pop data.table: data frame with population data
+#' @param mean numeric: named vector of means. The name of each value correspond
+#'   the data level of the value
+#' @param level character: data level. it could  be national, urban, rural, or
+#'   any other subnational division
+#'
+#' @return data.frame
+#' @export
+get_synth_vector <- function(dt, pop, mean, level) {
+
+  df <- dt[max_domain == level]
+  ccode     <- dt[, unique(country_code)]
+  svid_year <- dt[, unique(surveyid_year)]
+
+  popf   <- pop[country_code     == ccode
+                & year           == svid_year
+                & pop_data_level == level,
+                pop]
+
+  wf <- sd_create_synth_vector(df$welfare,
+                               df$weight,
+                               mean = mean[level],
+                               pop  = popf)
+  return(wf)
 }
