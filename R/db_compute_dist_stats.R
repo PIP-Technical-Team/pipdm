@@ -3,18 +3,18 @@
 #' Calculate distributional statistics  for a single survey dataset.
 #'
 #' @inheritParams db_clean_data
+#' @param pop_table data.table: A table with population data.
 #' @param mean numeric: A value with the survey mean.
-#' @param pop dataframe with population data
 #' @param cache_id character: cache id to identify the right process
 #' @return list
 #' @export
-db_compute_dist_stats <- function(dt, mean, pop, cache_id, gc = FALSE) {
+db_compute_dist_stats <- function(dt, mean, pop_table, cache_id, gc = FALSE) {
 
   tryCatch(
     expr = {
 
       # Compute dist stats
-      res <- compute_dist_stats(dt, mean, pop, cache_id)
+      res <- compute_dist_stats(dt, mean, pop_table, cache_id)
 
       # Garbage collection
       if (gc) gc(verbose = FALSE)
@@ -41,7 +41,7 @@ db_compute_dist_stats <- function(dt, mean, pop, cache_id, gc = FALSE) {
 #' @inheritParams db_compute_dist_stats
 #' @return list
 #' @noRd
-compute_dist_stats <- function(dt, mean, pop, cache_id) {
+compute_dist_stats <- function(dt, mean, pop_table, cache_id) {
 
   # identify procedure
   source      <- gsub("(.*_)([A-Z]+$)", "\\2", cache_id)
@@ -66,7 +66,7 @@ compute_dist_stats <- function(dt, mean, pop, cache_id) {
 
       # create synthetic vector
       wf <- purrr::map_df(.x = pop_level,
-                          .f = ~get_synth_vector(dt, pop, mean, level = .x))
+                          .f = ~get_synth_vector(dt, pop_table, mean, level = .x))
 
     } else { # microdata
 
@@ -74,11 +74,11 @@ compute_dist_stats <- function(dt, mean, pop, cache_id) {
 
     }
 
-      # national mean
-      res_national <- md_dist_stats(wf)
+    # national mean
+    res_national <- md_dist_stats(wf)
 
-      res <- append(list(res_national), res)
-      names(res) <- c("national", pop_level)
+    res <- append(list(res_national), res)
+    names(res) <- c("national", pop_level)
 
   }
 
@@ -148,7 +148,7 @@ id_dist_stats <- function(dt){
   return(res)
 }
 
-#' get  dist stats based on data level for md or gd
+#' Get dist stats based on data level for md or gd
 #'
 #' @inheritParams db_compute_dist_stats
 #' @inheritParams get_synth_vector
@@ -162,7 +162,6 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
   if (source == "GROUP") {
     res <- gd_dist_stats(df, mean[level])
   } else {
-
     is_imputed <- length(unique(df$imputation_id)) > 1
     if (is_imputed) {
       res <- id_dist_stats(df)
@@ -176,25 +175,25 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
 
 #' Get synthetic vector based on data level
 #'
-#' @param dt data.table: data frame with grouped data
-#' @param pop data.table: data frame with population data
-#' @param mean numeric: named vector of means. The name of each value correspond
-#'   the data level of the value
+#' @param dt data.table: A table with grouped data.
+#' @param pop_table data.table: A table with population data.
+#' @param mean numeric: A named vector of means. The name must correspond to
+#'   the data level of the value,
 #' @param level character: data level. it could  be national, urban, rural, or
 #'   any other subnational division
 #'
 #' @return data.frame
 #' @export
-get_synth_vector <- function(dt, pop, mean, level) {
+get_synth_vector <- function(dt, pop_table, mean, level) {
 
   df <- dt[max_domain == level]
   ccode     <- dt[, unique(country_code)]
   svid_year <- dt[, unique(surveyid_year)]
 
-  popf   <- pop[country_code     == ccode
-                & year           == svid_year
-                & pop_data_level == level,
-                pop]
+  popf   <- pop_table[country_code     == ccode
+                      & year           == svid_year
+                      & pop_data_level == level,
+                      pop]
 
   wf <- sd_create_synth_vector(df$welfare,
                                df$weight,
