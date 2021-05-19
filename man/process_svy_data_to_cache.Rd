@@ -6,7 +6,7 @@
 \usage{
 process_svy_data_to_cache(
   survey_id,
-  chh_filename,
+  cache_id,
   pip_data_dir,
   cache_svy_dir,
   compress,
@@ -18,7 +18,7 @@ process_svy_data_to_cache(
 \arguments{
 \item{survey_id}{character: Original Survey ID}
 
-\item{chh_filename}{character: Cache filename}
+\item{cache_id}{character: cache id vector}
 
 \item{pip_data_dir}{character: Input folder for the raw survey data.}
 
@@ -33,7 +33,7 @@ process_svy_data_to_cache(
 \item{ppp_dt}{data frame with PPP data to deflate welfare in TB data}
 }
 \value{
-
+data frame with status of process
 }
 \description{
 Process survey data to cache file

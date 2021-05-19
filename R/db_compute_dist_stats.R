@@ -183,7 +183,7 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
 #'   any other subnational division
 #'
 #' @return data.frame
-#' @export
+#' @noRd
 get_synth_vector <- function(dt, pop_table, mean, level) {
 
   df <- dt[max_domain == level]
