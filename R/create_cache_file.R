@@ -49,17 +49,22 @@ create_cache_file <- function(pipeline_inventory = NULL,
     pip_inventory <-
       do.call(pipload::pip_find_data,
               c(
-                inv_file = paste0(getOption("pip.maindir"),
+                inv_file = paste0(pip_data_dir,
                                   '_inventory/inventory.fst'),
                 fil,
-                maindir = getOption("pip.maindir")
+                maindir = pip_data_dir
               )
       )
 
     # Create pipeline inventory
     pipeline_inventory <-
-      db_filter_inventory(pip_inventory,
-                          pfw_table = pipload::pip_load_aux("pfw")
+      db_filter_inventory(
+        pip_inventory,
+        pfw_table =
+          pipload::pip_load_aux(measure = "pfw",
+                                msrdir = paste0(pip_data_dir,
+                                         "_aux/", "pfw", "/")
+          )
       )
   }
 
@@ -77,7 +82,6 @@ create_cache_file <- function(pipeline_inventory = NULL,
     }
   }
 
-
   # correspondence file
   crr_dir      <- glue::glue("{cache_svy_dir}_crr_inventory/")
   crr_filename <- glue::glue("{crr_dir}crr_inventory.fst")
@@ -92,10 +96,12 @@ create_cache_file <- function(pipeline_inventory = NULL,
   # real new files
   if (isFALSE(force)) {
 
-    new_svy_ids <- find_new_svy_data(cache_id      = pipeline_inventory$cache_id,
-                                     filename      = pipeline_inventory$filename,
-                                     tool          = tool,
-                                     cache_svy_dir = cache_svy_dir)
+    new_svy_ids <- find_new_svy_data(
+      cache_id      = pipeline_inventory$cache_id,
+      filename      = pipeline_inventory$filename,
+      tool          = tool,
+      cache_svy_dir = cache_svy_dir)
+
     if (verbose) {
       cli::cli_alert("Found {.field {nrow(new_svy_ids)}} new survey(s)...")
     }
@@ -115,10 +121,8 @@ create_cache_file <- function(pipeline_inventory = NULL,
 
   }
 
-
   # Early return
   if (nrow(new_svy_ids) == 0) {
-
 
     if ( !(file.exists(crr_filename)) ) {
 
@@ -126,9 +130,11 @@ create_cache_file <- function(pipeline_inventory = NULL,
                            It will be created",
                            wrap = TRUE)
 
-      pip_update_cache_inventory(pipeline_inventory = pipeline_inventory,
-                                 cache_svy_dir      = cache_svy_dir,
-                                 tool               = tool)
+      pip_update_cache_inventory(
+        pipeline_inventory = pipeline_inventory,
+        pip_data_dir = pip_data_dir,
+        cache_svy_dir = cache_svy_dir,
+        tool = tool)
     }
 
     crr    <- fst::read_fst(crr_filename,
@@ -166,9 +172,13 @@ create_cache_file <- function(pipeline_inventory = NULL,
                        })
 
   #--------- Save correspondence file ---------
-  crr_status <- pip_update_cache_inventory(pipeline_inventory = pipeline_inventory,
-                                           cache_svy_dir      = cache_svy_dir,
-                                           tool               = tool)
+
+  crr_status <- pip_update_cache_inventory(
+    pipeline_inventory = pipeline_inventory,
+    pip_data_dir = pip_data_dir,
+    cache_svy_dir = cache_svy_dir,
+    tool = tool)
+
   if (verbose) {
     if (crr_status) {
 

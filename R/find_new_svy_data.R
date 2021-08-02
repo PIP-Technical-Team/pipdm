@@ -14,7 +14,8 @@ find_new_svy_data <- function(cache_id,
                               cache_svy_dir = NULL) {
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ## scheck parameters --------
+
+  ## check parameters --------
   tool <- match.arg(tool)
 
   if (is.null(cache_svy_dir)) {
@@ -37,15 +38,14 @@ find_new_svy_data <- function(cache_id,
   # Select new surveys
   new_svy_ids <- filename[!(cache_id %in% existing_chh_ids)]
 
-
   # working data.table
   pipe <- data.table::data.table(
     cache_id = get("cache_id"),
     filename = get("filename")
   )
 
-
   #--------- find data whose SVY id has changed ---------
+
   # load correspondence inventory
   crr_dir <- glue::glue("{cache_svy_dir}_crr_inventory/")
 
@@ -53,8 +53,6 @@ find_new_svy_data <- function(cache_id,
 
     crr_inv <- fst::read_fst(glue::glue("{crr_dir}crr_inventory.fst"))
     data.table::setDT(crr_inv)
-
-
 
     chd_svy <-
       crr_inv[pipe,
@@ -69,6 +67,7 @@ find_new_svy_data <- function(cache_id,
     if (length(chd_svy) > 0) {
       new_svy_ids <- c(new_svy_ids, chd_svy)
     }
+
   } else {
     pip_update_cache_inventory(cache_svy_dir = cache_svy_dir,
                                tool          = tool)
