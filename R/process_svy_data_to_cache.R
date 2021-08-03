@@ -44,7 +44,6 @@ process_svy_data_to_cache <- function(survey_id,
     }
   ) # End of trycatch
 
-
   if (is.null(df)) {
     ret <- data.table(id     = survey_id,
                       status = "error loading")
@@ -125,7 +124,6 @@ process_svy_data_to_cache <- function(survey_id,
       NULL
     }
   ) # End of trycatch
-
 
   if (is.null(df)) {
     ret <- data.table(id     = survey_id,

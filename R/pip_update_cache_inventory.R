@@ -6,19 +6,15 @@
 #' @return TRUE if file is update. FALSE If no data is in directory
 #' @export
 pip_update_cache_inventory <- function(pipeline_inventory = NULL,
+                                       pip_data_dir       = getOption("pip.maindir"),
                                        cache_svy_dir      = NULL,
                                        tool               = c("PC", "TB")
                                        ) {
 
 
-
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # If pipeline inventor not provided   ---------
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   tool <- match.arg(tool)
 
-  # CAche directory
-
+  # Cache directory
   if (is.null(cache_svy_dir)) {
     if (tool == "PC") {
 
@@ -31,7 +27,7 @@ pip_update_cache_inventory <- function(pipeline_inventory = NULL,
     }
   }
 
-  # pipeliine inventory
+  # Pipeline inventory
   if (is.null(pipeline_inventory)) {
     # Load PIP inventory
     if (tool == "PC") {
@@ -47,20 +43,23 @@ pip_update_cache_inventory <- function(pipeline_inventory = NULL,
     pip_inventory <-
       do.call(pipload::pip_find_data,
                c(
-                 inv_file = paste0(getOption("pip.maindir"), '_inventory/inventory.fst'),
+                 inv_file = paste0(pip_data_dir, '_inventory/inventory.fst'),
                  fil,
-                 maindir = getOption("pip.maindir")
+                 maindir = pip_data_dir
                  )
       )
 
     # Create pipeline inventory
     pipeline_inventory <-
-      db_filter_inventory(pip_inventory,
-                          pfw_table = pipload::pip_load_aux("pfw")
-                          )
+      db_filter_inventory(
+        pip_inventory,
+        pfw_table =
+          pipload::pip_load_aux(measure = "pfw",
+                                msrdir = paste0(pip_data_dir,
+                                                "_aux/", "pfw", "/")
+          )
+      )
   }
-
-
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # get surveys available in cache dir   ---------
@@ -117,18 +116,18 @@ pip_update_cache_inventory <- function(pipeline_inventory = NULL,
                        verbose       = FALSE)
   }
 
-
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Save   ---------
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  # FST
+  # fst
   fst::write_fst(crr, glue::glue("{crr_filename}.fst"))
   fst::write_fst(crr, glue::glue("{crr_vintage}.fst"))
 
-  #dta
+  # dta
   haven::write_dta(crr, glue::glue("{crr_filename}.dta"))
   haven::write_dta(crr, glue::glue("{crr_vintage}.dta"))
 
   return(invisible(TRUE))
+
 }
