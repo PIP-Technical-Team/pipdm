@@ -85,33 +85,33 @@ db_create_dsm_table <- function(lcu_table,
   cdt  <- dt[, unique(country_code)]
   cppp <- jn[report == "y", unique(country_code)]
 
-  if (!identical(c("CHN", "IDN", "IND"), intersect(cdt, cppp))) {
-
-    miss <- setdiff(intersect(cdt, cppp), c("CHN", "IDN", "IND"))
-    extr <- setdiff(c("CHN", "IDN", "IND"), intersect(cdt, cppp))
-
-    if (length(miss) > 0) {
-
-      cli::cli_alert_danger("{.field {miss}} should be present in 'right'
-                            observations of joining table.", wrap = TRUE)
-
-    }
-
-    if (length(extr) > 0) {
-
-      cli::cli_alert_danger("{.field {extr}} should be present in 'inner'
-                            observations of joining table.", wrap = TRUE)
-
-      msg     <- "missing countries in resulting table."
-      hint    <- "All countries in survey-mean should have a corresponding PPP value"
-      rlang::abort(c(
-        msg,
-        i = hint
-      ),
-      class = "pipdm_error"
-      )
-    }
-  }
+  # if (!identical(c("CHN", "IDN", "IND"), intersect(cdt, cppp))) {
+  #
+  #   miss <- setdiff(intersect(cdt, cppp), c("CHN", "IDN", "IND"))
+  #   extr <- setdiff(c("CHN", "IDN", "IND"), intersect(cdt, cppp))
+  #
+  #   if (length(miss) > 0) {
+  #
+  #     cli::cli_alert_danger("{.field {miss}} should be present in 'right'
+  #                           observations of joining table.", wrap = TRUE)
+  #
+  #   }
+  #
+  #   if (length(extr) > 0) {
+  #
+  #     cli::cli_alert_danger("{.field {extr}} should be present in 'inner'
+  #                           observations of joining table.", wrap = TRUE)
+  #
+  #     msg     <- "missing countries in resulting table."
+  #     hint    <- "All countries in survey-mean should have a corresponding PPP value"
+  #     rlang::abort(c(
+  #       msg,
+  #       i = hint
+  #     ),
+  #     class = "pipdm_error"
+  #     )
+  #   }
+  # }
 
 
   dt <- jn[report != "y"  # Countries in PPP table for which we don't have data
@@ -123,6 +123,24 @@ db_create_dsm_table <- function(lcu_table,
   dt$survey_mean_ppp <-
     wbpip::deflate_welfare_mean(
       welfare_mean = dt$survey_mean_lcu, ppp = dt$ppp, cpi = dt$cpi)
+
+
+  #--------- Add comparable spell ---------
+
+  dl <- split(dt, list(dt$country_code, dt$survey_comparability))
+  dl <- lapply(dl, function(x) {
+    if (nrow(x) == 1) {
+      x$comparable_spell <- x$reporting_year
+    } else {
+      x$comparable_spell <-
+        sprintf('%s - %s',
+                x$reporting_year[1],
+                x$reporting_year[length(x$reporting_year)]
+        )
+    }
+    return(x)
+  })
+  dt <- data.table::rbindlist(dl)
 
   #--------- Finalize table ---------
 
@@ -140,7 +158,8 @@ db_create_dsm_table <- function(lcu_table,
   dt <- dt[, .SD, .SDcols =
              c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
                'country_code', 'survey_acronym', 'survey_coverage',
-               'survey_comparability','surveyid_year', 'reporting_year',
+               'survey_comparability', 'comparable_spell',
+               'surveyid_year', 'reporting_year',
                'survey_year', 'welfare_type',
                'survey_mean_lcu', 'survey_mean_ppp', #'survey_pop',
                'reporting_pop', 'ppp', 'cpi', 'pop_data_level',
@@ -182,6 +201,7 @@ add_aggregated_mean <- function(dt) {
       survey_acronym    = unique(survey_acronym),
       survey_coverage   = unique(survey_coverage),
       survey_comparability = unique(survey_comparability),
+      comparable_spell  = unique(comparable_spell),
       surveyid_year     = unique(surveyid_year),
       reporting_year    = unique(reporting_year),
       survey_year       = unique(survey_year),

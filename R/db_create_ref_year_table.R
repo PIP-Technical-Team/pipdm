@@ -35,6 +35,7 @@ db_create_ref_year_table <- function(gdp_table,
                                          'wb_region_code')) {
 
   # CHECKS
+  region_code <- match.arg(region_code)
   check_inputs_ref_years(ref_years)
   check_inputs_pip_years(pip_years)
 
