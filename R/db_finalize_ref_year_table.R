@@ -93,7 +93,7 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
             'survey_coverage', 'survey_comparability',
             'comparable_spell', 'welfare_type', 'survey_mean_lcu',
             'survey_mean_ppp', 'predicted_mean_ppp',
-            'ppp', 'pop', 'gdp', 'pce',
+            'ppp', 'cpi', 'pop', 'gdp', 'pce',
             'pop_data_level', 'gdp_data_level',
             'pce_data_level', 'cpi_data_level',
             'ppp_data_level', 'distribution_type',
@@ -108,6 +108,12 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
     reporting_pop = pop,
     reporting_pce = pce,
     reporting_gdp = gdp)
+
+  # Add interpolation id
+  dt <- dt %>%
+    base::transform(
+      interpolation_id = paste(country_code, reporting_year, pop_data_level, sep = "_")
+    )
 
   # Sort rows
   data.table::setorder(dt, survey_id, pop_data_level)

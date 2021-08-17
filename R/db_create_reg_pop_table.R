@@ -36,10 +36,14 @@ db_create_reg_pop_table <- function(pop_table,
 
   # Subset to only include years used by PIP
   dt <- dt[year %in% pip_years]
+
+  # Add grouping type column
   dt[, grouping_type := "WB"]
 
-  # Set colnames
-  data.table::setnames(dt, 'region_code_to_use', "region_code")
+  # Change colnames
+  data.table::setnames(
+    dt, c('year', 'pop', 'region_code_to_use'),
+    c('reporting_year', 'reporting_pop', 'region_code'))
 
   return(dt)
 
