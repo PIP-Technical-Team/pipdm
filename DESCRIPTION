@@ -24,10 +24,9 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     knitr,
-    rmarkdown,
-    pushoverr
-URL: https://github.com/PovcalNet-Team/pipdm
-BugReports: https://github.com/PovcalNet-Team/pipdm/issues
+    rmarkdown
+URL: https://github.com/PIP-Technical-Team/pipdm
+BugReports: https://github.com/PIP-Technical-Team/pipdm/issues
 Depends: 
     R (>= 3.5.0)
 Imports: 
@@ -45,7 +44,10 @@ Imports:
     readxl,
     cli,
     tibble,
+    pushoverr,
     joyn,
-    pipload,
-    vctrs
+    pipload
+Remotes:
+    PIP-Technical-Team/pipload
+    randrescastaneda/joyn
 VignetteBuilder: knitr

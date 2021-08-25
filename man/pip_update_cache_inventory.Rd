@@ -6,6 +6,7 @@
 \usage{
 pip_update_cache_inventory(
   pipeline_inventory = NULL,
+  pip_data_dir = getOption("pip.maindir"),
   cache_svy_dir = NULL,
   tool = c("PC", "TB")
 )
@@ -13,10 +14,12 @@ pip_update_cache_inventory(
 \arguments{
 \item{pipeline_inventory}{data.table: Pipeline inventory table.}
 
+\item{pip_data_dir}{character: Input folder for the raw survey data.}
+
 \item{cache_svy_dir}{character: Output folder for the cached survey data.}
 
 \item{tool}{character: Either "PC" or "TB" for poverty calculator and Table
-Baker, repectively}
+Baker, receptively}
 }
 \value{
 TRUE if file is update. FALSE If no data is in directory

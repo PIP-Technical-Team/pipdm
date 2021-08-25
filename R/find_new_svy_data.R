@@ -2,9 +2,9 @@
 #'
 #' @param cache_svy_dir character: Output folder for the cached survey data.
 #' @param cache_id  character: vector with cache Ids from pipeline inventory
-#' @param filename charater: vector with original dta file names
+#' @param filename character: vector with original dta file names
 #' @param tool character: Either "PC" or "TB" for poverty calculator and Table
-#'   Baker, repectively
+#'   Baker, receptively
 #'
 #' @return
 #' @export

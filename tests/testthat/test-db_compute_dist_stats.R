@@ -1,3 +1,5 @@
+skip_if(Sys.getenv("PIPDM_RUN_LOCAL_TESTS") != "TRUE")
+
 library(data.table)
 
 gdm       <- pipload::pip_load_aux("gdm")

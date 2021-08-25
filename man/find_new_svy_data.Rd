@@ -14,10 +14,10 @@ find_new_svy_data(
 \arguments{
 \item{cache_id}{character: vector with cache Ids from pipeline inventory}
 
-\item{filename}{charater: vector with original dta file names}
+\item{filename}{character: vector with original dta file names}
 
 \item{tool}{character: Either "PC" or "TB" for poverty calculator and Table
-Baker, repectively}
+Baker, receptively}
 
 \item{cache_svy_dir}{character: Output folder for the cached survey data.}
 }
