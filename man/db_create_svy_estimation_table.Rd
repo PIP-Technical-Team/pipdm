@@ -4,12 +4,16 @@
 \alias{db_create_svy_estimation_table}
 \title{Create survey estimation table}
 \usage{
-db_create_svy_estimation_table(dsm_table, dist_table)
+db_create_svy_estimation_table(dsm_table, dist_table, gdp_table, pce_table)
 }
 \arguments{
 \item{dsm_table}{data.table: A table with deflated survey means.}
 
 \item{dist_table}{data.table: Output of \code{\link[=db_create_dist_table]{db_create_dist_table()}}.}
+
+\item{gdp_table}{data.table: A table with GDP data.}
+
+\item{pce_table}{data.table: A table with PCE data.}
 }
 \value{
 data.table
