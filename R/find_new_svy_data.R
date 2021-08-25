@@ -10,28 +10,24 @@
 #' @export
 find_new_svy_data <- function(cache_id,
                               filename,
-                              tool          = c("PC", "TB"),
+                              tool = c("PC", "TB"),
                               cache_svy_dir = NULL) {
 
-  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   ## check parameters --------
   tool <- match.arg(tool)
 
   if (is.null(cache_svy_dir)) {
     if (tool == "PC") {
-
       cache_svy_dir <- getOption("pip.cachedir.pc")
-
     } else {
-
       cache_svy_dir <- getOption("pip.cachedir.tb")
-
     }
   }
 
   # Get existing survey ids
-  existing_chh_ids <- gsub('(.+)(\\.fst)', '\\1', list.files(cache_svy_dir))
+  existing_chh_ids <- gsub("(.+)(\\.fst)", "\\1", list.files(cache_svy_dir))
 
   #--------- Identify new Surveys ---------
 
@@ -50,33 +46,34 @@ find_new_svy_data <- function(cache_id,
   crr_dir <- glue::glue("{cache_svy_dir}_crr_inventory/")
 
   if (file.exists(glue::glue("{crr_dir}crr_inventory.fst"))) {
-
     crr_inv <- fst::read_fst(glue::glue("{crr_dir}crr_inventory.fst"))
     data.table::setDT(crr_inv)
 
     chd_svy <-
       crr_inv[pipe,
-              on = "cache_id",
-              filename_svy := i.filename
-              ][
-                filename_svy != filename
-              ][,
-                filename
-              ]
+        on = "cache_id",
+        filename_svy := i.filename
+      ][
+        filename_svy != filename
+      ][
+        ,
+        filename
+      ]
 
     if (length(chd_svy) > 0) {
       new_svy_ids <- c(new_svy_ids, chd_svy)
     }
-
   } else {
-    pip_update_cache_inventory(cache_svy_dir = cache_svy_dir,
-                               tool          = tool)
+    pip_update_cache_inventory(
+      cache_svy_dir = cache_svy_dir,
+      tool = tool
+    )
   }
 
-  df <- pipe[filename %chin% new_svy_ids
-            ][,
-              svy_ids := gsub('(.+)(\\.dta)', '\\1', filename)
-            ]
+  df <- pipe[filename %chin% new_svy_ids][
+    ,
+    svy_ids := gsub("(.+)(\\.dta)", "\\1", filename)
+  ]
 
   return(df)
 }

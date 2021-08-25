@@ -16,7 +16,7 @@
 #'
 #' @return numeric
 #' @keywords internal
-adjust_aux_values <- function(svy_year, aux_df, value_var){
+adjust_aux_values <- function(svy_year, aux_df, value_var) {
   years <- get_years(svy_year)
   weights <- get_weights(svy_year)
   values <- get_values(years, aux_df = aux_df, value_var = value_var)
@@ -85,7 +85,7 @@ get_years <- function(svy_year) {
 #' @return numeric
 #' @noRd
 get_values <- function(years, aux_df, value_var) {
-  keep <- aux_df[['year']] %in% years
+  keep <- aux_df[["year"]] %in% years
   out <- aux_df[[value_var]][keep]
   return(out)
 }

@@ -11,20 +11,24 @@ db_create_reg_pop_table <- function(pop_table,
                                     cl_table,
                                     pip_years,
                                     region_code =
-                                      c('pcn_region_code',
-                                        'region_code')) {
+                                      c(
+                                        "pcn_region_code",
+                                        "region_code"
+                                      )) {
 
   # Match argument
   region_code <- match.arg(region_code)
 
   # Subselect columns
   cl_table$region_code_to_use <- cl_table[[region_code]]
-  cl_table <- cl_table[, c('country_code', 'region_code_to_use')]
+  cl_table <- cl_table[, c("country_code", "region_code_to_use")]
 
   # Merge POP table w/ WDI meta (left join)
   dt <- data.table::merge.data.table(
-    pop_table, cl_table, by = 'country_code',
-    all.x = TRUE)
+    pop_table, cl_table,
+    by = "country_code",
+    all.x = TRUE
+  )
 
   # Remove territories without regional classification
   # i.e "ESH" "GLP" "GUF" "MTQ" "MYT" "REU"
@@ -32,7 +36,8 @@ db_create_reg_pop_table <- function(pop_table,
 
   # Aggregate population by region
   dt <- dt[, .(pop = sum(pop, na.rm = TRUE)),
-           by = .(region_code_to_use, year)]
+    by = .(region_code_to_use, year)
+  ]
 
   # Subset to only include years used by PIP
   dt <- dt[year %in% pip_years]
@@ -42,9 +47,9 @@ db_create_reg_pop_table <- function(pop_table,
 
   # Change colnames
   data.table::setnames(
-    dt, c('year', 'pop', 'region_code_to_use'),
-    c('reporting_year', 'reporting_pop', 'region_code'))
+    dt, c("year", "pop", "region_code_to_use"),
+    c("reporting_year", "reporting_pop", "region_code")
+  )
 
   return(dt)
-
 }

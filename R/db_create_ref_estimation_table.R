@@ -13,34 +13,47 @@ db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
   dist_table$reporting_year <- NULL
   dist_table$problem <- NULL
   dt <- joyn::merge(ref_year_table, dist_table,
-                   by = c('survey_id', 'cache_id', 'wb_region_code',
-                          'pcn_region_code', 'country_code', 'survey_acronym',
-                          'surveyid_year', 'survey_year',
-                          'welfare_type', 'pop_data_level'),
-                   match_type = 'm:1', keep = 'left')
+    by = c(
+      "survey_id", "cache_id", "wb_region_code",
+      "pcn_region_code", "country_code", "survey_acronym",
+      "surveyid_year", "survey_year",
+      "welfare_type", "pop_data_level"
+    ),
+    match_type = "m:1", keep = "left"
+  )
   dt$report <- NULL
 
   # Set dist stat columns to NA for interpolated surveys
-  dist_cols <- c('survey_median_lcu', 'survey_median_ppp',
-                 'gini', 'mld', 'polarization', 'decile1',
-                 'decile2', 'decile3', 'decile4', 'decile5',
-                 'decile6', 'decile7', 'decile8', 'decile9',
-                 'decile10')
+  dist_cols <- c(
+    "survey_median_lcu", "survey_median_ppp",
+    "gini", "mld", "polarization", "decile1",
+    "decile2", "decile3", "decile4", "decile5",
+    "decile6", "decile7", "decile8", "decile9",
+    "decile10"
+  )
   dt <- set_int_cols_to_na(dt, dist_cols)
 
   # Remove rows with missing predicted_mean_ppp
   if (anyNA(dt$predicted_mean_ppp)) {
-    rlang::warn(c(sprintf('Removing %s rows with missing `predicted_mean_ppp`:',
-                        sum(is.na(dt$predicted_mean_ppp))),
-                        unique(dt[is.na(predicted_mean_ppp)]$cache_id)))
+    rlang::warn(c(
+      sprintf(
+        "Removing %s rows with missing `predicted_mean_ppp`:",
+        sum(is.na(dt$predicted_mean_ppp))
+      ),
+      unique(dt[is.na(predicted_mean_ppp)]$cache_id)
+    ))
     dt <- dt[!is.na(predicted_mean_ppp), ]
   }
 
   # Remove rows with missing ppp
   if (anyNA(dt$ppp)) {
-    rlang::warn(c(sprintf('Removing %s rows with missing `ppp`:',
-                        sum(is.na(dt$ppp))),
-                        unique(dt[is.na(ppp)]$cache_id)))
+    rlang::warn(c(
+      sprintf(
+        "Removing %s rows with missing `ppp`:",
+        sum(is.na(dt$ppp))
+      ),
+      unique(dt[is.na(ppp)]$cache_id)
+    ))
     dt <- dt[!is.na(ppp), ]
   }
 
@@ -49,12 +62,13 @@ db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
   dt$median <- dt$survey_median_ppp
   dt <- dt %>%
     data.table::setnames(
-      "pcn_region_code", "region_code")
+      "pcn_region_code", "region_code"
+    )
 
   # Order final columns
   cols <- c(
-    "survey_id",  "cache_id", "region_code", "wb_region_code",
-    "country_code",  "reporting_year", "surveyid_year",
+    "survey_id", "cache_id", "region_code", "wb_region_code",
+    "country_code", "reporting_year", "surveyid_year",
     "survey_year", "survey_acronym", "survey_coverage",
     "survey_comparability", "comparable_spell", "welfare_type",
     "mean", "median", "mld", "gini",
@@ -75,19 +89,17 @@ db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
   dt <- dt[, .SD, .SDcols = cols]
 
   return(dt)
-
 }
 
 #' set_int_cols_to_na
 #' @noRd
 set_int_cols_to_na <- function(dt, cols) {
-
   for (i in seq_along(cols)) {
     dt[[cols[i]]] <- data.table::fifelse(
-      dt$estimation_type == 'interpolation',
-      NA_real_, dt[[cols[i]]])
+      dt$estimation_type == "interpolation",
+      NA_real_, dt[[cols[i]]]
+    )
   }
 
   return(dt)
 }
-

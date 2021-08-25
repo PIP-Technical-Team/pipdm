@@ -16,15 +16,17 @@ process_svy_data_to_cache <- function(survey_id,
                                       pip_data_dir,
                                       cache_svy_dir,
                                       compress,
-                                      cols    = NULL,
-                                      cpi_dt  = NULL,
-                                      ppp_dt  = NULL) {
+                                      cols = NULL,
+                                      cpi_dt = NULL,
+                                      ppp_dt = NULL) {
 
 
   #--------- Load data ---------
-  chh_filename <- fifelse(grepl("\\.fst$", cache_id),
-                          cache_id,
-                          paste0(cache_id, ".fst"))
+  chh_filename <- fifelse(
+    grepl("\\.fst$", cache_id),
+    cache_id,
+    paste0(cache_id, ".fst")
+  )
 
   df <- tryCatch(
     expr = {
@@ -32,7 +34,8 @@ process_svy_data_to_cache <- function(survey_id,
       pipload::pip_load_data(
         survey_id = survey_id,
         maindir   = pip_data_dir,
-        noisy     = FALSE)
+        noisy     = FALSE
+      )
     }, # end of expr section
 
     error = function(e) {
@@ -45,8 +48,10 @@ process_svy_data_to_cache <- function(survey_id,
   ) # End of trycatch
 
   if (is.null(df)) {
-    ret <- data.table(id     = survey_id,
-                      status = "error loading")
+    ret <- data.table(
+      id = survey_id,
+      status = "error loading"
+    )
     return(ret)
   }
 
@@ -54,66 +59,72 @@ process_svy_data_to_cache <- function(survey_id,
 
   df <- tryCatch(
     expr = {
-      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       # Clean data   ---------
-      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       ## Standard cleaning --------
 
       df <- db_clean_data(df)
 
-      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       ## additional variables --------
 
       # make sure the right welfare type is in the microdata.
       wt <- gsub("(.+_)([A-Z]{3})(_[A-Z\\-]+)(\\.fst)?$", "\\2", chh_filename)
       wt <- fifelse(wt == "INC", "income", "consumption")
 
-      df[,welfare_type := wt]
+      df[, welfare_type := wt]
 
       # add max data level variable
-      dl_var <- grep("data_level", names(df), value = TRUE) #data_level vars
+      dl_var <- grep("data_level", names(df), value = TRUE) # data_level vars
 
-      ordered_level <- purrr::map_dbl(dl_var, ~get_ordered_level(df, .x))
-      select_var    <- dl_var[which.max(ordered_level)]
+      ordered_level <- purrr::map_dbl(dl_var, ~ get_ordered_level(df, .x))
+      select_var <- dl_var[which.max(ordered_level)]
 
       df[, max_domain := get(select_var)]
 
       data.table::setorder(df, max_domain)
 
-      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       ## Deflate data --------
       ppp_dt <- ppp_dt[ppp_default == TRUE]
 
       # Merge survey table with PPP (left join)
       df <- joyn::merge(df, ppp_dt,
-                        by         = c("country_code", "ppp_data_level"),
-                        match_type = "m:1",
-                        yvars      = 'ppp',
-                        keep       = "left",
-                        reportvar  = FALSE,
-                        verbose    = FALSE)
+        by         = c("country_code", "ppp_data_level"),
+        match_type = "m:1",
+        yvars      = "ppp",
+        keep       = "left",
+        reportvar  = FALSE,
+        verbose    = FALSE
+      )
 
       # Merge survey table with CPI (left join)
       df <- joyn::merge(df, cpi_dt,
-                        by         = c("country_code", "survey_year",
-                                       "survey_acronym", "cpi_data_level"),
-                        match_type = "m:1",
-                        yvars      = 'cpi',
-                        keep       = "left",
-                        reportvar  = FALSE,
-                        verbose    = FALSE)
+        by = c(
+          "country_code", "survey_year",
+          "survey_acronym", "cpi_data_level"
+        ),
+        match_type = "m:1",
+        yvars = "cpi",
+        keep = "left",
+        reportvar = FALSE,
+        verbose = FALSE
+      )
 
-      df[,
-         welfare_lcu := welfare
-         ][,
-           welfare_ppp := wbpip::deflate_welfare_mean(
-           welfare_mean = welfare_lcu,
-           ppp          = ppp,
-           cpi          = cpi)
-           ]
-
+      df[
+        ,
+        welfare_lcu := welfare
+      ][
+        ,
+        welfare_ppp := wbpip::deflate_welfare_mean(
+          welfare_mean = welfare_lcu,
+          ppp          = ppp,
+          cpi          = cpi
+        )
+      ]
     }, # end of expr section
 
     error = function(e) {
@@ -126,8 +137,10 @@ process_svy_data_to_cache <- function(survey_id,
   ) # End of trycatch
 
   if (is.null(df)) {
-    ret <- data.table(id     = survey_id,
-                      status = "error cleaning")
+    ret <- data.table(
+      id = survey_id,
+      status = "error cleaning"
+    )
     return(ret)
   }
 
@@ -145,9 +158,11 @@ process_svy_data_to_cache <- function(survey_id,
 
       svy_out_path <- paste(cache_svy_dir, chh_filename, sep = "/")
 
-      fst::write_fst(x = df,
-                     path = svy_out_path,
-                     compress = compress)
+      fst::write_fst(
+        x = df,
+        path = svy_out_path,
+        compress = compress
+      )
       TRUE
     }, # end of expr section
 
@@ -162,16 +177,19 @@ process_svy_data_to_cache <- function(survey_id,
 
 
   if (is.null(df)) {
-    ret <- data.table(id     = survey_id,
-                      status = "error saving")
+    ret <- data.table(
+      id = survey_id,
+      status = "error saving"
+    )
     return(ret)
   }
 
-  ret <- data.table(id     = survey_id,
-                    status = "success")
+  ret <- data.table(
+    id = survey_id,
+    status = "success"
+  )
 
   return(ret)
-
 }
 
 

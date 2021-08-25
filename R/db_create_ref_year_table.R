@@ -1,8 +1,9 @@
 # Add global variables to avoid NSE notes in R CMD check
-if (getRversion() >= '2.15.1')
+if (getRversion() >= "2.15.1") {
   utils::globalVariables(
-    c('gdp', 'pce')
+    c("gdp", "pce")
   )
+}
 
 #' Create reference year table
 #'
@@ -31,8 +32,10 @@ db_create_ref_year_table <- function(gdp_table,
                                      ref_years,
                                      pip_years,
                                      region_code =
-                                       c('pcn_region_code',
-                                         'wb_region_code')) {
+                                       c(
+                                         "pcn_region_code",
+                                         "wb_region_code"
+                                       )) {
 
   # CHECKS
   region_code <- match.arg(region_code)
@@ -41,17 +44,20 @@ db_create_ref_year_table <- function(gdp_table,
 
   # Create Survey Anchor table
   svy_anchor <- db_create_svy_anchor(
-    dsm_table = dsm_table, pfw_table = pfw_table)
+    dsm_table = dsm_table, pfw_table = pfw_table
+  )
 
   # Create National Accounts table
   dt_nac <- db_create_nac_table(
     gdp_table = gdp_table, pce_table = pce_table,
-    pip_years = pip_years)
+    pip_years = pip_years
+  )
 
   # Create a table with survey metadata information and adjusted values
   # for GDP and PCE for surveys that span multiple years
   dt_svy <- db_merge_anchor_nac(
-    nac_table = dt_nac, svy_anchor = svy_anchor)
+    nac_table = dt_nac, svy_anchor = svy_anchor
+  )
 
   # Create reference year table
   dt_ref <-
@@ -62,5 +68,4 @@ db_create_ref_year_table <- function(gdp_table,
     db_finalize_ref_year_table(pfw_table) # Finalize table (select rows and columns)
 
   return(dt_ref)
-
 }

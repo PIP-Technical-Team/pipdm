@@ -8,7 +8,6 @@
 #' @return data.table
 #' @export
 db_clean_data <- function(dt, gc = FALSE) {
-
   tryCatch(
     expr = {
 
@@ -25,21 +24,17 @@ db_clean_data <- function(dt, gc = FALSE) {
       if (gc) gc(verbose = FALSE)
 
       return(dt)
-
     }, # end of expr section
 
     error = function(e) {
-
-      rlang::warn('Data cleaning failed. Returning NULL.')
+      rlang::warn("Data cleaning failed. Returning NULL.")
 
       # Garbage collection
       if (gc) gc(verbose = FALSE)
 
       return(NULL)
-
     } # end of error
   ) # End of trycatch
-
 }
 
 #' clean_data
@@ -51,65 +46,65 @@ clean_data <- function(dt) {
   dist_type <- unique(dt$distribution_type)
 
   # Get GD type (1, 2, or 5)
-  gd_type <- as.numeric(sub('T0', '', unique(dt$gd_type)))
+  gd_type <- as.numeric(sub("T0", "", unique(dt$gd_type)))
 
   # Calculate distributional statistics
-  if (dist_type == 'micro') {
+  if (dist_type == "micro") {
     # Clean data (remove negative values etc.)
     df <- md_clean_data(
-      dt, welfare = 'welfare', weight = 'weight',
-      quiet = TRUE)$data
+      dt,
+      welfare = "welfare", weight = "weight",
+      quiet = TRUE
+    )$data
 
     df <- as_pipmd(df)
-  } else if (dist_type == 'group') {
+  } else if (dist_type == "group") {
     # Standardize to type 1
     df <- gd_clean_data(
       dt,
-      welfare = 'welfare',
-      population = 'weight',
+      welfare = "welfare",
+      population = "weight",
       gd_type = gd_type,
-      quiet = TRUE)
+      quiet = TRUE
+    )
 
     df <- as_pipgd(df)
-
-  } else if (dist_type == 'aggregate') {
+  } else if (dist_type == "aggregate") {
     # Split by area
-    dt_rural <- dt[dt$area == 'rural']
-    dt_urban <- dt[dt$area == 'urban']
+    dt_rural <- dt[dt$area == "rural"]
+    dt_urban <- dt[dt$area == "urban"]
     # Standardize rural
     dt_rural <- gd_clean_data(
       dt_rural,
-      welfare = 'welfare',
-      population = 'weight',
+      welfare = "welfare",
+      population = "weight",
       gd_type = gd_type,
-      quiet = TRUE)
+      quiet = TRUE
+    )
     # Standardize urban
     dt_urban <- gd_clean_data(
       dt_urban,
-      welfare = 'welfare',
-      population = 'weight',
+      welfare = "welfare",
+      population = "weight",
       gd_type = gd_type,
-      quiet = TRUE)
+      quiet = TRUE
+    )
     # Bind back together
     df <- rbind(dt_rural, dt_urban)
 
     df <- as_pipgd(df)
-
-  } else if (dist_type == 'imputed') {
+  } else if (dist_type == "imputed") {
     # Clean data (remove negative values etc.)
     df <- md_clean_data(
-      dt, welfare = 'welfare', weight = 'weight',
-      quiet = TRUE)$data
+      dt,
+      welfare = "welfare", weight = "weight",
+      quiet = TRUE
+    )$data
 
     df <- as_pipid(df)
-
   } else {
     stop("`dist_type` not valid")
   }
 
   return(df)
-
 }
-
-
-

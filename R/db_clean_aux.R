@@ -7,13 +7,14 @@
 #' @inheritParams db_create_ref_year_table
 #' @return data.table
 #' @export
-db_clean_aux <- function(dt, name, pip_years)  {
-
-  if (name == 'cpi') {
+db_clean_aux <- function(dt, name, pip_years) {
+  if (name == "cpi") {
 
     # Subset columns
-    dt <- dt[, c('country_code', 'survey_year',
-                 'cpi', 'cpi_data_level')]
+    dt <- dt[, c(
+      "country_code", "survey_year",
+      "cpi", "cpi_data_level"
+    )]
 
     # Take floor value of survey year
     dt$year <- floor(dt$survey_year)
@@ -22,12 +23,12 @@ db_clean_aux <- function(dt, name, pip_years)  {
     dt <- unique(dt)
   }
 
-  if (name == 'ppp') {
+  if (name == "ppp") {
     dt <- dt[ppp_default_by_year == TRUE]
   }
 
   # Rename columns
-  names(dt) <- sub(paste0(name, '_'), '', names(dt))
+  names(dt) <- sub(paste0(name, "_"), "", names(dt))
 
   # Subset to only include years used by PIP
   dt <- dt[dt$year %in% pip_years, ]
@@ -35,8 +36,8 @@ db_clean_aux <- function(dt, name, pip_years)  {
   # Reshape to wide format
   dt <- data.table::dcast(
     dt, country_code + data_level ~ year,
-    value.var = name)
+    value.var = name
+  )
 
   return(dt)
-
 }

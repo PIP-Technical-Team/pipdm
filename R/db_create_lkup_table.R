@@ -2,20 +2,23 @@
 NULL
 
 # Add global variables to avoid NSE notes in R CMD check
-if (getRversion() >= '2.15.1')
+if (getRversion() >= "2.15.1") {
   utils::globalVariables(
-    c('region_code', 'country_code', 'survey_coverage',
-      'nac_data_level', 'ppp_data_level', 'cpi_data_level',
-      'nac_domain', 'ppp_domain', 'cpi_domain',
-      'cpi_data_level_index', 'cpi_domain_index',
-      'nac_data_level_index', 'nac_domain_index',
-      'ppp_data_level_index', 'ppp_domain_index',
-      'reference_year', 'region_code_index',
-      'country_code_index', 'data_level_index',
-      'domain_index', 'survey_coverage_index',
-      'welfare_type_index','reference_year_index',
-      'gdp', 'pce')
+    c(
+      "region_code", "country_code", "survey_coverage",
+      "nac_data_level", "ppp_data_level", "cpi_data_level",
+      "nac_domain", "ppp_domain", "cpi_domain",
+      "cpi_data_level_index", "cpi_domain_index",
+      "nac_data_level_index", "nac_domain_index",
+      "ppp_data_level_index", "ppp_domain_index",
+      "reference_year", "region_code_index",
+      "country_code_index", "data_level_index",
+      "domain_index", "survey_coverage_index",
+      "welfare_type_index", "reference_year_index",
+      "gdp", "pce"
+    )
   )
+}
 
 #' Create reference year look-up table
 #'
@@ -53,37 +56,47 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
       pop_data_level_index = pop_data_level,
       ppp_data_level_index = ppp_data_level,
       cpi_data_level_index = cpi_data_level,
-      reference_year_index = reference_year)
+      reference_year_index = reference_year
+    )
 
   # Merge with GDP and PCE data (left join)
   dt <- joyn::merge(dt, nac_table,
-                    by = c("country_code",
-                           "nac_data_level_index = nac_data_level",
-                           "reference_year_index = year"),
-                    match_type = "m:1")
+    by = c(
+      "country_code",
+      "nac_data_level_index = nac_data_level",
+      "reference_year_index = year"
+    ),
+    match_type = "m:1"
+  )
   # NOTE AE: Originally, you have left join, but there are 569 obs from table
   # dt that do not have match with nac_table. For those observations there is
   # national accounts. Should we leave them in the sample or remove them?
   # you were keeping them but I am not sure. I'll leave them for now
 
-  dt <- dt[report != "y"
-           ][, report := NULL]
+  dt <- dt[report != "y"][, report := NULL]
 
   # Merge with POP data (left join)
   dt <- joyn::merge(dt, pop_table,
-                    by = c("country_code",
-                           "pop_data_level_index = pop_data_level",
-                           "reference_year_index = year"),
-                    match_type = "m:1")
+    by = c(
+      "country_code",
+      "pop_data_level_index = pop_data_level",
+      "reference_year_index = year"
+    ),
+    match_type = "m:1"
+  )
 
-  dt <- dt[report != "y"  # I found NO "x" in the report
-          ][, report := NULL]
+  dt <- dt[
+    report != "y" # I found NO "x" in the report
+  ][, report := NULL]
 
   # Order column
   data.table::setcolorder(
-    dt, c('country_code_index', 'reference_year_index',
-          'nac_data_level_index', 'pop_data_level_index',
-          'cpi_data_level_index', 'ppp_data_level_index'))
+    dt, c(
+      "country_code_index", "reference_year_index",
+      "nac_data_level_index", "pop_data_level_index",
+      "cpi_data_level_index", "ppp_data_level_index"
+    )
+  )
 
   # Nest by index columns
   dt <- dt %>%
@@ -96,18 +109,19 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
       cpi_data_level_index,
       reference_year_index,
       gdp, pce, pop,
-      .key = 'data')
+      .key = "data"
+    )
 
   # Remove reference year rows where both GDP and PCE are missing
   na_check <- is.na(dt$gdp) & is.na(dt$pce)
   if (any(na_check)) {
     msg <- sprintf(
-      'Info: %s country-year(s) are missing both GDP and PCE values. These rows were removed.',
-      sum(na_check))
+      "Info: %s country-year(s) are missing both GDP and PCE values. These rows were removed.",
+      sum(na_check)
+    )
     rlang::inform(msg)
-    dt <- dt[!na_check,]
+    dt <- dt[!na_check, ]
   }
 
   return(dt)
-
 }

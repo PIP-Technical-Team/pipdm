@@ -21,29 +21,36 @@ db_create_dsm_table <- function(lcu_table,
 
   # Select CPI columns
   cpi_table <-
-    cpi_table[, .SD, .SDcols =
-                c('country_code', 'survey_year', 'survey_acronym',
-                  'cpi_data_level', 'cpi')]
+    cpi_table[, .SD,
+      .SDcols =
+        c(
+          "country_code", "survey_year", "survey_acronym",
+          "cpi_data_level", "cpi"
+        )
+    ]
 
   # Merge survey table with CPI (left join)
   dt <- joyn::merge(lcu_table, cpi_table,
-                    by = c("country_code", "survey_year",
-                           "survey_acronym", "cpi_data_level"),
-                    match_type = "m:1")
+    by = c(
+      "country_code", "survey_year",
+      "survey_acronym", "cpi_data_level"
+    ),
+    match_type = "m:1"
+  )
 
-  if (nrow(dt[report == "x"]) > 0 ) {
-    msg     <- "We should not have NOT-matching observations from survey-mean tables"
-    hint    <- "Make sure CPI table is up to date"
+  if (nrow(dt[report == "x"]) > 0) {
+    msg <- "We should not have NOT-matching observations from survey-mean tables"
+    hint <- "Make sure CPI table is up to date"
     rlang::abort(c(
       msg,
       i = hint
     ),
     class = "pipdm_error"
     )
-
   }
 
-  dt <- dt[report != "y"  # This is unnecessary data in cpi table... should we have it?
+  dt <- dt[
+    report != "y" # This is unnecessary data in cpi table... should we have it?
   ][, report := NULL]
   # NOTE AE: I just asked Minh about why we have some obs in CPI that we don't use.
   # NOTE AC: Yes, I saw the email thread. So that should be okay. In general my understanding is that there will be
@@ -57,24 +64,26 @@ db_create_dsm_table <- function(lcu_table,
 
   # Select PPP columns
   ppp_table <-
-    ppp_table[, .SD, .SDcols =
-                c('country_code', 'ppp_data_level', 'ppp')]
+    ppp_table[, .SD,
+      .SDcols =
+        c("country_code", "ppp_data_level", "ppp")
+    ]
 
   # Merge survey table with PPP (left join)
   jn <- joyn::merge(dt, ppp_table,
-                    by = c("country_code", "ppp_data_level"),
-                    match_type = "m:1")
+    by = c("country_code", "ppp_data_level"),
+    match_type = "m:1"
+  )
 
-  if (nrow(jn[report == "x"]) > 0 ) {
-    msg     <- "We should not have NOT-matching observations from survey-mean tables"
-    hint    <- "Make sure PPP table is up to date"
+  if (nrow(jn[report == "x"]) > 0) {
+    msg <- "We should not have NOT-matching observations from survey-mean tables"
+    hint <- "Make sure PPP table is up to date"
     rlang::abort(c(
       msg,
       i = hint
     ),
     class = "pipdm_error"
     )
-
   }
 
   # Only CHN, IND and IDN could be left behind for national ppp_data_level
@@ -82,7 +91,7 @@ db_create_dsm_table <- function(lcu_table,
   # This should preferrably be handlded "automatically" by the data level columns.
   # If we want this to be a validation check than I think it should be in the
   # validation repo.
-  cdt  <- dt[, unique(country_code)]
+  cdt <- dt[, unique(country_code)]
   cppp <- jn[report == "y", unique(country_code)]
 
   # if (!identical(c("CHN", "IDN", "IND"), intersect(cdt, cppp))) {
@@ -114,7 +123,8 @@ db_create_dsm_table <- function(lcu_table,
   # }
 
 
-  dt <- jn[report != "y"  # Countries in PPP table for which we don't have data
+  dt <- jn[
+    report != "y" # Countries in PPP table for which we don't have data
   ][, report := NULL]
 
   #--------- Deflate welfare mean ---------
@@ -122,7 +132,8 @@ db_create_dsm_table <- function(lcu_table,
   # svy_mean_ppp = survey_mean_lcu / cpi / ppp
   dt$survey_mean_ppp <-
     wbpip::deflate_welfare_mean(
-      welfare_mean = dt$survey_mean_lcu, ppp = dt$ppp, cpi = dt$cpi)
+      welfare_mean = dt$survey_mean_lcu, ppp = dt$ppp, cpi = dt$cpi
+    )
 
 
   #--------- Add comparable spell ---------
@@ -133,9 +144,10 @@ db_create_dsm_table <- function(lcu_table,
       x$comparable_spell <- x$reporting_year
     } else {
       x$comparable_spell <-
-        sprintf('%s - %s',
-                x$reporting_year[1],
-                x$reporting_year[length(x$reporting_year)]
+        sprintf(
+          "%s - %s",
+          x$reporting_year[1],
+          x$reporting_year[length(x$reporting_year)]
         )
     }
     return(x)
@@ -151,22 +163,27 @@ db_create_dsm_table <- function(lcu_table,
   # Temporary quick fix for is_used_for_aggregation column,
   # see issue PIP-Technical-Team/TMP_pipeline#14
   dt$is_used_for_aggregation <-
-    ifelse(dt$pop_data_level != 'national',
-           TRUE, FALSE)
+    ifelse(dt$pop_data_level != "national",
+      TRUE, FALSE
+    )
 
   # Select and order columns
-  dt <- dt[, .SD, .SDcols =
-             c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
-               'country_code', 'survey_acronym', 'survey_coverage',
-               'survey_comparability', 'comparable_spell',
-               'surveyid_year', 'reporting_year',
-               'survey_year', 'welfare_type',
-               'survey_mean_lcu', 'survey_mean_ppp', #'survey_pop',
-               'reporting_pop', 'ppp', 'cpi', 'pop_data_level',
-               'gdp_data_level', 'pce_data_level',
-               'cpi_data_level', 'ppp_data_level',
-               'distribution_type', 'gd_type',
-               'is_interpolated', 'is_used_for_aggregation')]
+  dt <- dt[, .SD,
+    .SDcols =
+      c(
+        "survey_id", "cache_id", "wb_region_code", "pcn_region_code",
+        "country_code", "survey_acronym", "survey_coverage",
+        "survey_comparability", "comparable_spell",
+        "surveyid_year", "reporting_year",
+        "survey_year", "welfare_type",
+        "survey_mean_lcu", "survey_mean_ppp", #' survey_pop',
+        "reporting_pop", "ppp", "cpi", "pop_data_level",
+        "gdp_data_level", "pce_data_level",
+        "cpi_data_level", "ppp_data_level",
+        "distribution_type", "gd_type",
+        "is_interpolated", "is_used_for_aggregation"
+      )
+  ]
 
   # Add aggregated mean for surveys split by Urban/Rural
   dt <- add_aggregated_mean(dt)
@@ -188,41 +205,43 @@ db_create_dsm_table <- function(lcu_table,
 add_aggregated_mean <- function(dt) {
 
   # Select rows w/ non-national pop_data_level
-  dt_sub <- dt[pop_data_level != 'national',]
+  dt_sub <- dt[pop_data_level != "national", ]
 
   # Compute aggregated mean (weighted population average)
   dt_agg <-
     dt_sub[, .(
       # survey_id       = unique(survey_id),
       # cache_id        = unique(cache_id),
-      wb_region_code    = unique(wb_region_code),
-      pcn_region_code   = unique(pcn_region_code),
-      country_code      = unique(country_code),
-      survey_acronym    = unique(survey_acronym),
-      survey_coverage   = unique(survey_coverage),
+      wb_region_code = unique(wb_region_code),
+      pcn_region_code = unique(pcn_region_code),
+      country_code = unique(country_code),
+      survey_acronym = unique(survey_acronym),
+      survey_coverage = unique(survey_coverage),
       survey_comparability = unique(survey_comparability),
-      comparable_spell  = unique(comparable_spell),
-      surveyid_year     = unique(surveyid_year),
-      reporting_year    = unique(reporting_year),
-      survey_year       = unique(survey_year),
-      welfare_type      = unique(welfare_type),
-      survey_mean_lcu   = collapse::fmean(
+      comparable_spell = unique(comparable_spell),
+      surveyid_year = unique(surveyid_year),
+      reporting_year = unique(reporting_year),
+      survey_year = unique(survey_year),
+      welfare_type = unique(welfare_type),
+      survey_mean_lcu = collapse::fmean(
         x = survey_mean_lcu,
-        w = reporting_pop),
-      survey_mean_ppp   = collapse::fmean(
+        w = reporting_pop
+      ),
+      survey_mean_ppp = collapse::fmean(
         x = survey_mean_ppp,
-        w = reporting_pop),
-      reporting_pop     = sum(reporting_pop),
-      ppp               = NA,
-      cpi               = NA,
-      pop_data_level    = 'national',
-      gdp_data_level    = 'national',
-      pce_data_level    = 'national',
-      cpi_data_level    = 'national',
-      ppp_data_level    = 'national',
+        w = reporting_pop
+      ),
+      reporting_pop = sum(reporting_pop),
+      ppp = NA,
+      cpi = NA,
+      pop_data_level = "national",
+      gdp_data_level = "national",
+      pce_data_level = "national",
+      cpi_data_level = "national",
+      ppp_data_level = "national",
       distribution_type = unique(distribution_type),
-      gd_type           = unique(gd_type),
-      is_interpolated   = FALSE,
+      gd_type = unique(gd_type),
+      is_interpolated = FALSE,
       is_used_for_aggregation = TRUE
     ),
     by = .(survey_id, cache_id)
@@ -232,5 +251,4 @@ add_aggregated_mean <- function(dt) {
 
   # Sort rows
   data.table::setorder(dt, survey_id)
-
 }

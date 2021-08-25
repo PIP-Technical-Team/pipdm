@@ -2,11 +2,14 @@
 NULL
 
 # Add global variables to avoid NSE notes in R CMD check
-if (getRversion() >= '2.15.1')
+if (getRversion() >= "2.15.1") {
   utils::globalVariables(
-    c('survey_year', 'is_ref_year', 'n_per_welfare_type', 'both_sides',
-      'dist_from_ref_year', 'welfare_type')
+    c(
+      "survey_year", "is_ref_year", "n_per_welfare_type", "both_sides",
+      "dist_from_ref_year", "welfare_type"
+    )
   )
+}
 
 #' Select correct line-up surveys
 #'
@@ -18,16 +21,18 @@ if (getRversion() >= '2.15.1')
 #' @seealso [select_lineup_survey()]
 #' @return data.table
 #' @keywords internal
-db_select_lineup_surveys <- function(dt){
+db_select_lineup_surveys <- function(dt) {
 
   # CHECK inputs
   check_inputs_db_class(dt)
 
   # Fetch surveys to be used for line-up
   dt$svy_lineup_items <-
-    purrr::map2(dt$svy_items,
-                dt$reference_year_index,
-                select_lineup_survey)
+    purrr::map2(
+      dt$svy_items,
+      dt$reference_year_index,
+      select_lineup_survey
+    )
 
   # Remove nested 'svy_items' column
   dt$svy_items <- NULL
@@ -70,8 +75,8 @@ select_lineup_survey <- function(df, ref_year) {
   # equal to the reference year.
   if (nrow(tmp) == 1) {
     return(tmp)
-  } else if (any(grepl('consumption', tmp$welfare_type))) {
-    return(tmp[tmp[['welfare_type']] == 'consumption', ])
+  } else if (any(grepl("consumption", tmp$welfare_type))) {
+    return(tmp[tmp[["welfare_type"]] == "consumption", ])
   } else if (nrow(tmp) == 2) {
     return(tmp)
   }
@@ -87,16 +92,16 @@ select_lineup_survey <- function(df, ref_year) {
     dplyr::select(-n_per_welfare_type, -both_sides) %>%
     as.data.frame()
 
-  if (length(unique(tmp[['welfare_type']])) > 1) {
-    return(tmp[tmp[['welfare_type']] == 'consumption', ])
+  if (length(unique(tmp[["welfare_type"]])) > 1) {
+    return(tmp[tmp[["welfare_type"]] == "consumption", ])
   }
-  if (length(unique(tmp[['welfare_type']])) == 1) {
+  if (length(unique(tmp[["welfare_type"]])) == 1) {
     return(tmp)
   }
 
   # Deal with cases with only one survey of each welfare type
   # Choose survey closest to the ref_year
-  if (nrow(df) == 2 & length(unique(df[['welfare_type']])) > 1) {
+  if (nrow(df) == 2 & length(unique(df[["welfare_type"]])) > 1) {
     tmp <- df %>%
       dplyr::group_by(welfare_type) %>%
       dplyr::mutate(
@@ -109,11 +114,7 @@ select_lineup_survey <- function(df, ref_year) {
     if (nrow(tmp) == 1) {
       return(tmp)
     } else {
-      return(tmp[tmp[['welfare_type']] == 'consumption', ])
+      return(tmp[tmp[["welfare_type"]] == "consumption", ])
     }
   }
 }
-
-
-
-

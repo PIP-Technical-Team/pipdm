@@ -7,7 +7,6 @@
 #' @return data.table
 #' @export
 db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce_table) {
-
   dist_table$reporting_year <- NULL
   dist_table$problem <- NULL
 
@@ -37,18 +36,26 @@ db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce
   # This shouldn't be the case
   # A problem with PHL 2009
   if (anyNA(dt$survey_mean_ppp)) {
-    rlang::warn(c(sprintf('Removing %s rows with missing `survey_mean_ppp`: ',
-                        sum(is.na(dt$survey_mean_ppp))),
-                        unique(dt[is.na(survey_mean_ppp)]$cache_id)))
+    rlang::warn(c(
+      sprintf(
+        "Removing %s rows with missing `survey_mean_ppp`: ",
+        sum(is.na(dt$survey_mean_ppp))
+      ),
+      unique(dt[is.na(survey_mean_ppp)]$cache_id)
+    ))
     dt <- dt[!is.na(survey_mean_ppp), ]
   }
 
   # Remove rows with missing ppp
   # CHN, IDN, why?
   if (anyNA(dt$ppp)) {
-    rlang::warn(c(sprintf('Removing %s rows with missing `ppp`:',
-                        sum(is.na(dt$ppp))),
-                        unique(dt[is.na(ppp)]$cache_id)))
+    rlang::warn(c(
+      sprintf(
+        "Removing %s rows with missing `ppp`:",
+        sum(is.na(dt$ppp))
+      ),
+      unique(dt[is.na(ppp)]$cache_id)
+    ))
     dt <- dt[!is.na(ppp), ]
   }
 
@@ -67,8 +74,8 @@ db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce
 
   # Order final columns
   cols <- c(
-    "survey_id",  "cache_id", "region_code", "wb_region_code",
-    "country_code",  "reporting_year", "surveyid_year",
+    "survey_id", "cache_id", "region_code", "wb_region_code",
+    "country_code", "reporting_year", "surveyid_year",
     "survey_year", "survey_acronym", "survey_coverage",
     "survey_comparability", "comparable_spell", "welfare_type",
     "mean", "median", "mld", "gini",

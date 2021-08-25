@@ -15,44 +15,51 @@ db_create_coverage_table <- function(ref_year_table,
                                      ref_years,
                                      digits = 2,
                                      special_countries =
-                                       c('ARG','CHN','IDN', 'IND')) {
+                                       c("ARG", "CHN", "IDN", "IND")) {
 
   # ---- Prepare Reference year table ----
 
   # Select relevant columns
-  dt <- ref_year_table[,
-          c('wb_region_code', 'pcn_region_code',
-            'country_code', 'reporting_year',
-            'survey_year', 'welfare_type',
-            'pop_data_level')]
+  dt <- ref_year_table[
+    ,
+    c(
+      "wb_region_code", "pcn_region_code",
+      "country_code", "reporting_year",
+      "survey_year", "welfare_type",
+      "pop_data_level"
+    )
+  ]
 
   # Remove duplicated rows
   dt <- dt[!duplicated(dt), ]
 
   # Transform table to one row per country-year-coverage
   dt <- dt[, .(survey_year = toString(survey_year)),
-           by = list(country_code, reporting_year,
-                     pop_data_level, welfare_type,
-                     pcn_region_code, wb_region_code)]
+    by = list(
+      country_code, reporting_year,
+      pop_data_level, welfare_type,
+      pcn_region_code, wb_region_code
+    )
+  ]
   dt$survey_year_2 <- dt$survey_year %>%
-    regmatches(. , gregexpr(', .*', .)) %>%
-    gsub(', ', '', .) %>%
-    ifelse(. == 'character(0)', NA, .) %>%
-  as.numeric()
+    regmatches(., gregexpr(", .*", .)) %>%
+    gsub(", ", "", .) %>%
+    ifelse(. == "character(0)", NA, .) %>%
+    as.numeric()
   dt$survey_year <-
-    gsub(', .*', '', dt$survey_year) %>%
+    gsub(", .*", "", dt$survey_year) %>%
     as.character() %>%
     as.numeric()
 
   # ---- Prepare Population table ----
 
   # Select national population estimates except for special countries
-  pop_table <- pop_table[(pop_data_level == 'national' |
-                            country_code %in% special_countries), ]
+  pop_table <- pop_table[(pop_data_level == "national" |
+    country_code %in% special_countries), ]
 
   # Remove national population estimates for selected countries
-  pop_table <- pop_table[!(pop_data_level == 'national' &
-                           country_code %in% special_countries), ]
+  pop_table <- pop_table[!(pop_data_level == "national" &
+    country_code %in% special_countries), ]
 
   # Select population estimates for selected reference years
   pop_table <- pop_table[year %in% ref_years, ]
@@ -63,11 +70,12 @@ db_create_coverage_table <- function(ref_year_table,
 
   # ---- Merge datasets ----
 
-    # Merge dt with pop_table (full outer join)
+  # Merge dt with pop_table (full outer join)
   dt <- merge(dt, pop_table,
-              by.x = c('country_code', 'reporting_year', 'pop_data_level'),
-              by.y = c('country_code', 'year', 'pop_data_level'),
-              all = TRUE)
+    by.x = c("country_code", "reporting_year", "pop_data_level"),
+    by.y = c("country_code", "year", "pop_data_level"),
+    all = TRUE
+  )
 
   # ---- Create coverage column ----
 
@@ -76,9 +84,9 @@ db_create_coverage_table <- function(ref_year_table,
 
   # Create coverage column (current method)
   dt$coverage <- (abs(dt$reporting_year - dt$survey_year) < 3 |
-                    abs(dt$reporting_year - dt$survey_year_2) < 3)
+    abs(dt$reporting_year - dt$survey_year_2) < 3)
   dt$coverage <- data.table::fifelse(dt$coverage, 100, 0)
-  dt[is.na(coverage),]$coverage <- 0
+  dt[is.na(coverage), ]$coverage <- 0
 
   # ---- Calculate world and regional coverage ----
 
@@ -92,15 +100,15 @@ db_create_coverage_table <- function(ref_year_table,
   out_wld <- dt %>%
     dplyr::group_by(reporting_year) %>%
     dplyr::summarise(coverage = stats::weighted.mean(coverage, pop)) %>%
-    base::transform(pcn_region_code = 'WLD') %>%
+    base::transform(pcn_region_code = "WLD") %>%
     data.table::as.data.table()
 
   # Total coverage (World less Other High Income)
   out_tot <- dt %>%
-    dplyr::filter(pcn_region_code != 'OHI') %>%
+    dplyr::filter(pcn_region_code != "OHI") %>%
     dplyr::group_by(reporting_year) %>%
     dplyr::summarise(coverage = stats::weighted.mean(coverage, pop)) %>%
-    base::transform(pcn_region_code = 'TOT') %>%
+    base::transform(pcn_region_code = "TOT") %>%
     data.table::as.data.table()
 
   # Combine to a single table
@@ -108,5 +116,4 @@ db_create_coverage_table <- function(ref_year_table,
   out$coverage <- round(out$coverage, digits)
 
   return(out)
-
 }
