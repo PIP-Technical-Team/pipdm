@@ -21,6 +21,9 @@ create_cache_file(
 
 \item{pip_data_dir}{character: Input folder for the raw survey data.}
 
+\item{tool}{character: Either "PC" or "TB" for poverty calculator and Table
+Baker, receptively}
+
 \item{cache_svy_dir}{character: Output folder for the cached survey data.}
 
 \item{compress}{numeric: Compression level used in \code{fst::write_fst()}.}

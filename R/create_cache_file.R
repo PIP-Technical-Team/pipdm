@@ -10,6 +10,8 @@
 #' @param verbose boolean: If TRUE additional messages are printed to the
 #' console.
 #' @param force logical: if TRUE, all files will be generate again.
+#' @param tool character: Either "PC" or "TB" for poverty calculator and Table
+#'   Baker, receptively
 #'
 #' @return list: creation status and cache data availability
 #' @export
