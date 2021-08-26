@@ -7,6 +7,11 @@
 #' @return data.table
 #' @export
 db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce_table) {
+
+  # TEMP FIX: TO BE REMOVED
+  dist_table$survey_id <- toupper(dist_table$survey_id)
+
+  # Remove cols from dist_table
   dist_table$reporting_year <- NULL
   dist_table$problem <- NULL
 

@@ -9,6 +9,10 @@
 #' @export
 db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
 
+
+  # TEMP FIX: TO BE REMOVED
+  dist_table$survey_id <- toupper(dist_table$survey_id)
+
   # Merge refyear table w/ dist stat table (left join)
   dist_table$reporting_year <- NULL
   dist_table$problem <- NULL

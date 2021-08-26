@@ -133,7 +133,7 @@ db_create_dist_table <- function(dl,
 
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ## Merge with corespondence inventory to get survey_id --------
+  ## Merge with correspondence inventory to get survey_id --------
 
   df[crr_inv,
     on = "cache_id",
@@ -217,6 +217,10 @@ db_create_dist_table <- function(dl,
 
 
   ## --- Finalize table ----
+
+  # TEMP FIX: TO BE REMOVED
+  # Make sure survey_id is uppercase
+  dt$survey_id <- toupper(dt$survey_id)
 
   # Order columns
   data.table::setcolorder(
