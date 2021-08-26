@@ -19,44 +19,53 @@ db_create_svy_anchor <- function(dsm_table, pfw_table) {
 
   # Add national coverage rows for countries without national surveys
   if (!purrr::is_empty(cc)) {
-    msg <- sprintf('Info: National coverage rows have been added for \'%s\'.',
-                   paste(cc, collapse = '\', \''))
+    msg <- sprintf(
+      "Info: National coverage rows have been added for '%s'.",
+      paste(cc, collapse = "', '")
+    )
     rlang::inform(msg)
     rows_to_add <-
-      pfw_table[pfw_table$country_code %in% cc,] %>%
-      transform(survey_coverage = 'national')
+      pfw_table[pfw_table$country_code %in% cc, ] %>%
+      transform(survey_coverage = "national")
     pfw_table <- rbind(pfw_table, rows_to_add)
   }
 
   # Select columns
   pfw_table <-
-    pfw_table[,
-              c('wb_region_code', 'pcn_region_code',
-                'country_code', 'survey_coverage',
-                'surveyid_year', 'survey_acronym',
-                'reporting_year')]
+    pfw_table[
+      ,
+      c(
+        "wb_region_code", "pcn_region_code",
+        "country_code", "survey_coverage",
+        "surveyid_year", "survey_acronym",
+        "reporting_year"
+      )
+    ]
 
   # # Merge DSM table with PFW (left join)
   dt <- joyn::merge(dsm_table, pfw_table,
-                    by = c("country_code", "surveyid_year",
-                           "survey_acronym", "survey_coverage", "reporting_year",
-                           "wb_region_code", "pcn_region_code"),
-                    match_type = "m:1")
+    by = c(
+      "country_code", "surveyid_year",
+      "survey_acronym", "survey_coverage", "reporting_year",
+      "wb_region_code", "pcn_region_code"
+    ),
+    match_type = "m:1"
+  )
 
-  if (nrow(dt[report == "x"]) > 0 ) {
-    msg     <- "We should not have NOT-matching observations from survey-mean table"
-    hint    <- "Make sure survey IDs are correct"
+  if (nrow(dt[report == "x"]) > 0) {
+    msg <- "We should not have NOT-matching observations from survey-mean table"
+    hint <- "Make sure survey IDs are correct"
     rlang::abort(c(
       msg,
       i = hint
     ),
     class = "pipdm_error"
     )
-
   }
 
-  dt <- dt[report != "y"  # This is unnecessary data in PFW table... should we have it?
-          ][, report := NULL]
+  dt <- dt[
+    report != "y" # This is unnecessary data in PFW table... should we have it?
+  ][, report := NULL]
 
 
   if (identical(dt$gdp_data_level, dt$pce_data_level)) {
@@ -64,18 +73,18 @@ db_create_svy_anchor <- function(dsm_table, pfw_table) {
     dt$gdp_data_level <- NULL
     dt$pce_data_level <- NULL
   } else {
-    rlang::abort('`gdp_data_level` and `pce_data_level` are not identical.')
+    rlang::abort("`gdp_data_level` and `pce_data_level` are not identical.")
   }
 
   # Order columns
   data.table::setcolorder(
-    dt, c('survey_id', 'cache_id', 'wb_region_code', 'pcn_region_code',
-          'country_code', 'surveyid_year', 'survey_acronym',
-          'survey_coverage', 'survey_year', 'welfare_type',
-          'survey_mean_ppp'))
+    dt, c(
+      "survey_id", "cache_id", "wb_region_code", "pcn_region_code",
+      "country_code", "surveyid_year", "survey_acronym",
+      "survey_coverage", "survey_year", "welfare_type",
+      "survey_mean_ppp"
+    )
+  )
 
   return(dt)
-
 }
-
-

@@ -11,7 +11,6 @@
 db_compute_survey_mean <- function(dt,
                                    gd_mean = NULL,
                                    gc = FALSE) {
-
   tryCatch(
     expr = {
 
@@ -23,28 +22,27 @@ db_compute_survey_mean <- function(dt,
 
       # Order columns
       data.table::setcolorder(
-        dt, c('survey_id', 'country_code', 'surveyid_year', 'survey_acronym',
-              'survey_year', 'welfare_type', 'survey_mean_lcu'))
+        dt, c(
+          "survey_id", "country_code", "surveyid_year", "survey_acronym",
+          "survey_year", "welfare_type", "survey_mean_lcu"
+        )
+      )
 
       # Garbage collection
       if (gc) gc(verbose = FALSE)
 
       return(dt)
-
     }, # end of expr section
 
     error = function(e) {
-
-      rlang::warn('Survey mean caluclation failed. Returning NULL.')
+      rlang::warn("Survey mean caluclation failed. Returning NULL.")
 
       # Garbage collection
       if (gc) gc(verbose = FALSE)
 
       return(NULL)
-
     } # end of error
   ) # End of trycatch
-
 }
 
 #' compute_survey_mean
@@ -70,27 +68,31 @@ md_compute_survey_mean <- function(dt, gd_mean = NULL) {
 
   # Compute mean by data levels
   dt <-
-    dt[, .(survey_id         = unique(survey_id),
-           cache_id          = unique(cache_id),
-           country_code      = unique(country_code),
-           surveyid_year     = unique(surveyid_year),
-           survey_acronym    = unique(survey_acronym),
-           survey_year       = unique(survey_year),
-           welfare_type      = unique(welfare_type),
-           distribution_type = unique(distribution_type),
-           gd_type           = unique(gd_type),
-           survey_mean_lcu   =
-             collapse::fmean(
-                             x = welfare,
-                             w = weight,
-                             na.rm = TRUE)),
-       by = .(cpi_data_level, ppp_data_level,
-              gdp_data_level, pce_data_level,
-              pop_data_level)
+    dt[, .(
+      survey_id = unique(survey_id),
+      cache_id = unique(cache_id),
+      country_code = unique(country_code),
+      surveyid_year = unique(surveyid_year),
+      survey_acronym = unique(survey_acronym),
+      survey_year = unique(survey_year),
+      welfare_type = unique(welfare_type),
+      distribution_type = unique(distribution_type),
+      gd_type = unique(gd_type),
+      survey_mean_lcu =
+        collapse::fmean(
+          x = welfare,
+          w = weight,
+          na.rm = TRUE
+        )
+    ),
+    by = .(
+      cpi_data_level, ppp_data_level,
+      gdp_data_level, pce_data_level,
+      pop_data_level
+    )
     ]
 
   return(dt)
-
 }
 
 #' gd_compute_survey_mean
@@ -105,26 +107,25 @@ gd_compute_survey_mean <- function(dt, gd_mean) {
 
   # Assign mean to aggregated dataset
   dt <-
-    dt[, .(survey_id         = unique(survey_id),
-           cache_id          = unique(cache_id),
-           country_code      = unique(country_code),
-           surveyid_year     = unique(surveyid_year),
-           survey_acronym    = unique(survey_acronym),
-           survey_year       = unique(survey_year),
-           welfare_type      = unique(welfare_type),
-           distribution_type = unique(distribution_type),
-           gd_type           = unique(gd_type),
-           survey_mean_lcu   = gd_mean,
-           cpi_data_level    = unique(cpi_data_level),
-           ppp_data_level    = unique(ppp_data_level),
-           gdp_data_level    = unique(gdp_data_level),
-           pce_data_level    = unique(pce_data_level),
-           pop_data_level    = unique(pop_data_level)
-           )
-    ]
+    dt[, .(
+      survey_id = unique(survey_id),
+      cache_id = unique(cache_id),
+      country_code = unique(country_code),
+      surveyid_year = unique(surveyid_year),
+      survey_acronym = unique(survey_acronym),
+      survey_year = unique(survey_year),
+      welfare_type = unique(welfare_type),
+      distribution_type = unique(distribution_type),
+      gd_type = unique(gd_type),
+      survey_mean_lcu = gd_mean,
+      cpi_data_level = unique(cpi_data_level),
+      ppp_data_level = unique(ppp_data_level),
+      gdp_data_level = unique(gdp_data_level),
+      pce_data_level = unique(pce_data_level),
+      pop_data_level = unique(pop_data_level)
+    )]
 
   return(dt)
-
 }
 
 #' id_compute_survey_mean
@@ -140,48 +141,55 @@ id_compute_survey_mean <- function(dt, gd_mean = NULL) {
   dl_mean <- purrr::map(dl, function(dt) {
 
     # Compute mean by data levels
-    dt[, .(survey_id         = unique(survey_id),
-           cache_id          = unique(cache_id),
-           country_code      = unique(country_code),
-           surveyid_year     = unique(surveyid_year),
-           survey_acronym    = unique(survey_acronym),
-           survey_year       = unique(survey_year),
-           welfare_type      = unique(welfare_type),
-           distribution_type = unique(distribution_type),
-           gd_type           = unique(gd_type),
-           survey_mean_lcu   =
-             collapse::fmean(
-               x = welfare,
-               w = weight,
-               na.rm = TRUE)),
-       by = .(cpi_data_level, ppp_data_level,
-              gdp_data_level, pce_data_level,
-              pop_data_level)
+    dt[, .(
+      survey_id = unique(survey_id),
+      cache_id = unique(cache_id),
+      country_code = unique(country_code),
+      surveyid_year = unique(surveyid_year),
+      survey_acronym = unique(survey_acronym),
+      survey_year = unique(survey_year),
+      welfare_type = unique(welfare_type),
+      distribution_type = unique(distribution_type),
+      gd_type = unique(gd_type),
+      survey_mean_lcu =
+        collapse::fmean(
+          x = welfare,
+          w = weight,
+          na.rm = TRUE
+        )
+    ),
+    by = .(
+      cpi_data_level, ppp_data_level,
+      gdp_data_level, pce_data_level,
+      pop_data_level
+    )
     ]
   })
   dt <- data.table::rbindlist(dl_mean)
 
   # Compute mean by data levels
   dt <-
-    dt[, .(survey_id         = unique(survey_id),
-           cache_id          = unique(cache_id),
-           country_code      = unique(country_code),
-           surveyid_year     = unique(surveyid_year),
-           survey_acronym    = unique(survey_acronym),
-           survey_year       = unique(survey_year),
-           welfare_type      = unique(welfare_type),
-           distribution_type = unique(distribution_type),
-           gd_type           = unique(gd_type),
-           survey_mean_lcu   =
-             collapse::fmean(survey_mean_lcu)),
-       by = .(cpi_data_level,
-              ppp_data_level,
-              gdp_data_level,
-              pce_data_level,
-              pop_data_level)
+    dt[, .(
+      survey_id = unique(survey_id),
+      cache_id = unique(cache_id),
+      country_code = unique(country_code),
+      surveyid_year = unique(surveyid_year),
+      survey_acronym = unique(survey_acronym),
+      survey_year = unique(survey_year),
+      welfare_type = unique(welfare_type),
+      distribution_type = unique(distribution_type),
+      gd_type = unique(gd_type),
+      survey_mean_lcu =
+        collapse::fmean(survey_mean_lcu)
+    ),
+    by = .(
+      cpi_data_level,
+      ppp_data_level,
+      gdp_data_level,
+      pce_data_level,
+      pop_data_level
+    )
     ]
 
   return(dt)
-
-
 }

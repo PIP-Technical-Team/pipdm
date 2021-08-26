@@ -5,14 +5,14 @@
 #' @return data.table
 #' @export
 ts_cache_read_ok <- function(inv_path) {
-
   inv <- fst::read_fst(inv_path, as.data.table = TRUE)
   # inv <- inv[grepl("ARG.+201[7-9]", filename)]
 
   cch <- inv$cache_file
 
-  df <- purrr::map(.x = cch,
-                   .f = safe_fst
+  df <- purrr::map(
+    .x = cch,
+    .f = safe_fst
   )
   df <- unlist(df)
   inv[, status := df]
@@ -31,6 +31,7 @@ status_fst <- function(x) {
 }
 
 
-safe_fst <- purrr::possibly(.f = status_fst,
-                            otherwise = NA)
-
+safe_fst <- purrr::possibly(
+  .f = status_fst,
+  otherwise = NA
+)

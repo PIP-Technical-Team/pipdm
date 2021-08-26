@@ -1,8 +1,9 @@
 # Add global variables to avoid NSE notes in R CMD check
-if (getRversion() >= '2.15.1')
+if (getRversion() >= "2.15.1") {
   utils::globalVariables(
-    c('req_items')
+    c("req_items")
   )
+}
 
 #' Finalize reference year table
 #'
@@ -26,18 +27,20 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
   dt$estimation_type <-
     data.table::fifelse(
       n == 1,
-      'extrapolation',
-      'interpolation')
+      "extrapolation",
+      "interpolation"
+    )
 
-    # Unnest 'req_items'
+  # Unnest 'req_items'
   dt <- tidyfast::dt_unnest(dt, req_items)
 
   # Add survey as category to estimation_type
   dt$estimation_type <-
     data.table::fifelse(
       dt$survey_year == dt$reference_year,
-      'survey',
-      dt$estimation_type)
+      "survey",
+      dt$estimation_type
+    )
 
   # Check for countries without any national surveys
   cc <- check_no_national_survey(pfw_table)
@@ -47,21 +50,27 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
   if (!purrr::is_empty(cc)) {
     tmp <- purrr::map_df(cc, find_unique_coverage, pfw_table)
     dt$survey_coverage <- ifelse(dt$country_code %in% tmp$country_code,
-                                 tmp$survey_coverage, dt$survey_coverage)
-    msg <- sprintf('Info: Recoding survey coverage for \'%s\'.',
-                   paste(tmp$country_code, collapse = '\', \''))
+      tmp$survey_coverage, dt$survey_coverage
+    )
+    msg <- sprintf(
+      "Info: Recoding survey coverage for '%s'.",
+      paste(tmp$country_code, collapse = "', '")
+    )
     rlang::inform(msg)
   }
 
   # Remove rows with national survey coverage and missing reference year mean
-  na_check <- dt$survey_coverage == 'national' & is.na(dt$pred_mean_ppp)
+  na_check <- dt$survey_coverage == "national" & is.na(dt$pred_mean_ppp)
   if (any(na_check)) {
     cc <- dt[na_check]$country_code %>% unique()
     dt <- dt[!na_check]
     msg <- sprintf(
-      paste('Info: %s country-year(s) with national survey coverage have',
-            'missing values for the reference year mean. Removing such rows for \'%s\'.'),
-            sum(na_check), paste(cc, collapse = '\', \''))
+      paste(
+        "Info: %s country-year(s) with national survey coverage have",
+        "missing values for the reference year mean. Removing such rows for '%s'."
+      ),
+      sum(na_check), paste(cc, collapse = "', '")
+    )
     rlang::inform(msg)
   }
 
@@ -80,26 +89,28 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
   # aggregated numbers
   dt$predicted_mean_ppp <- data.table::fifelse(
     dt$is_interpolated &
-      dt$pop_data_level == 'national' &
-      dt$is_used_for_aggregation
-    , NA_real_,
+      dt$pop_data_level == "national" &
+      dt$is_used_for_aggregation,
+    NA_real_,
     dt$predicted_mean_ppp
   )
 
   # Select final columns
-  cols <- c('survey_id', 'cache_id', 'wb_region_code',
-            'pcn_region_code', 'country_code', 'reference_year',
-            'surveyid_year', 'survey_year', 'survey_acronym',
-            'survey_coverage', 'survey_comparability',
-            'comparable_spell', 'welfare_type', 'survey_mean_lcu',
-            'survey_mean_ppp', 'predicted_mean_ppp',
-            'ppp', 'cpi', 'pop', 'gdp', 'pce',
-            'pop_data_level', 'gdp_data_level',
-            'pce_data_level', 'cpi_data_level',
-            'ppp_data_level', 'distribution_type',
-            'gd_type', 'is_interpolated',
-            'is_used_for_aggregation',
-            'estimation_type')
+  cols <- c(
+    "survey_id", "cache_id", "wb_region_code",
+    "pcn_region_code", "country_code", "reference_year",
+    "surveyid_year", "survey_year", "survey_acronym",
+    "survey_coverage", "survey_comparability",
+    "comparable_spell", "welfare_type", "survey_mean_lcu",
+    "survey_mean_ppp", "predicted_mean_ppp",
+    "ppp", "cpi", "pop", "gdp", "pce",
+    "pop_data_level", "gdp_data_level",
+    "pce_data_level", "cpi_data_level",
+    "ppp_data_level", "distribution_type",
+    "gd_type", "is_interpolated",
+    "is_used_for_aggregation",
+    "estimation_type"
+  )
   dt <- dt[, .SD, .SDcols = cols]
 
   # Rename variables
@@ -107,7 +118,8 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
     reporting_year = reference_year,
     reporting_pop = pop,
     reporting_pce = pce,
-    reporting_gdp = gdp)
+    reporting_gdp = gdp
+  )
 
   # Add interpolation id
   dt <- dt %>%
@@ -119,5 +131,4 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
   data.table::setorder(dt, survey_id, pop_data_level)
 
   return(dt)
-
 }

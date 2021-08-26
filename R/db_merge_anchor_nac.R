@@ -1,9 +1,12 @@
 # Add global variables to avoid NSE notes in R CMD check
-if (getRversion() >= '2.15.1')
+if (getRversion() >= "2.15.1") {
   utils::globalVariables(
-    c('country_code', 'gdp_data_level', 'pce_data_level',
-      'gdp_domain', 'pce_domain')
+    c(
+      "country_code", "gdp_data_level", "pce_data_level",
+      "gdp_domain", "pce_domain"
+    )
   )
+}
 
 #' Merge survey anchor with national accounts data
 #'
@@ -19,24 +22,29 @@ if (getRversion() >= '2.15.1')
 #' @seealso [adjust_aux_values()]
 #' @return data.table
 #' @keywords internal
-db_merge_anchor_nac <- function(svy_anchor, nac_table){
+db_merge_anchor_nac <- function(svy_anchor, nac_table) {
 
   # Create nested NAC table
   nac_nested <- nac_table %>%
-    tidyfast::dt_nest(country_code, nac_data_level, .key = 'data')
+    tidyfast::dt_nest(country_code, nac_data_level, .key = "data")
 
   # Merge svy_anchor with nac_nested (left join)
   dt <- joyn::merge(svy_anchor, nac_nested,
-                    by = c("country_code", "nac_data_level"),
-                    match_type = "m:1",
-                    keep = "left",
-                    reportvar = FALSE)
+    by = c("country_code", "nac_data_level"),
+    match_type = "m:1",
+    keep = "left",
+    reportvar = FALSE
+  )
 
   # Adjust GDP and PCE values for surveys spanning two calender years
   dt$survey_gdp <- purrr::map2_dbl(dt$survey_year, dt$data,
-                                adjust_aux_values, value_var = 'gdp')
+    adjust_aux_values,
+    value_var = "gdp"
+  )
   dt$survey_pce <- purrr::map2_dbl(dt$survey_year, dt$data,
-                                adjust_aux_values, value_var = 'pce')
+    adjust_aux_values,
+    value_var = "pce"
+  )
 
   # Remove nested data column
   dt$data <- NULL

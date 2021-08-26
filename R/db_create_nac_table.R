@@ -10,18 +10,21 @@
 #' @inheritParams db_create_ref_year_table
 #' @return data.table
 #' @keywords internal
-db_create_nac_table <- function(gdp_table, pce_table, pip_years){
+db_create_nac_table <- function(gdp_table, pce_table, pip_years) {
 
   # Standardize ^_data_level ^_domain column names
-  names(pce_table) <- sub('^pce[_]', 'nac_', names(pce_table))
-  names(gdp_table) <- sub('^gdp[_]', 'nac_', names(gdp_table))
+  names(pce_table) <- sub("^pce[_]", "nac_", names(pce_table))
+  names(gdp_table) <- sub("^gdp[_]", "nac_", names(gdp_table))
 
   # Merge GDP and PCE by country, year, data_level and domain (full join)
   dt <- joyn::merge(gdp_table, pce_table,
-                    by = c("country_code", "year", "nac_data_level",
-                           "nac_domain"),
-                    match_type = "1:1",
-                    reportvar = FALSE)
+    by = c(
+      "country_code", "year", "nac_data_level",
+      "nac_domain"
+    ),
+    match_type = "1:1",
+    reportvar = FALSE
+  )
 
   # Remove domain column
   dt$nac_domain <- NULL
