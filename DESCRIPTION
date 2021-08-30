@@ -44,7 +44,6 @@ Imports:
     readxl,
     cli,
     tibble,
-    pushoverr,
     joyn,
     pipload (>= 0.1.3.9000)
 VignetteBuilder: knitr
