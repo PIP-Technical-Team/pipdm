@@ -16,7 +16,7 @@
 #' @return list: creation status and cache data availability
 #' @export
 create_cache_file <- function(pipeline_inventory = NULL,
-                              pip_data_dir = getOption("pip.maindir"),
+                              pip_data_dir = gls$PIP_DATA_DIR,
                               tool = c("PC", "TB"),
                               cache_svy_dir = NULL,
                               compress = 100,
@@ -76,9 +76,9 @@ create_cache_file <- function(pipeline_inventory = NULL,
   ## cache directory --------
   if (is.null(cache_svy_dir)) {
     if (tool == "PC") {
-      cache_svy_dir <- getOption("pip.cachedir.pc")
+      cache_svy_dir <- gls$CACHE_SVY_DIR_PC
     } else {
-      cache_svy_dir <- getOption("pip.cachedir.tb")
+      cache_svy_dir <- gls$CACHE_SVY_DIR_TB
     }
   }
 

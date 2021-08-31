@@ -4,7 +4,7 @@
 #' @return TRUE if file is update. FALSE If no data is in directory
 #' @export
 pip_update_cache_inventory <- function(pipeline_inventory = NULL,
-                                       pip_data_dir = getOption("pip.maindir"),
+                                       pip_data_dir = gls$PIP_DATA_DIR,
                                        cache_svy_dir = NULL,
                                        tool = c("PC", "TB")) {
   tool <- match.arg(tool)
@@ -12,9 +12,9 @@ pip_update_cache_inventory <- function(pipeline_inventory = NULL,
   # Cache directory
   if (is.null(cache_svy_dir)) {
     if (tool == "PC") {
-      cache_svy_dir <- getOption("pip.cachedir.pc")
+      cache_svy_dir <- gls$CACHE_SVY_DIR_PC
     } else {
-      cache_svy_dir <- getOption("pip.cachedir.tb")
+      cache_svy_dir <- gls$CACHE_SVY_DIR_TB
     }
   }
 

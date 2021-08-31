@@ -20,9 +20,9 @@ find_new_svy_data <- function(cache_id,
 
   if (is.null(cache_svy_dir)) {
     if (tool == "PC") {
-      cache_svy_dir <- getOption("pip.cachedir.pc")
+      cache_svy_dir <- gls$CACHE_SVY_DIR_PC
     } else {
-      cache_svy_dir <- getOption("pip.cachedir.tb")
+      cache_svy_dir <- gls$CACHE_SVY_DIR_TB
     }
   }
 

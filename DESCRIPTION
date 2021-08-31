@@ -1,6 +1,6 @@
 Package: pipdm
 Title: PIP Data Managment
-Version: 0.0.1.9017
+Version: 0.0.1.9018
 Authors@R: 
     c(person(given = "Tony",
             family = "Fujs",
@@ -24,7 +24,8 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    pushoverr
 URL: https://github.com/PIP-Technical-Team/pipdm
 BugReports: https://github.com/PIP-Technical-Team/pipdm/issues
 Depends: 
@@ -44,10 +45,10 @@ Imports:
     readxl,
     cli,
     tibble,
-    pushoverr,
     joyn,
-    pipload
-Remotes:
-    PIP-Technical-Team/pipload
-    randrescastaneda/joyn
+    pipload (>= 0.1.3.9001),
+    fst,
+    glue,
+    haven,
+    progress
 VignetteBuilder: knitr

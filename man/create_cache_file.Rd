@@ -6,7 +6,7 @@
 \usage{
 create_cache_file(
   pipeline_inventory = NULL,
-  pip_data_dir = getOption("pip.maindir"),
+  pip_data_dir = gls$PIP_DATA_DIR,
   tool = c("PC", "TB"),
   cache_svy_dir = NULL,
   compress = 100,
