@@ -6,7 +6,7 @@
 \usage{
 pip_update_cache_inventory(
   pipeline_inventory = NULL,
-  pip_data_dir = getOption("pip.maindir"),
+  pip_data_dir = gls$PIP_DATA_DIR,
   cache_svy_dir = NULL,
   tool = c("PC", "TB")
 )

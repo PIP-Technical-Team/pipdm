@@ -24,7 +24,8 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    pushoverr
 URL: https://github.com/PIP-Technical-Team/pipdm
 BugReports: https://github.com/PIP-Technical-Team/pipdm/issues
 Depends: 
@@ -45,5 +46,9 @@ Imports:
     cli,
     tibble,
     joyn,
-    pipload (>= 0.1.3.9000)
+    pipload (>= 0.1.3.9001),
+    fst,
+    glue,
+    haven,
+    progress
 VignetteBuilder: knitr
