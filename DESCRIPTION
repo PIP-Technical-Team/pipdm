@@ -1,6 +1,6 @@
 Package: pipdm
 Title: PIP Data Managment
-Version: 0.0.1.9017
+Version: 0.0.1.9018
 Authors@R: 
     c(person(given = "Tony",
             family = "Fujs",
