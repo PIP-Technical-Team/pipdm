@@ -52,3 +52,5 @@ Imports:
     haven,
     progress
 VignetteBuilder: knitr
+Remotes:  
+    github::PIP-Technical-Team/pipload
