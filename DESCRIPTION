@@ -1,6 +1,6 @@
 Package: pipdm
 Title: PIP Data Managment
-Version: 0.0.1.9018
+Version: 0.0.1.9019
 Authors@R: 
     c(person(given = "Tony",
             family = "Fujs",
@@ -52,5 +52,5 @@ Imports:
     haven,
     progress
 VignetteBuilder: knitr
-Remotes:  
+Remotes: 
     github::PIP-Technical-Team/pipload
