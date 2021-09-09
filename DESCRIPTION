@@ -46,7 +46,7 @@ Imports:
     cli,
     tibble,
     joyn,
-    pipload (>= 0.1.3.9001),
+    pipload (>= 0.1.4.9002),
     fst,
     glue,
     haven,

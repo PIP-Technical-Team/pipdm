@@ -8,6 +8,6 @@
 #'
 #' @docType package
 #' @name pipdm
-#' @importFrom pipload pip_create_globals
+#' @importFrom pipload pip_create_globals add_gls_to_env
 NULL
 #> NULL
