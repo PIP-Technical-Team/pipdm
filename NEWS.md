@@ -1,4 +1,4 @@
-# pipdm (development version)
+# pipdm 0.0.2
 
 * bring pip_update_cache_inventory to pipdm. It was before in the pipeline
 
