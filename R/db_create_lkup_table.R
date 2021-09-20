@@ -5,17 +5,33 @@ NULL
 if (getRversion() >= "2.15.1") {
   utils::globalVariables(
     c(
-      "region_code", "country_code", "survey_coverage",
-      "nac_data_level", "ppp_data_level", "cpi_data_level",
-      "nac_domain", "ppp_domain", "cpi_domain",
-      "cpi_data_level_index", "cpi_domain_index",
-      "nac_data_level_index", "nac_domain_index",
-      "ppp_data_level_index", "ppp_domain_index",
-      "reference_year", "region_code_index",
-      "country_code_index", "data_level_index",
-      "domain_index", "survey_coverage_index",
-      "welfare_type_index", "reference_year_index",
-      "gdp", "pce"
+      "region_code",
+      "country_code",
+      "survey_coverage",
+      "nac_data_level",
+      "ppp_data_level",
+      "cpi_data_level",
+      "max_domain",
+      "nac_domain",
+      "ppp_domain",
+      "cpi_domain",
+      "cpi_data_level_index",
+      "cpi_domain_index",
+      "max_domain_index",
+      "nac_data_level_index",
+      "nac_domain_index",
+      "ppp_data_level_index",
+      "ppp_domain_index",
+      "reference_year",
+      "region_code_index",
+      "country_code_index",
+      "data_level_index",
+      "domain_index",
+      "survey_coverage_index",
+      "welfare_type_index",
+      "reference_year_index",
+      "gdp",
+      "pce"
     )
   )
 }
@@ -109,8 +125,8 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
       pop_data_level_index,
       ppp_data_level_index,
       cpi_data_level_index,
-      reference_year_index,
       max_domain_index,
+      reference_year_index,
       gdp, pce, pop,
       .key = "data"
     )
