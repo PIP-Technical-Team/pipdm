@@ -50,12 +50,13 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
   # Add index columns
   dt <- dt %>%
     base::transform(
-      region_code_index = region_code,
-      country_code_index = country_code,
+      region_code_index    = region_code,
+      country_code_index   = country_code,
       nac_data_level_index = nac_data_level,
       pop_data_level_index = pop_data_level,
       ppp_data_level_index = ppp_data_level,
       cpi_data_level_index = cpi_data_level,
+      max_domain_index     = max_domain,
       reference_year_index = reference_year
     )
 
@@ -94,7 +95,8 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
     dt, c(
       "country_code_index", "reference_year_index",
       "nac_data_level_index", "pop_data_level_index",
-      "cpi_data_level_index", "ppp_data_level_index"
+      "cpi_data_level_index", "ppp_data_level_index",
+      "max_domain_index"
     )
   )
 
@@ -108,6 +110,7 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
       ppp_data_level_index,
       cpi_data_level_index,
       reference_year_index,
+      max_domain_index,
       gdp, pce, pop,
       .key = "data"
     )
