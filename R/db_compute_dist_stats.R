@@ -191,7 +191,7 @@ get_synth_vector <- function(dt, pop_table, mean, level) {
     pop
   ]
 
-  wf <- sd_create_synth_vector(df$welfare,
+  wf <- wbpip:::sd_create_synth_vector(df$welfare,
     df$weight,
     mean = mean[level],
     pop  = popf
