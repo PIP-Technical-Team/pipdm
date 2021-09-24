@@ -105,7 +105,7 @@ db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
     "pce_data_level",
     "cpi_data_level",
     "ppp_data_level",
-    "max_domain",
+    "reporting_level",
     "distribution_type",
     "gd_type",
     "is_interpolated",

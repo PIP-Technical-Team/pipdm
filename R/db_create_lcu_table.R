@@ -13,7 +13,7 @@ if (getRversion() >= "2.15.1") {
       "gdp_data_level",
       "pce_data_level",
       "pop_data_level",
-      "max_domain",
+      "reporting_level",
       "svy_mean_lcu",
       "surveyid_year",
       "survey_acronym",

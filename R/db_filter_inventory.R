@@ -47,7 +47,7 @@ db_filter_inventory <- function(dt, pfw_table) {
       )
     ][,
       # Find MAX domain per obs
-      max_domain := apply(.SD, MARGIN = 1, max),
+      reporting_level := apply(.SD, MARGIN = 1, max),
       .SDcols = dcols
     ]
 
@@ -102,7 +102,7 @@ db_filter_inventory <- function(dt, pfw_table) {
     cache_id := paste(country_code,
       surveyid_year,
       survey_acronym,
-      paste0("D", max_domain),
+      paste0("D", reporting_level),
       wt,
       source,
       sep = "_"

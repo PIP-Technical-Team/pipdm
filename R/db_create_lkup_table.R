@@ -11,13 +11,13 @@ if (getRversion() >= "2.15.1") {
       "nac_data_level",
       "ppp_data_level",
       "cpi_data_level",
-      "max_domain",
+      "reporting_level",
       "nac_domain",
       "ppp_domain",
       "cpi_domain",
       "cpi_data_level_index",
       "cpi_domain_index",
-      "max_domain_index",
+      "reporting_level_index",
       "nac_data_level_index",
       "nac_domain_index",
       "ppp_data_level_index",
@@ -72,7 +72,7 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
       pop_data_level_index = pop_data_level,
       ppp_data_level_index = ppp_data_level,
       cpi_data_level_index = cpi_data_level,
-      max_domain_index     = max_domain,
+      reporting_level_index     = reporting_level,
       reference_year_index = reference_year
     )
 
@@ -112,7 +112,7 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
       "country_code_index", "reference_year_index",
       "nac_data_level_index", "pop_data_level_index",
       "cpi_data_level_index", "ppp_data_level_index",
-      "max_domain_index"
+      "reporting_level_index"
     )
   )
 
@@ -125,7 +125,7 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
       pop_data_level_index,
       ppp_data_level_index,
       cpi_data_level_index,
-      max_domain_index,
+      reporting_level_index,
       reference_year_index,
       gdp, pce, pop,
       .key = "data"

@@ -85,7 +85,7 @@ md_compute_survey_mean <- function(dt, gd_mean = NULL) {
     by = .(
       cpi_data_level, ppp_data_level,
       gdp_data_level, pce_data_level,
-      pop_data_level, max_domain
+      pop_data_level, reporting_level
     )
     ]
 
@@ -120,7 +120,7 @@ gd_compute_survey_mean <- function(dt, gd_mean) {
       gdp_data_level    = unique(gdp_data_level),
       pce_data_level    = unique(pce_data_level),
       pop_data_level    = unique(pop_data_level),
-      max_domain        = unique(max_domain)
+      reporting_level        = unique(reporting_level)
     )]
 
   return(dt)
@@ -159,7 +159,7 @@ id_compute_survey_mean <- function(dt, gd_mean = NULL) {
     by = .(
       cpi_data_level, ppp_data_level,
       gdp_data_level, pce_data_level,
-      pop_data_level, max_domain
+      pop_data_level, reporting_level
     )
     ]
   })
@@ -186,7 +186,7 @@ id_compute_survey_mean <- function(dt, gd_mean = NULL) {
       gdp_data_level,
       pce_data_level,
       pop_data_level,
-      max_domain
+      reporting_level
     )
     ]
 

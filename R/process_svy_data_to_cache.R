@@ -83,9 +83,9 @@ process_svy_data_to_cache <- function(survey_id,
       ordered_level <- purrr::map_dbl(dl_var, ~ get_ordered_level(df, .x))
       select_var <- dl_var[which.max(ordered_level)]
 
-      df[, max_domain := get(select_var)]
+      df[, reporting_level := get(select_var)]
 
-      data.table::setorder(df, max_domain)
+      data.table::setorder(df, reporting_level)
 
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       ## Deflate data --------

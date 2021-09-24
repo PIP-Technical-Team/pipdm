@@ -113,7 +113,7 @@ db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce
     "pce_data_level",
     "cpi_data_level",
     "ppp_data_level",
-    "max_domain",
+    "reporting_level",
     "distribution_type",
     "gd_type",
     "is_interpolated",

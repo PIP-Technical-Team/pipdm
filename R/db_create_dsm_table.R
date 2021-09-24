@@ -179,7 +179,7 @@ db_create_dsm_table <- function(lcu_table,
         "survey_mean_lcu", "survey_mean_ppp", #' survey_pop',
         "reporting_pop", "ppp", "cpi", "pop_data_level",
         "gdp_data_level", "pce_data_level",
-        "cpi_data_level", "ppp_data_level", "max_domain",
+        "cpi_data_level", "ppp_data_level", "reporting_level",
         "distribution_type", "gd_type",
         "is_interpolated", "is_used_for_aggregation"
       )
@@ -239,7 +239,7 @@ add_aggregated_mean <- function(dt) {
       pce_data_level = "national",
       cpi_data_level = "national",
       ppp_data_level = "national",
-      max_domain     = "national",
+      reporting_level     = "national",
       distribution_type = unique(distribution_type),
       gd_type = unique(gd_type),
       is_interpolated = FALSE,

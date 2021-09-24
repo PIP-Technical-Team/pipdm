@@ -33,7 +33,7 @@ db_create_metadata_table <- function(pfw_table, lcu_table) {
       "ppp_data_level",
       "gdp_data_level",
       "pce_data_level",
-      "max_domain"
+      "reporting_level"
     )]
 
   # Merge datasets

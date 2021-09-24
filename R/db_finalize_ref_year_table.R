@@ -106,7 +106,7 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
     "ppp", "cpi", "pop", "gdp", "pce",
     "pop_data_level", "gdp_data_level",
     "pce_data_level", "cpi_data_level",
-    "ppp_data_level", "max_domain", "distribution_type",
+    "ppp_data_level", "reporting_level", "distribution_type",
     "gd_type", "is_interpolated",
     "is_used_for_aggregation",
     "estimation_type"
