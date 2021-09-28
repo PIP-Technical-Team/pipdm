@@ -21,10 +21,19 @@ db_create_metadata_table <- function(pfw_table, lcu_table) {
   # LCU columns
   lcu_table <-
     lcu_table[, c(
-      "survey_id", "country_code", "surveyid_year",
-      "survey_acronym", "survey_year", "welfare_type",
-      "distribution_type", "gd_type", "cpi_data_level",
-      "ppp_data_level", "gdp_data_level", "pce_data_level"
+      "survey_id",
+      "country_code",
+      "surveyid_year",
+      "survey_acronym",
+      "survey_year",
+      "welfare_type",
+      "distribution_type",
+      "gd_type",
+      "cpi_data_level",
+      "ppp_data_level",
+      "gdp_data_level",
+      "pce_data_level",
+      "reporting_level"
     )]
 
   # Merge datasets

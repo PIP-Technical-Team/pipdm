@@ -43,7 +43,7 @@ compute_dist_stats <- function(dt, mean, pop_table, cache_id) {
   data_level <- gsub("(.*_)(D[123])(.+$)", "\\2", cache_id)
 
   # NOTE: we should variable pop_data_level to something more general. We could
-  # use something similar to vartiable max_domain in the function db_filter_inventory
+  # use something similar to vartiable reporting_level in the function db_filter_inventory
 
   # Order by population data level
   data.table::setorder(dt, pop_data_level)
@@ -153,7 +153,7 @@ id_dist_stats <- function(dt) {
 #' @return list
 #' @noRd
 get_dist_stats_by_level <- function(dt, mean, source, level) {
-  df <- dt[max_domain == level]
+  df <- dt[reporting_level == level]
 
   if (source == "GROUP") {
     res <- gd_dist_stats(df, mean[level])
@@ -180,7 +180,7 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
 #' @return data.frame
 #' @noRd
 get_synth_vector <- function(dt, pop_table, mean, level) {
-  df <- dt[max_domain == level]
+  df <- dt[reporting_level == level]
   ccode <- dt[, unique(country_code)]
   svid_year <- dt[, unique(surveyid_year)]
 
@@ -191,7 +191,7 @@ get_synth_vector <- function(dt, pop_table, mean, level) {
     pop
   ]
 
-  wf <- sd_create_synth_vector(df$welfare,
+  wf <- wbpip:::sd_create_synth_vector(df$welfare,
     df$weight,
     mean = mean[level],
     pop  = popf

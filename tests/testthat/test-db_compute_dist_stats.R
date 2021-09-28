@@ -23,10 +23,10 @@ get_dist_stata <- function(cache_id) {
   cache_id <- dt[, unique(cache_id)]
 
   dtmean <- dt[, .(mean = collapse::fmean(welfare, w = weight)),
-    by = max_domain
+    by = reporting_level
   ]
   mean <- dtmean[, mean]
-  names(mean) <- dtmean[, max_domain]
+  names(mean) <- dtmean[, reporting_level]
   ld <- db_compute_dist_stats(dt, mean, pop, cache_id)
   return(list(ld = ld, ldnames = names(mean)))
 }
