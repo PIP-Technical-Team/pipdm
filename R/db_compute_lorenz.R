@@ -15,7 +15,8 @@ db_compute_lorenz <- function(dt, gc = FALSE) {
           welfare = dt$welfare, weight = dt$weight
         )
       } else {
-        rlang::info("Pre-calculation of Lorenz curves only implemented for microdata. Returning NULL.")
+        cli::cli_alert_info("Pre-calculation of Lorenz curves only implemented
+                            for microdata. Returning NULL.", wrap = TRUE)
         res <- NULL
       }
 
