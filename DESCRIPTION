@@ -51,7 +51,7 @@ Imports:
     glue,
     haven,
     progress,
-    pipcheck (>= 0.0.0.9003)
+    pipcheck (>= 0.0.0.9004)
 VignetteBuilder: knitr
 Remotes: 
     github::PIP-Technical-Team/pipload,
