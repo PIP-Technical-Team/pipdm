@@ -9,7 +9,8 @@ pip_update_cache_inventory(
   pip_data_dir = gls$PIP_DATA_DIR,
   cache_svy_dir = NULL,
   tool = c("PC", "TB"),
-  save = TRUE
+  save = TRUE,
+  load = FALSE
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ pip_update_cache_inventory(
 Baker, receptively}
 
 \item{save}{logical. If true, it saves, if FALSE it loads the data}
+
+\item{load}{logical. If true, loads data. if False return TRUE invisibly}
 }
 \value{
 TRUE if file is update. FALSE If no data is in directory

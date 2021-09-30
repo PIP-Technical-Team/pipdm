@@ -2,6 +2,7 @@
 #'
 #' @inheritParams create_cache_file
 #' @param save logical. If true, it saves, if FALSE it loads the data
+#' @param load logical. If true, loads data. if False return TRUE invisibly
 #' @return TRUE if file is update. FALSE If no data is in directory
 #' @export
 pip_update_cache_inventory <-
@@ -10,7 +11,8 @@ pip_update_cache_inventory <-
            pip_data_dir       = gls$PIP_DATA_DIR,
            cache_svy_dir      = NULL,
            tool               = c("PC", "TB"),
-           save               = TRUE) {
+           save               = TRUE,
+           load               = FALSE) {
 
 
   tool <- match.arg(tool)
@@ -115,6 +117,7 @@ pip_update_cache_inventory <-
     ## Check if data has changed --------
 
     if (!identical(cci, crr)) {
+      cli::cli_alert_warning("cache inventory has changed")
 
       crr <- joyn::merge(cci, crr,
         by            = "cache_id",
@@ -126,7 +129,7 @@ pip_update_cache_inventory <-
 
     } else {
       cli::cli_alert_info("cache inventory has not changed")
-      return(invisible(TRUE))
+      save <- FALSE
     }
   }
 
@@ -144,9 +147,13 @@ pip_update_cache_inventory <-
     haven::write_dta(crr, glue::glue("{crr_filename}.dta"))
     haven::write_dta(crr, glue::glue("{crr_vintage}.dta"))
 
-    return(invisible(TRUE))
-  } else {
+
+  }
+
+  if (load) {
     return(crr)
+  } else {
+    return(invisible(TRUE))
   }
 
 }
