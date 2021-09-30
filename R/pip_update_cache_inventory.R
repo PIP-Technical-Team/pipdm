@@ -96,6 +96,16 @@ pip_update_cache_inventory <-
     verbose    = FALSE
   )
 
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## Auxiliary variables for joins --------
+  crr[,
+      wt := gsub("(.+)_([[:upper:]]+)_([[:upper:]]+$)", "\\2", cache_id)
+      ][,
+        welfare_type := fcase(wt == "CON", "consumption",
+                              wt == "INC", "income",
+                              default =  "")
+        ][, wt := NULL]
+
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Stamps   ---------
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -111,6 +121,7 @@ pip_update_cache_inventory <-
   # Current inventory   ---------
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (file.exists(crr_fst)) {
+
     cci <- fst::read_fst(crr_fst, as.data.table = TRUE)
 
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
