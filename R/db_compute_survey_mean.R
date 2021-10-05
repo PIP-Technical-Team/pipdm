@@ -120,7 +120,7 @@ gd_compute_survey_mean <- function(dt, gd_mean) {
       gdp_data_level    = unique(gdp_data_level),
       pce_data_level    = unique(pce_data_level),
       pop_data_level    = unique(pop_data_level),
-      reporting_level        = unique(reporting_level)
+      reporting_level   = unique(reporting_level)
     )]
 
   return(dt)

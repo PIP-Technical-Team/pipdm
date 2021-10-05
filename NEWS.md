@@ -1,5 +1,7 @@
-# pipdm (development version)
+# pipdm 0.0.3
   * Add variable`max_domain` to all scripts. 
+  * add `save_*`  fucntions from pipeline. 
+  * fix bugs
 
 # pipdm 0.0.2
 * load global variables in `gls` using `pipload::pip_create_globals()` and `pipload::add_gls_to_env()`

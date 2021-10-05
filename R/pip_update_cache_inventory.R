@@ -1,12 +1,20 @@
 #' Update correspondence inventory file
 #'
 #' @inheritParams create_cache_file
+#' @param save logical. If true, it saves, if FALSE it loads the data
+#' @param load logical. If true, loads data. if False return TRUE invisibly
 #' @return TRUE if file is update. FALSE If no data is in directory
 #' @export
-pip_update_cache_inventory <- function(pipeline_inventory = NULL,
-                                       pip_data_dir = gls$PIP_DATA_DIR,
-                                       cache_svy_dir = NULL,
-                                       tool = c("PC", "TB")) {
+pip_update_cache_inventory <-
+
+  function(pipeline_inventory = NULL,
+           pip_data_dir       = gls$PIP_DATA_DIR,
+           cache_svy_dir      = NULL,
+           tool               = c("PC", "TB"),
+           save               = TRUE,
+           load               = FALSE) {
+
+
   tool <- match.arg(tool)
 
   # Cache directory
@@ -88,44 +96,75 @@ pip_update_cache_inventory <- function(pipeline_inventory = NULL,
     verbose    = FALSE
   )
 
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## Auxiliary variables for joins --------
+  crr[,
+      wt := gsub("(.+)_([[:upper:]]+)_([[:upper:]]+$)", "\\2", cache_id)
+      ][,
+        welfare_type := fcase(wt == "CON", "consumption",
+                              wt == "INC", "income",
+                              default =  "")
+        ][, wt := NULL]
+
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Stamps   ---------
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   time <- format(Sys.time(), "%Y%m%d%H%M%S") # find a way to account for time zones
 
-  crr_dir <- glue::glue("{cache_svy_dir}_crr_inventory/")
+  crr_dir      <- glue::glue("{cache_svy_dir}_crr_inventory/")
   crr_filename <- glue::glue("{crr_dir}crr_inventory")
-  crr_vintage <- glue::glue("{crr_dir}vintage/crr_inventory_{time}")
+  crr_vintage  <- glue::glue("{crr_dir}vintage/crr_inventory_{time}")
+
+  crr_fst <- glue::glue("{crr_filename}.fst")
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Current inventory   ---------
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (file.exists(crr_fst)) {
 
-  if (file.exists(glue::glue("{crr_filename}.fst"))) {
-    cci <- fst::read_fst(glue::glue("{crr_filename}.fst"),
-      as.data.table = TRUE
-    )
+    cci <- fst::read_fst(crr_fst, as.data.table = TRUE)
 
-    crr <- joyn::merge(cci, crr,
-      by            = "cache_id",
-      match_type    = "1:1",
-      update_values = TRUE,
-      reportvar     = FALSE,
-      verbose       = FALSE
-    )
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ## Check if data has changed --------
+
+    if (!identical(cci, crr)) {
+      cli::cli_alert_warning("cache inventory has changed")
+
+      crr <- joyn::merge(cci, crr,
+        by            = "cache_id",
+        match_type    = "1:1",
+        update_values = TRUE,
+        reportvar     = FALSE,
+        verbose       = FALSE
+      )
+
+    } else {
+      cli::cli_alert_info("cache inventory has not changed")
+      save <- FALSE
+    }
   }
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Save   ---------
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  # fst
-  fst::write_fst(crr, glue::glue("{crr_filename}.fst"))
-  fst::write_fst(crr, glue::glue("{crr_vintage}.fst"))
+  if (save) {
 
-  # dta
-  haven::write_dta(crr, glue::glue("{crr_filename}.dta"))
-  haven::write_dta(crr, glue::glue("{crr_vintage}.dta"))
+    # fst
+    fst::write_fst(crr, crr_fst)
+    fst::write_fst(crr, glue::glue("{crr_vintage}.fst"))
 
-  return(invisible(TRUE))
+    # dta
+    haven::write_dta(crr, glue::glue("{crr_filename}.dta"))
+    haven::write_dta(crr, glue::glue("{crr_vintage}.dta"))
+
+
+  }
+
+  if (load) {
+    return(crr)
+  } else {
+    return(invisible(TRUE))
+  }
+
 }

@@ -8,7 +8,9 @@ pip_update_cache_inventory(
   pipeline_inventory = NULL,
   pip_data_dir = gls$PIP_DATA_DIR,
   cache_svy_dir = NULL,
-  tool = c("PC", "TB")
+  tool = c("PC", "TB"),
+  save = TRUE,
+  load = FALSE
 )
 }
 \arguments{
@@ -20,6 +22,10 @@ pip_update_cache_inventory(
 
 \item{tool}{character: Either "PC" or "TB" for poverty calculator and Table
 Baker, receptively}
+
+\item{save}{logical. If true, it saves, if FALSE it loads the data}
+
+\item{load}{logical. If true, loads data. if False return TRUE invisibly}
 }
 \value{
 TRUE if file is update. FALSE If no data is in directory

@@ -167,13 +167,13 @@ create_cache_file <- function(pipeline_inventory = NULL,
       pb$tick(tokens = list(what = id_what))
 
       process_svy_data_to_cache(
-        survey_id = .x,
-        cache_id = .y,
-        pip_data_dir = pip_data_dir,
+        survey_id     = .x,
+        cache_id      = .y,
+        pip_data_dir  = pip_data_dir,
         cache_svy_dir = cache_svy_dir,
-        compress = 100,
-        cpi_dt = cpi_dt,
-        ppp_dt = ppp_dt
+        compress      = 100,
+        cpi_dt        = cpi_dt,
+        ppp_dt        = ppp_dt
       )
     }
   )

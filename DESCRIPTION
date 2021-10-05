@@ -1,6 +1,6 @@
 Package: pipdm
 Title: PIP Data Managment
-Version: 0.0.2.9003
+Version: 0.0.3
 Authors@R: 
     c(person(given = "Tony",
             family = "Fujs",
@@ -20,7 +20,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     testthat,
     knitr,
@@ -50,7 +50,9 @@ Imports:
     fst,
     glue,
     haven,
-    progress
+    progress,
+    pipcheck (>= 0.0.0.9007)
 VignetteBuilder: knitr
 Remotes: 
-    github::PIP-Technical-Team/pipload
+    github::PIP-Technical-Team/pipload,
+    github::PIP-Technical-Team/pipcheck
