@@ -4,10 +4,14 @@
 \alias{save_aux_data}
 \title{Save auxiliary data.}
 \usage{
-save_aux_data(x, filename, compress)
+save_aux_data(x, filename, compress = FALSE)
 }
 \arguments{
-\item{compress}{}
+\item{x}{dataframe}
+
+\item{filename}{final name of aux data}
+
+\item{compress}{logical. iF TRUE it compress output}
 }
 \value{
 

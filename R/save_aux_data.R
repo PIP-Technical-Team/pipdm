@@ -1,14 +1,14 @@
 #' Save auxiliary data.
 #'
-#' @param x
-#' @param filename
-#' @param compress
+#' @param x dataframe
+#' @param filename final name of aux data
+#' @param compress logical. iF TRUE it compress output
 #'
 #' @return
 #' @export
 save_aux_data <- function(x,
                           filename,
-                          compress) {
+                          compress = FALSE) {
 
 
   type <- gsub("(.+)(\\.)([a-z]{3}$)", "\\3", filename)

@@ -10,7 +10,9 @@ save_survey_data(
   output_dir,
   cache_filename,
   future_plan = c("sequential", "multisession", "callr"),
-  compress
+  compress,
+  save = TRUE,
+  load = FALSE
 )
 }
 \arguments{
@@ -26,6 +28,11 @@ saved.}
 \item{future_plan}{character: \code{future} plan to use.}
 
 \item{compress}{numeric: Compression level used in \code{fst::write_fst()}.}
+
+\item{save}{logical: if TRUE save data file. Default is TRUE}
+
+\item{load}{logical: if TRUE loads data. Defatul is FALSE and returns file
+directory path}
 }
 \description{
 Save survey data to .fst file in specified output directory.
