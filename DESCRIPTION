@@ -1,6 +1,6 @@
 Package: pipdm
 Title: PIP Data Managment
-Version: 0.0.3.9000
+Version: 0.0.3.9001
 Authors@R: 
     c(person(given = "Tony",
             family = "Fujs",
@@ -50,9 +50,7 @@ Imports:
     fst,
     glue,
     haven,
-    progress,
-    pipcheck (>= 0.0.0.9007)
+    progress
 VignetteBuilder: knitr
 Remotes: 
-    github::PIP-Technical-Team/pipload,
-    github::PIP-Technical-Team/pipcheck
+    github::PIP-Technical-Team/pipload
