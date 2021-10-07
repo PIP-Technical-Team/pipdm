@@ -68,54 +68,29 @@ db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce
   dt$reporting_year <- as.integer(dt$reporting_year)
   dt$estimation_type <- "survey"
   dt$predicted_mean_ppp <- numeric(0)
-  dt$median <- dt$survey_median_ppp
+  # dt$median <- dt$survey_median_ppp
   dt <- dt %>%
     data.table::setnames(
       c("gdp", "pce", "pcn_region_code"),
       c("reporting_gdp", "reporting_pce", "region_code")
     )
 
-
-
   # Order final columns
   cols <- c(
-    "survey_id",
-    "cache_id",
-    "region_code",
-    "wb_region_code",
-    "country_code",
-    "reporting_year",
-    "surveyid_year",
-    "survey_year",
-    "survey_acronym",
-    "survey_coverage",
-    "survey_comparability",
-    "comparable_spell",
-    "welfare_type",
-    "mean",
-    "median",
-    "mld",
-    "gini",
-    "polarization",
-    sprintf("decile%s", 1:10),
-    "survey_mean_lcu",
-    "survey_mean_ppp",
-    "survey_median_ppp",
-    "survey_median_lcu",
-    "predicted_mean_ppp",
-    "ppp",
-    "cpi",
-    "reporting_pop",
-    "reporting_gdp",
-    "reporting_pce",
-    "pop_data_level",
-    "gdp_data_level",
-    "pce_data_level",
-    "cpi_data_level",
-    "ppp_data_level",
-    "reporting_level",
-    "distribution_type",
-    "gd_type",
+    "survey_id", "cache_id", "region_code", "wb_region_code",
+    "country_code", "reporting_year", "surveyid_year",
+    "survey_year", "survey_acronym", "survey_coverage",
+    "survey_comparability", "comparable_spell", "welfare_type",
+    # "mean", "median", "mld", "gini",
+    # "polarization", sprintf("decile%s", 1:10),
+    "survey_mean_lcu", "survey_mean_ppp",
+    "survey_median_ppp", "survey_median_lcu",
+    "predicted_mean_ppp", "ppp", "cpi",
+    "reporting_pop", "reporting_gdp",
+    "reporting_pce", "pop_data_level",
+    "gdp_data_level", "pce_data_level",
+    "cpi_data_level", "ppp_data_level",
+    "distribution_type", "gd_type",
     "is_interpolated",
     "is_used_for_aggregation",
     "estimation_type"

@@ -17,15 +17,25 @@ db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
   dist_table$reporting_year <- NULL
   dist_table$problem <- NULL
   dt <- joyn::merge(ref_year_table, dist_table,
-    by = c(
-      "survey_id", "cache_id", "wb_region_code",
-      "pcn_region_code", "country_code", "survey_acronym",
-      "surveyid_year", "survey_year",
-      "welfare_type", "pop_data_level"
-    ),
-    match_type = "m:1", keep = "left"
+                    by = c(
+                      "survey_id", "cache_id", "wb_region_code",
+                      "pcn_region_code", "country_code", "survey_acronym",
+                      "surveyid_year", "survey_year",
+                      "welfare_type", "pop_data_level"
+                    ),
+                    match_type = "m:1", keep = "left"
   )
   dt$report <- NULL
+
+  # Set dist stat columns to NA for interpolated surveys
+  dist_cols <- c(
+    "survey_median_lcu", "survey_median_ppp",
+    "gini", "mld", "polarization", "decile1",
+    "decile2", "decile3", "decile4", "decile5",
+    "decile6", "decile7", "decile8", "decile9",
+    "decile10"
+  )
+  dt <- set_int_cols_to_na(dt, dist_cols)
 
   # Set dist stat columns to NA for interpolated surveys
   dist_cols <- c(
@@ -63,7 +73,7 @@ db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
 
   # Fix and add columns
   dt$reporting_year <- as.integer(dt$reporting_year)
-  dt$median <- dt$survey_median_ppp
+  # dt$median <- dt$survey_median_ppp
   dt <- dt %>%
     data.table::setnames(
       "pcn_region_code", "region_code"
@@ -71,43 +81,20 @@ db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
 
   # Order final columns
   cols <- c(
-    "survey_id",
-    "cache_id",
-    "region_code",
-    "wb_region_code",
-    "country_code",
-    "reporting_year",
-    "surveyid_year",
-    "survey_year",
-    "survey_acronym",
-    "survey_coverage",
-    "survey_comparability",
-    "comparable_spell",
-    "welfare_type",
-    "mean",
-    "median",
-    "mld",
-    "gini",
-    "polarization",
-    sprintf("decile%s", 1:10),
-    "survey_mean_lcu",
-    "survey_mean_ppp",
-    "survey_median_ppp",
-    "survey_median_lcu",
-    "predicted_mean_ppp",
-    "ppp",
-    "cpi",
-    "reporting_pop",
-    "reporting_gdp",
-    "reporting_pce",
-    "pop_data_level",
-    "gdp_data_level",
-    "pce_data_level",
-    "cpi_data_level",
-    "ppp_data_level",
-    "reporting_level",
-    "distribution_type",
-    "gd_type",
+    "survey_id", "cache_id", "region_code", "wb_region_code",
+    "country_code", "reporting_year", "surveyid_year",
+    "survey_year", "survey_acronym", "survey_coverage",
+    "survey_comparability", "comparable_spell", "welfare_type",
+    # "mean", "median", "mld", "gini",
+    # "polarization", sprintf("decile%s", 1:10),
+    "survey_mean_lcu", "survey_mean_ppp",
+    "survey_median_ppp", "survey_median_lcu",
+    "predicted_mean_ppp", "ppp", "cpi",
+    "reporting_pop", "reporting_gdp",
+    "reporting_pce", "pop_data_level",
+    "gdp_data_level", "pce_data_level",
+    "cpi_data_level", "ppp_data_level",
+    "distribution_type", "gd_type",
     "is_interpolated",
     "is_used_for_aggregation",
     "estimation_type",
