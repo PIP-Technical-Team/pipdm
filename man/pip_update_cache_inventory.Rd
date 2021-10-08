@@ -10,7 +10,8 @@ pip_update_cache_inventory(
   cache_svy_dir = NULL,
   tool = c("PC", "TB"),
   save = TRUE,
-  load = FALSE
+  load = FALSE,
+  verbose = getOption("pipdm.verbose")
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ Baker, receptively}
 \item{save}{logical. If true, it saves, if FALSE it loads the data}
 
 \item{load}{logical. If true, loads data. if False return TRUE invisibly}
+
+\item{verbose}{logical: Whether to display messages. Default is TRUE}
 }
 \value{
 TRUE if file is update. FALSE If no data is in directory

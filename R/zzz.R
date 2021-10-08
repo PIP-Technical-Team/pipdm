@@ -1,7 +1,7 @@
 
 
 pipdm_default_options <- list(
-  pip.dm = ""
+  pipdm.verbose = TRUE
 )
 
 .onLoad <- function(libname, pkgname) {

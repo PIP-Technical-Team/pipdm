@@ -3,6 +3,8 @@
 #' @inheritParams create_cache_file
 #' @param save logical. If true, it saves, if FALSE it loads the data
 #' @param load logical. If true, loads data. if False return TRUE invisibly
+#' @param verbose logical: Whether to display messages. Default is TRUE
+#'
 #' @return TRUE if file is update. FALSE If no data is in directory
 #' @export
 pip_update_cache_inventory <-
@@ -12,7 +14,8 @@ pip_update_cache_inventory <-
            cache_svy_dir      = NULL,
            tool               = c("PC", "TB"),
            save               = TRUE,
-           load               = FALSE) {
+           load               = FALSE,
+           verbose            = getOption("pipdm.verbose")) {
 
 
   tool <- match.arg(tool)
@@ -128,7 +131,9 @@ pip_update_cache_inventory <-
     ## Check if data has changed --------
 
     if (!identical(cci, crr)) {
-      cli::cli_alert_warning("cache inventory has changed")
+      if (verbose) {
+        cli::cli_alert_warning("cache inventory has changed")
+      }
 
       crr <- joyn::merge(cci, crr,
         by            = "cache_id",
@@ -139,7 +144,9 @@ pip_update_cache_inventory <-
       )
 
     } else {
-      cli::cli_alert_info("cache inventory has not changed")
+      if (verbose) {
+        cli::cli_alert_info("cache inventory has not changed")
+      }
       save <- FALSE
     }
   }
