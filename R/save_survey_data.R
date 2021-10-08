@@ -9,9 +9,10 @@
 #' @param future_plan character: `future` plan to use.
 #' @param compress numeric: Compression level used in `fst::write_fst()`.
 #' @param save logical: if TRUE save data file. Default is TRUE
-#' @param load logical: if TRUE loads data. Defatul is FALSE and returns file
+#' @param load logical: if TRUE loads data. Default is FALSE and returns file
 #'   directory path
 #' @param cache_filename character: Vector with new names for microdata.
+#' @param verbose logical: Whether to display messages. Default is TRUE
 #'
 #' @export
 save_survey_data <- function(dt,
@@ -21,7 +22,8 @@ save_survey_data <- function(dt,
                              future_plan = c('sequential', 'multisession', 'callr'),
                              compress,
                              save        = TRUE,
-                             load        = FALSE) {
+                             load        = FALSE,
+                             verbose     = getOption("pipdm.verbose")) {
 
   # Select columns
   if (!is.null(cols)) {
@@ -44,10 +46,13 @@ save_survey_data <- function(dt,
     odt <- fst::read_fst(svy_out_path)
 
     if (identical(odt, dt)) {
-      cli::cli_alert_info("{cache_filename} has not changed")
+      if (verbose) {
+        cli::cli_alert_info("{cache_filename} has not changed")
+      }
       save <- FALSE
     } else {
-      cli::cli_alert_warning("{cache_filename} has changed")
+      if (verbose)
+        cli::cli_alert_warning("{cache_filename} has changed")
     }
 
   }

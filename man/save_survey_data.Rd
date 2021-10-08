@@ -12,7 +12,8 @@ save_survey_data(
   future_plan = c("sequential", "multisession", "callr"),
   compress,
   save = TRUE,
-  load = FALSE
+  load = FALSE,
+  verbose = getOption("pipdm.verbose")
 )
 }
 \arguments{
@@ -31,8 +32,10 @@ saved.}
 
 \item{save}{logical: if TRUE save data file. Default is TRUE}
 
-\item{load}{logical: if TRUE loads data. Defatul is FALSE and returns file
+\item{load}{logical: if TRUE loads data. Default is FALSE and returns file
 directory path}
+
+\item{verbose}{logical: Whether to display messages. Default is TRUE}
 }
 \description{
 Save survey data to .fst file in specified output directory.

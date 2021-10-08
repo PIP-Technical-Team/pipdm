@@ -16,14 +16,14 @@
 #' @return list: creation status and cache data availability
 #' @export
 create_cache_file <- function(pipeline_inventory = NULL,
-                              pip_data_dir = gls$PIP_DATA_DIR,
-                              tool = c("PC", "TB"),
-                              cache_svy_dir = NULL,
-                              compress = 100,
-                              verbose = TRUE,
-                              force = FALSE,
-                              cpi_dt = NULL,
-                              ppp_dt = NULL) {
+                              pip_data_dir       = gls$PIP_DATA_DIR,
+                              tool               = c("PC", "TB"),
+                              cache_svy_dir      = NULL,
+                              compress           = 100,
+                              verbose            = getOption("pipdm.verbose"),
+                              force              = FALSE,
+                              cpi_dt             = NULL,
+                              ppp_dt             = NULL) {
 
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

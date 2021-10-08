@@ -4,7 +4,12 @@
 \alias{db_create_dist_table}
 \title{Create distributional statistics table}
 \usage{
-db_create_dist_table(dl, dsm_table, crr_inv)
+db_create_dist_table(
+  dl,
+  dsm_table,
+  crr_inv,
+  verbose = getOption("pipdm.verbose")
+)
 }
 \arguments{
 \item{dl}{list: A list with distributional statistics datasets.}
@@ -12,6 +17,8 @@ db_create_dist_table(dl, dsm_table, crr_inv)
 \item{dsm_table}{data.table: A table with deflated survey means.}
 
 \item{crr_inv}{data frame with correspondence inventory}
+
+\item{verbose}{logical: Whether to display messages. Default is TRUE}
 }
 \value{
 data.table

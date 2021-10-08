@@ -5,12 +5,14 @@
 #' @param dl list: A list with distributional statistics datasets.
 #' @param crr_inv data frame with correspondence inventory
 #' @inheritParams db_create_ref_year_table
+#' @inheritParams pip_update_cache_inventory
 #'
 #' @return data.table
 #' @export
 db_create_dist_table <- function(dl,
                                  dsm_table,
-                                 crr_inv) {
+                                 crr_inv,
+                                 verbose = getOption("pipdm.verbose")) {
 
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,10 +170,13 @@ db_create_dist_table <- function(dl,
     # NOTE AE: should this be an error to abort or just to notify? I made it to
     # notify
     # NOTE AC: Sorry I don't understand what this code catches.
-    cli::cli_rule(left = "The following obs from deflated means table do not have
-                  correspondence with dist stats table")
-    cli::cli_ul(dy)
-    cli::cli_rule(right = "end")
+
+    if (verbose) {
+      cli::cli_rule(left = "The following obs from deflated means table do not have
+                    correspondence with dist stats table")
+      cli::cli_ul(dy)
+      cli::cli_rule(right = "end")
+    }
   }
 
   if (length(dx) > 0) {
@@ -182,9 +187,11 @@ db_create_dist_table <- function(dl,
     # right. All observations should have a non-missing median. In that case the problem
     # would lie in db_compute_dist_stats() or in the underlying wbpip functions.
 
-    cli::cli_rule(left = "error on deflated means in the following")
-    cli::cli_ul(dx)
-    cli::cli_rule(right = "end")
+    if (verbose) {
+      cli::cli_rule(left = "error on deflated means in the following")
+      cli::cli_ul(dx)
+      cli::cli_rule(right = "end")
+    }
 
     msg <- "We should no have surveys without deflated means"
     hint <- "Check calculation of means in `db_create_dsm_table` or

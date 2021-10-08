@@ -3,7 +3,7 @@
 #' @inheritParams create_cache_file
 #' @param save logical. If true, it saves, if FALSE it loads the data
 #' @param load logical. If true, loads data. if False return TRUE invisibly
-#' @param verbose logical: Whether to display messagges. Default is TRUE
+#' @param verbose logical: Whether to display messages. Default is TRUE
 #'
 #' @return TRUE if file is update. FALSE If no data is in directory
 #' @export

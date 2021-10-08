@@ -28,7 +28,7 @@ Baker, receptively}
 
 \item{load}{logical. If true, loads data. if False return TRUE invisibly}
 
-\item{verbose}{logical: Whether to display messagges. Default is TRUE}
+\item{verbose}{logical: Whether to display messages. Default is TRUE}
 }
 \value{
 TRUE if file is update. FALSE If no data is in directory
