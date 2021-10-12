@@ -1,4 +1,4 @@
-# pipdm (development version)
+# pipdm 0.0.4
 
 # pipdm 0.0.3
   * Add variable`max_domain` to all scripts. 
