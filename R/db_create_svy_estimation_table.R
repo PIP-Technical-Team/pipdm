@@ -81,6 +81,7 @@ db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce
     "country_code", "reporting_year", "surveyid_year",
     "survey_year", "survey_acronym", "survey_coverage",
     "survey_comparability", "comparable_spell", "welfare_type",
+    "reporting_level",
     # "mean", "median", "mld", "gini",
     # "polarization", sprintf("decile%s", 1:10),
     "survey_mean_lcu", "survey_mean_ppp",
