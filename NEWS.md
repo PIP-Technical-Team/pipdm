@@ -1,4 +1,7 @@
 # pipdm 0.0.4
+* add variable `reporting_level` to dist_stat. 
+* remove `problem` from frame dist_stat.
+* change class of reporting_year in ref_year_table
 
 # pipdm 0.0.3
   * Add variable`max_domain` to all scripts. 
