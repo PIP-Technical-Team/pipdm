@@ -60,9 +60,9 @@ db_create_dist_table <- function(dl,
       value = "quantiles",
       name  = "cache_id"
     ) %>%
-    # Create column for pop_data_level and fix survey name
+    # Create column for reporting_level and fix survey name
     dplyr::mutate(
-      pop_data_level = gsub("(.+)(\\.)([a-z]+)", "\\3", cache_id),
+      reporting_level = gsub("(.+)(\\.)([a-z]+)", "\\3", cache_id),
       cache_id = gsub("(.+)(\\.)([a-z]+)", "\\1", cache_id)
     ) %>%
     # unnest the quantile tibble so that I have only a tibble wit no lists
@@ -99,9 +99,9 @@ db_create_dist_table <- function(dl,
       value = "diststats",
       name  = "cache_id"
     ) %>%
-    # Create column for pop_data_level and fix survey name
+    # Create column for reporting_level and fix survey name
     dplyr::mutate(
-      pop_data_level = gsub("(.+)(\\.)([a-z]+)", "\\3", cache_id),
+      reporting_level = gsub("(.+)(\\.)([a-z]+)", "\\3", cache_id),
       cache_id = gsub("(.+)(\\.)([a-z]+)", "\\1", cache_id)
     ) %>%
     # unnest the quantile tible so that I have only a tiblle wit no lists
@@ -115,7 +115,7 @@ db_create_dist_table <- function(dl,
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ## merge quantiles with other dist stats --------
   df <- joyn::merge(qt, ds,
-    by = c("cache_id", "pop_data_level"),
+    by = c("cache_id", "reporting_level"),
     match_type = "1:1"
   )
 
@@ -152,16 +152,20 @@ db_create_dist_table <- function(dl,
           "survey_id", "cache_id", "wb_region_code", "pcn_region_code",
           "country_code", "surveyid_year", "survey_year",
           "reporting_year", "survey_acronym", "welfare_type",
-          "cpi", "ppp", "pop_data_level"
+          "cpi", "ppp", "pop_data_level", "reporting_level"
         )
     ]
 
   # Merge dist stats with DSM (left join)
   dt <- joyn::merge(df, dsm_table,
-    by = c("cache_id", "pop_data_level"),
+    by = c("cache_id", "reporting_level"),
     match_type = "1:1"
   )
-  dt_p <- dt[, problem := paste(cache_id, pop_data_level, sep = "-")][, .(report, problem)]
+  dt_p <- data.table::copy(dt)
+  dt_p <- dt_p[,
+               problem := paste(cache_id, reporting_level, sep = "-")
+             ][,
+               .(report, problem)]
 
   dy <- dt_p[report == "y", problem]
   dx <- dt_p[report == "x", problem]
@@ -236,7 +240,7 @@ db_create_dist_table <- function(dl,
       "survey_id", "cache_id", "wb_region_code", "pcn_region_code",
       "country_code", "survey_acronym", "surveyid_year",
       "survey_year", "reporting_year", "welfare_type",
-      "pop_data_level", "survey_median_lcu",
+      "reporting_level", "survey_median_lcu",
       "survey_median_ppp"
     )
   )
