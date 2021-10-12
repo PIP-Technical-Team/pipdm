@@ -98,7 +98,7 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
   # Select final columns
   cols <- c(
     "survey_id", "cache_id", "wb_region_code",
-    "pcn_region_code", "country_code", "reference_year",
+    "pcn_region_code", "country_code", "reference_year","reporting_year",
     "surveyid_year", "survey_year", "survey_acronym",
     "survey_coverage", "survey_comparability",
     "comparable_spell", "welfare_type", "survey_mean_lcu",
@@ -115,7 +115,7 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
 
   # Rename variables
   dt <- dt %>% dplyr::rename(
-    reporting_year = reference_year,
+    # reporting_year = reference_year,
     reporting_pop = pop,
     reporting_pce = pce,
     reporting_gdp = gdp
