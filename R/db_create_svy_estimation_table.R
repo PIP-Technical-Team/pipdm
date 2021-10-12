@@ -65,7 +65,7 @@ db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce
   }
 
   # Fix and add columns
-  dt$reporting_year <- as.integer(dt$reporting_year)
+  # dt$reporting_year <- as.integer(dt$reporting_year)
   dt$estimation_type <- "survey"
   dt$predicted_mean_ppp <- numeric(0)
   # dt$median <- dt$survey_median_ppp

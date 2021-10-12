@@ -72,7 +72,8 @@ db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
   }
 
   # Fix and add columns
-  dt$reporting_year <- as.integer(dt$reporting_year)
+  # dt$reporting_year <- as.integer(dt$reporting_year)
+
   # dt$median <- dt$survey_median_ppp
   dt <- dt %>%
     data.table::setnames(
