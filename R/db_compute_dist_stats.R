@@ -72,6 +72,7 @@ compute_dist_stats <- function(dt, mean, pop_table, cache_id) {
     }
 
     # national mean
+    data.table::setorder(wf, welfare) # Data must be sorted
     res_national <- md_dist_stats(wf)
 
     res <- append(list(res_national), res)
