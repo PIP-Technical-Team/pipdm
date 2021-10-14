@@ -7,12 +7,13 @@
 process_svy_data_to_cache(
   survey_id,
   cache_id,
-  pip_data_dir,
-  cache_svy_dir,
-  compress,
+  pip_data_dir = gls$PIP_DATA_DIR,
+  cache_svy_dir = gls$CACHE_SVY_DIR_PC,
+  compress = 100,
   cols = NULL,
-  cpi_dt = NULL,
-  ppp_dt = NULL
+  cpi_dt = pipload::pip_load_aux("cpi"),
+  ppp_dt = pipload::pip_load_aux("ppp"),
+  pfw_dt = pipload::pip_load_aux("pfw")
 )
 }
 \arguments{
@@ -28,9 +29,11 @@ process_svy_data_to_cache(
 
 \item{cols}{character: vector of variables to keep. Default is NULL.}
 
-\item{cpi_dt}{data frame with CPI data to deflate welfare in TB data}
+\item{cpi_dt}{data frame with CPI data to deflate welfare}
 
-\item{ppp_dt}{data frame with PPP data to deflate welfare in TB data}
+\item{ppp_dt}{data frame with PPP data to deflate welfare}
+
+\item{pfw_dt}{data frame with Price FrameWork data}
 }
 \value{
 data frame with status of process

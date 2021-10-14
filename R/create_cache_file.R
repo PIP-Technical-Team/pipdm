@@ -23,7 +23,8 @@ create_cache_file <- function(pipeline_inventory = NULL,
                               verbose            = getOption("pipdm.verbose"),
                               force              = FALSE,
                               cpi_dt             = NULL,
-                              ppp_dt             = NULL) {
+                              ppp_dt             = NULL,
+                              pfw_dt             = NULL) {
 
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -61,15 +62,11 @@ create_cache_file <- function(pipeline_inventory = NULL,
     pipeline_inventory <-
       db_filter_inventory(
         pip_inventory,
-        pfw_table =
-          pipload::pip_load_aux(
-            measure = "pfw",
-            msrdir = paste0(
-              pip_data_dir,
-              "_aux/", "pfw", "/"
-            )
-          )
-      )
+        pfw_table = pipload::pip_load_aux(measure = "pfw",
+                                          msrdir  = paste0(pip_data_dir,
+                                                    "_aux/", "pfw", "/")
+                                          )
+        )
   }
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -173,7 +170,8 @@ create_cache_file <- function(pipeline_inventory = NULL,
         cache_svy_dir = cache_svy_dir,
         compress      = 100,
         cpi_dt        = cpi_dt,
-        ppp_dt        = ppp_dt
+        ppp_dt        = ppp_dt,
+        pfw_dt        = pfw_dt
       )
     }
   )
