@@ -1,4 +1,5 @@
 # pipdm 0.0.5
+* fix big bug on the selection of alternative welfare
 
 # pipdm 0.0.4
 * add variable `reporting_level` to dist_stat. 
