@@ -1,4 +1,4 @@
-# pipdm (development version)
+# pipdm 0.0.5
 
 # pipdm 0.0.4
 * add variable `reporting_level` to dist_stat. 
