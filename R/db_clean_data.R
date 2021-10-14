@@ -53,7 +53,8 @@ clean_data <- function(dt) {
     # Clean data (remove negative values etc.)
     df <- md_clean_data(
       dt,
-      welfare = "welfare", weight = "weight",
+      welfare = "welfare",
+      weight = "weight",
       quiet = TRUE
     )$data
 
@@ -97,7 +98,8 @@ clean_data <- function(dt) {
     # Clean data (remove negative values etc.)
     df <- md_clean_data(
       dt,
-      welfare = "welfare", weight = "weight",
+      welfare = "welfare",
+      weight = "weight",
       quiet = TRUE
     )$data
 

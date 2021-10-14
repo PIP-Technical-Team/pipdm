@@ -13,7 +13,8 @@ create_cache_file(
   verbose = getOption("pipdm.verbose"),
   force = FALSE,
   cpi_dt = NULL,
-  ppp_dt = NULL
+  ppp_dt = NULL,
+  pfw_dt = NULL
 )
 }
 \arguments{
@@ -33,9 +34,11 @@ console.}
 
 \item{force}{logical: if TRUE, all files will be generate again.}
 
-\item{cpi_dt}{data frame with CPI data to deflate welfare in TB data}
+\item{cpi_dt}{data frame with CPI data to deflate welfare}
 
-\item{ppp_dt}{data frame with PPP data to deflate welfare in TB data}
+\item{ppp_dt}{data frame with PPP data to deflate welfare}
+
+\item{pfw_dt}{data frame with Price FrameWork data}
 }
 \value{
 list: creation status and cache data availability

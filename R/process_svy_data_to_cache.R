@@ -6,19 +6,22 @@
 #' @param cols character: vector of variables to keep. Default is NULL.
 #' @param cache_svy_dir character: Output directory
 #' @param compress numeric: Compression level used in `fst::write_fst()`.
-#' @param cpi_dt data frame with CPI data to deflate welfare in TB data
-#' @param ppp_dt data frame with PPP data to deflate welfare in TB data
+#' @param cpi_dt data frame with CPI data to deflate welfare
+#' @param ppp_dt data frame with PPP data to deflate welfare
+#' @param pfw_dt data frame with Price FrameWork data
 #'
 #' @return data frame with status of process
 #' @export
 process_svy_data_to_cache <- function(survey_id,
                                       cache_id,
-                                      pip_data_dir,
-                                      cache_svy_dir,
-                                      compress,
-                                      cols = NULL,
-                                      cpi_dt = NULL,
-                                      ppp_dt = NULL) {
+                                      pip_data_dir  = gls$PIP_DATA_DIR,
+                                      cache_svy_dir = gls$CACHE_SVY_DIR_PC,
+                                      compress      = 100,
+                                      cols          = NULL,
+                                      cpi_dt        = pipload::pip_load_aux("cpi"),
+                                      ppp_dt        = pipload::pip_load_aux("ppp"),
+                                      pfw_dt        = pipload::pip_load_aux("pfw")
+                                      ) {
 
 
   #--------- Load data ---------
@@ -34,7 +37,7 @@ process_svy_data_to_cache <- function(survey_id,
       pipload::pip_load_data(
         survey_id = survey_id,
         maindir   = pip_data_dir,
-        noisy     = FALSE
+        verbose   = FALSE
       )
     }, # end of expr section
 
@@ -68,20 +71,59 @@ process_svy_data_to_cache <- function(survey_id,
 
       df <- db_clean_data(df)
 
-      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      ## additional variables --------
+
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      ## check if there is alternative welfare to use --------
 
       # make sure the right welfare type is in the microdata.
       wt <- gsub("(.+_)([A-Z]{3})(_[A-Z\\-]+)(\\.fst)?$", "\\2", chh_filename)
       wt <- fifelse(wt == "INC", "income", "consumption")
 
+      # get the right observations in pfw
+      vars <-
+        c(
+          "country_code",
+          "surveyid_year",
+          "survey_acronym",
+          "reporting_level",
+          "welfare_type",
+          "source"
+        )
+      dt_id <- data.table(cache_id = get("cache_id"))
+
+      dt_id[,
+            (vars) := data.table::tstrsplit(cache_id,
+                                            split = "_",
+                                            names = TRUE,
+                                            fixed = TRUE)
+      ][,
+        surveyid_year := as.integer(surveyid_year)
+      ]
+
+      pfw <- joyn::merge(pfw_dt,
+                         dt_id,
+                         by = c("country_code", "surveyid_year", "survey_acronym"),
+                         match_type = "1:1",
+                         keep = "inner")
+
+      if (pfw$oth_welfare1_type != "" && !is.na(pfw$oth_welfare1_type)) {
+        if (substr(wt, 1, 1) == pfw$oth_welfare1_type) {
+          # replace alternative welfare
+          df[, welfare := alt_welfare]
+
+        }
+      }
+
+      # stadanrdize and change weflare type
       df[, welfare_type := wt]
 
-      # add max data level variable
-      dl_var <- grep("data_level", names(df), value = TRUE) # data_level vars
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      ## additional variables --------
 
+      # add max data level variable
+      dl_var        <- grep("data_level", names(df), value = TRUE) # data_level vars
       ordered_level <- purrr::map_dbl(dl_var, ~ get_ordered_level(df, .x))
-      select_var <- dl_var[which.max(ordered_level)]
+      select_var    <- dl_var[which.max(ordered_level)]
 
       df[, reporting_level := get(select_var)]
 
