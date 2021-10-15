@@ -4,16 +4,16 @@
 #'
 #' @inheritParams db_clean_data
 #' @param pop_table data.table: A table with population data.
-#' @param mean numeric: A value with the survey mean.
+#' @param mean_table data frame with deflated means in PPP.
 #' @param cache_id character: cache id to identify the right process
 #' @return list
 #' @export
-db_compute_dist_stats <- function(dt, mean, pop_table, cache_id, gc = FALSE) {
+db_compute_dist_stats <- function(dt, mean_table, pop_table, cache_id, gc = FALSE) {
   tryCatch(
     expr = {
 
       # Compute dist stats
-      res <- compute_dist_stats(dt, mean, pop_table, cache_id)
+      res <- compute_dist_stats(dt, mean_table, pop_table, cache_id)
 
       # Garbage collection
       if (gc) gc(verbose = FALSE)
@@ -36,17 +36,27 @@ db_compute_dist_stats <- function(dt, mean, pop_table, cache_id, gc = FALSE) {
 #' @inheritParams db_compute_dist_stats
 #' @return list
 #' @noRd
-compute_dist_stats <- function(dt, mean, pop_table, cache_id) {
+compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
 
   # identify procedure
   source <- gsub("(.*_)([A-Z]+$)", "\\2", cache_id)
   data_level <- gsub("(.*_)(D[123])(.+$)", "\\2", cache_id)
 
+
+  # Extract PPP means
+  ci <- cache_id
+  mean       <- mean_table[cache_id == ci,
+                           survey_mean_ppp ]
+
+  names(mean) <- mean_table[cache_id == ci,
+                            reporting_level  ]
+
+
   # NOTE: we should variable pop_data_level to something more general. We could
   # use something similar to vartiable reporting_level in the function db_filter_inventory
 
   # Order by population data level
-  data.table::setorder(dt, pop_data_level)
+  data.table::setorder(dt, pop_data_level, welfare)
   pop_level <- unique(dt$pop_data_level)
 
   # get estimates by level
@@ -72,6 +82,7 @@ compute_dist_stats <- function(dt, mean, pop_table, cache_id) {
     }
 
     # national mean
+    data.table::setorder(wf, welfare) # Data must be sorted
     res_national <- md_dist_stats(wf)
 
     res <- append(list(res_national), res)

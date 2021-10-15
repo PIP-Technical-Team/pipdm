@@ -1,3 +1,6 @@
+# pipdm 0.0.6
+* Change argument `mean` for `mean_table` in `db_compute_dist_stats()`. Now, it does not receive a vector of means but a dataframe with the means of all countries and it is filtered using cache_id. In this way, we can select any variable and, more importantly, use mean PPP values. 
+
 # pipdm 0.0.5
 * fix big bug on the selection of alternative welfare
 
@@ -8,7 +11,7 @@
 
 # pipdm 0.0.3
   * Add variable`max_domain` to all scripts. 
-  * add `save_*`  fucntions from pipeline. 
+  * add `save_*` functions from pipeline. 
   * fix bugs
 
 # pipdm 0.0.2
