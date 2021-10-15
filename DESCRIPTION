@@ -31,7 +31,7 @@ BugReports: https://github.com/PIP-Technical-Team/pipdm/issues
 Depends: 
     R (>= 3.5.0)
 Imports: 
-    wbpip,
+    wbpip (>= 0.0.2.9003),
     tidyr,
     purrr,
     dplyr,
@@ -46,11 +46,12 @@ Imports:
     cli,
     tibble,
     joyn,
-    pipload (>= 0.1.4.9002),
+    pipload (>= 0.1.5.9002),
     fst,
     glue,
     haven,
     progress
 VignetteBuilder: knitr
-Remotes: 
-    github::PIP-Technical-Team/pipload
+Remotes:  
+    github::PIP-Technical-Team/pipload,
+    github::PIP-Technical-Team/wbpip
