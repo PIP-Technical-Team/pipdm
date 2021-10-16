@@ -18,7 +18,7 @@
 create_cache_file <- function(pipeline_inventory = NULL,
                               pip_data_dir       = gls$PIP_DATA_DIR,
                               tool               = c("PC", "TB"),
-                              cache_svy_dir      = NULL,
+                              cache_svy_dir      = gls$CACHE_SVY_DIR_PC,
                               compress           = 100,
                               verbose            = getOption("pipdm.verbose"),
                               force              = FALSE,
