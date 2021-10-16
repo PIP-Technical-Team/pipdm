@@ -22,10 +22,14 @@ db_create_dist_table <- function(dl,
   # Checks
   cache_id <- crr_inv$cache_id
 
-  assertthat::assert_that(
-    length(dl) == length(cache_id),
-    msg = "`dl` and `survey_id` must be of equal lengths."
-  )
+  if(length(dl) != length(cache_id))  {
+    cli::cli_abort(c("{.field dl} and {.field crr_inv$cache_id} must be of
+                     equal lengths.",
+                     i = "If you are on testing mode or using {.val pipcheck},
+                     try filtering {.field cache_inventory} using
+                     {.field cache_id}"),
+                   wrap = TRUE)
+  }
 
   names(dl) <- cache_id
 
