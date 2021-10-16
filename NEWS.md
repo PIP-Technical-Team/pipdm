@@ -1,4 +1,5 @@
 # pipdm (development version)
+* remove deprecated files from cache inventory
 
 # pipdm 0.0.6
 * Change argument `mean` for `mean_table` in `db_compute_dist_stats()`. Now, it does not receive a vector of means but a dataframe with the means of all countries and it is filtered using cache_id. In this way, we can select any variable and, more importantly, use mean PPP values. 
