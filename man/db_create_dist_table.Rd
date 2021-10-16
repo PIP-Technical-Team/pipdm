@@ -8,8 +8,7 @@ db_create_dist_table(
   dl,
   dsm_table,
   crr_inv,
-  verbose = getOption("pipdm.verbose"),
-  check_mode = FALSE
+  verbose = getOption("pipdm.verbose")
 )
 }
 \arguments{
@@ -20,8 +19,6 @@ db_create_dist_table(
 \item{crr_inv}{data frame with correspondence inventory}
 
 \item{verbose}{logical: Whether to display messages. Default is TRUE}
-
-\item{check_mode}{logical: useful for interactive use like being usd in \code{pipcheck}}
 }
 \value{
 data.table
