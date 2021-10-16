@@ -51,17 +51,13 @@ pip_update_cache_inventory <-
     # Create pipeline inventory
     pipeline_inventory <-
       db_filter_inventory(
-        pip_inventory,
-        pfw_table =
-          pipload::pip_load_aux(
-            measure = "pfw",
-            msrdir = paste0(
-              pip_data_dir,
-              "_aux/", "pfw", "/"
-            )
-          )
-      )
-  }
+        dt        = pip_inventory,
+        pfw_table =pipload::pip_load_aux(
+                          measure = "pfw",
+                          msrdir  = paste0(pip_data_dir,"_aux/pfw/")
+                          )
+        )
+    }
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # get surveys available in cache dir   ---------
@@ -70,9 +66,9 @@ pip_update_cache_inventory <-
   cch <- data.table::data.table(
     cache_file =
       list.files(
-        path = cache_svy_dir,
+        path       = cache_svy_dir,
         full.names = TRUE,
-        pattern = "\\.fst$"
+        pattern    = "\\.fst$"
       )
   )
 
@@ -135,6 +131,7 @@ pip_update_cache_inventory <-
         cli::cli_alert_warning("cache inventory has changed")
       }
 
+      # Update values with new information
       crr <- joyn::merge(cci, crr,
         by            = "cache_id",
         match_type    = "1:1",
@@ -142,6 +139,14 @@ pip_update_cache_inventory <-
         reportvar     = FALSE,
         verbose       = FALSE
       )
+
+      # remove information that is not longer necessary
+      crr <- joyn::merge(crr, cch,
+                         by            = "cache_id",
+                         match_type    = "1:1",
+                         verbose       = FALSE,
+                         keep          = "inner",
+                         reportvar     = FALSE )
 
     } else {
       if (verbose) {

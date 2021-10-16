@@ -74,24 +74,58 @@ clean_data <- function(dt) {
     # Split by area
     dt_rural <- dt[dt$area == "rural"]
     dt_urban <- dt[dt$area == "urban"]
+
     # Standardize rural
-    dt_rural <- gd_clean_data(
-      dt_rural,
-      welfare = "welfare",
-      population = "weight",
-      gd_type = gd_type,
-      quiet = TRUE
-    )
+    if (nrow(dt_rural) > 0) {
+
+      dt_rural <- gd_clean_data(
+        dt_rural,
+        welfare = "welfare",
+        population = "weight",
+        gd_type = gd_type,
+        quiet = TRUE
+      )
+
+      ra <- TRUE
+
+    } else {
+      ra <- FALSE
+    }
+
     # Standardize urban
-    dt_urban <- gd_clean_data(
-      dt_urban,
-      welfare = "welfare",
-      population = "weight",
-      gd_type = gd_type,
-      quiet = TRUE
-    )
+    if (nrow(dt_urban) > 0) {
+
+      dt_urban <- gd_clean_data(
+        dt_urban,
+        welfare = "welfare",
+        population = "weight",
+        gd_type = gd_type,
+        quiet = TRUE
+      )
+
+      ua <- TRUE
+
+    } else {
+      ua <- FALSE
+    }
     # Bind back together
-    df <- rbind(dt_rural, dt_urban)
+    if (all(ua, ra)) {
+
+      df <- rbind(dt_rural, dt_urban)
+
+    } else if (isTRUE(ua)) {
+
+      df <- dt_urban
+
+    } else if (isTRUE(ra)) {
+
+      df <- dt_rural
+
+    } else {
+      cli::cli_abort("there is neither urban nor rural observations in this
+                     aggregate data",
+                     wrap = TRUE)
+    }
 
     df <- as_pipgd(df)
   } else if (dist_type == "imputed") {
