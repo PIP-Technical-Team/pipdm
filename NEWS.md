@@ -1,4 +1,4 @@
-# pipdm (development version)
+# pipdm 0.0.7
 * remove deprecated files from cache inventory
 
 # pipdm 0.0.6
