@@ -5,18 +5,18 @@
 \title{Delete cache files that are no longer in use}
 \usage{
 delete_old_file(
-  cache_ids = NULL,
   target_dir = "in",
+  cache_ids = NULL,
   verbose = getOption("pipdm.verbose"),
   delete = NULL
 )
 }
 \arguments{
-\item{cache_ids}{character:vector with  Cache_ids. default from
-\code{db_create_pipeline_inventory()}}
-
 \item{target_dir}{character: directory where the cache files are stored. If
-could be a patch, like \code{gls$OUT_SVY_DIR_PC} from
+could be a patch, like \code{gls$OUT_SVY_DIR_PC} from}
+
+\item{cache_ids}{character:vector with  Cache_ids. default from
+\code{db_create_pipeline_inventory()}
 \code{pipload::add_gls_to_env()} or it could be one of the two shortcuts, "in"
 or "out". The former refers to \code{gls$CACHE_SVY_DIR_PC}. the latter refers to
 \code{gls$OUT_SVY_DIR_PC}.}
