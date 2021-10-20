@@ -1,8 +1,8 @@
-#' Title
+#' Delete cache files that are no longer in use
 #'
 #' @param cache_ids character:vector with  Cache_ids. default from
 #'   `db_create_pipeline_inventory()`
-#' @param output_dir character: directory where the cache files are stored. If
+#' @param target_dir character: directory where the cache files are stored. If
 #'   could be a patch, like `gls$OUT_SVY_DIR_PC` from
 #'   `pipload::add_gls_to_env()` or it could be one of the two shortcuts, "in"
 #'   or "out". The former refers to `gls$CACHE_SVY_DIR_PC`. the latter refers to
@@ -17,8 +17,8 @@
 #'
 #' @examples
 #' delete_old_output_file(delete = FALSE)
-delete_old_output_file <- function(cache_ids = NULL,
-                                   output_dir = "in",
+delete_old_file <- function(cache_ids = NULL,
+                                   target_dir = "in",
                                    verbose    = getOption("pipdm.verbose"),
                                    delete = NULL) {
 
@@ -27,15 +27,15 @@ delete_old_output_file <- function(cache_ids = NULL,
     cache_ids <- dt[, unique(cache_id)]
   }
 
-  if (output_dir == "in") {
-    output_dir <- gls$CACHE_SVY_DIR_PC
+  if (target_dir == "in") {
+    target_dir <- gls$CACHE_SVY_DIR_PC
   }
-  if (output_dir == "out") {
-    output_dir <- gls$OUT_SVY_DIR_PC
+  if (target_dir == "out") {
+    target_dir <- gls$OUT_SVY_DIR_PC
   }
 
 
-  dir_files <- list.files(path = output_dir,
+  dir_files <- list.files(path = target_dir,
                           full.names = TRUE)
 
   file_names <- gsub("(//.+/)|([\\.].+$)", "", dir_files)
