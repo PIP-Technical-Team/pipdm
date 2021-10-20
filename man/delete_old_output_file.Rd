@@ -5,17 +5,31 @@
 \title{Title}
 \usage{
 delete_old_output_file(
-  cache_ids,
+  cache_ids = NULL,
   output_dir = gls$OUT_SVY_DIR_PC,
-  verbose = getOption("pipdm.verbose")
+  verbose = getOption("pipdm.verbose"),
+  delete = NULL
 )
 }
 \arguments{
-\item{verbose}{}
+\item{cache_ids}{character:vector with  Cache_ids. default from
+\code{db_create_pipeline_inventory()}}
+
+\item{output_dir}{character: directory where the cache files are stored.
+default is \code{gls$OUT_SVY_DIR_PC} using \code{pipload::add_gls_to_env()}}
+
+\item{verbose}{logical: whether to display messages}
+
+\item{delete}{logical or NULL. If Null, menu with choices will be displayed
+(default). If false, no file will be deleleted. If TRUE, all old files not
+available in cache_id will be deleted}
 }
 \value{
 
 }
 \description{
 Title
+}
+\examples{
+delete_old_output_file(delete = FALSE)
 }

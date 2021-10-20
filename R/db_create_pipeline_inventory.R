@@ -17,8 +17,6 @@ db_create_pipeline_inventory <- function(root_dir = Sys.getenv("PIP_ROOT_DIR"),
                                                        "_inventory/inventory.fst")
                                          ) {
 
-
-
   pip_inventory <-
     pipload::pip_find_data(
       inv_file     = inv_file,
@@ -26,7 +24,7 @@ db_create_pipeline_inventory <- function(root_dir = Sys.getenv("PIP_ROOT_DIR"),
       maindir      = maindir)
 
     # Load price framework
-  pfw <- pipload::pip_load_aux("pfw")
+  pfw <- pipload::pip_load_aux("pfw", verbose = FALSE)
   pipeline_inventory <-
     db_filter_inventory(dt        = pip_inventory,
                        pfw_table  = pfw)
