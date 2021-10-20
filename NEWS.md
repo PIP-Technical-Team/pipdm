@@ -2,6 +2,7 @@
 * Add function `db_create_pipeline_inventory`
 * add function `delete_old_output_file`
 
+
 # pipdm 0.0.7
 * remove deprecated files from cache inventory
 * Allow the creation dist  statistics for aggregate group data with only one area, like ARG 1980

@@ -32,6 +32,13 @@ delete_old_output_file <- function(cache_ids = NULL,
 
   names_delete <- file_names[!(file_names %in% cache_ids)]
 
+  if (length(names_delete) == 0) {
+    if (verbose) {
+      cli::cli_alert_info("No old files found")
+    }
+    return(invisible(NA))
+  }
+
   cli::cli_alert_danger("The following files will be deleted?")
   cli::cli_ul(names_delete)
 
