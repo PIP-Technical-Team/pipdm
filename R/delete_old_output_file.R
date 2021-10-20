@@ -2,8 +2,11 @@
 #'
 #' @param cache_ids character:vector with  Cache_ids. default from
 #'   `db_create_pipeline_inventory()`
-#' @param output_dir character: directory where the cache files are stored.
-#'   default is `gls$OUT_SVY_DIR_PC` using `pipload::add_gls_to_env()`
+#' @param output_dir character: directory where the cache files are stored. If
+#'   could be a patch, like `gls$OUT_SVY_DIR_PC` from
+#'   `pipload::add_gls_to_env()` or it could be one of the two shortcuts, "in"
+#'   or "out". The former refers to `gls$CACHE_SVY_DIR_PC`. the latter refers to
+#'   `gls$OUT_SVY_DIR_PC`.
 #' @param verbose logical: whether to display messages
 #' @param delete logical or NULL. If Null, menu with choices will be displayed
 #'   (default). If false, no file will be deleleted. If TRUE, all old files not
@@ -15,7 +18,7 @@
 #' @examples
 #' delete_old_output_file(delete = FALSE)
 delete_old_output_file <- function(cache_ids = NULL,
-                                   output_dir = gls$OUT_SVY_DIR_PC,
+                                   output_dir = "in",
                                    verbose    = getOption("pipdm.verbose"),
                                    delete = NULL) {
 
@@ -24,7 +27,15 @@ delete_old_output_file <- function(cache_ids = NULL,
     cache_ids <- dt[, unique(cache_id)]
   }
 
-  dir_files <- list.files(path = gls$OUT_SVY_DIR_PC,
+  if (output_dir == "in") {
+    output_dir <- gls$CACHE_SVY_DIR_PC
+  }
+  if (output_dir == "out") {
+    output_dir <- gls$OUT_SVY_DIR_PC
+  }
+
+
+  dir_files <- list.files(path = output_dir,
                           full.names = TRUE)
 
   file_names <- gsub("(//.+/)|([\\.].+$)", "", dir_files)
@@ -43,12 +54,7 @@ delete_old_output_file <- function(cache_ids = NULL,
   cli::cli_ul(names_delete)
 
   if (is.null(delete)) {
-    choice <- menu(c("nope", "yes", "no no no"), title = "Delete?")
-    if (choice == 2) {
-      delete <- TRUE
-    } else {
-      delete <- FALSE
-    }
+    delete <- usethis::ui_yeah("Do you want to delete them?")
   }
 
 

@@ -6,7 +6,7 @@
 \usage{
 delete_old_output_file(
   cache_ids = NULL,
-  output_dir = gls$OUT_SVY_DIR_PC,
+  output_dir = "in",
   verbose = getOption("pipdm.verbose"),
   delete = NULL
 )
@@ -15,8 +15,11 @@ delete_old_output_file(
 \item{cache_ids}{character:vector with  Cache_ids. default from
 \code{db_create_pipeline_inventory()}}
 
-\item{output_dir}{character: directory where the cache files are stored.
-default is \code{gls$OUT_SVY_DIR_PC} using \code{pipload::add_gls_to_env()}}
+\item{output_dir}{character: directory where the cache files are stored. If
+could be a patch, like \code{gls$OUT_SVY_DIR_PC} from
+\code{pipload::add_gls_to_env()} or it could be one of the two shortcuts, "in"
+or "out". The former refers to \code{gls$CACHE_SVY_DIR_PC}. the latter refers to
+\code{gls$OUT_SVY_DIR_PC}.}
 
 \item{verbose}{logical: whether to display messages}
 
