@@ -170,6 +170,20 @@ pip_update_cache_inventory <-
     haven::write_dta(crr, glue::glue("{crr_filename}.dta"))
     haven::write_dta(crr, glue::glue("{crr_vintage}.dta"))
 
+    if (isTRUE(verbose)) {
+      cli::cli_alert_info("file {.url {crr_fst}} has been updated. You
+                          can review it by loading it by typing
+                          {.code pipload::pip_load_cache_inventory()}",
+                          wrap = TRUE
+                          )
+    }
+
+
+  } else {
+    if (isTRUE(verbose)) {
+      cli::cli_alert_warning("Cache inventory was {cli::col_red('NOT')} updated",
+                          wrap = TRUE)
+    }
 
   }
 

@@ -142,7 +142,7 @@ create_cache_file <- function(pipeline_inventory = NULL,
       processed_data = "No data processed",
       data_available = crr
     )))
-  }
+  }  # end of `nrow(new_svy_ids) == 0`
 
   #--------- Process data: Load, clean, and save ---------
   if (verbose) {
@@ -180,9 +180,9 @@ create_cache_file <- function(pipeline_inventory = NULL,
 
   crr_status <- pip_update_cache_inventory(
     pipeline_inventory = pipeline_inventory,
-    pip_data_dir = pip_data_dir,
-    cache_svy_dir = cache_svy_dir,
-    tool = tool
+    pip_data_dir       = pip_data_dir,
+    cache_svy_dir      = cache_svy_dir,
+    tool               = tool
   )
 
   if (verbose) {
