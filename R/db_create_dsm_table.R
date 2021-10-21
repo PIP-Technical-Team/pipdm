@@ -52,10 +52,6 @@ db_create_dsm_table <- function(lcu_table,
   dt <- dt[
     report != "y" # This is unnecessary data in cpi table... should we have it?
   ][, report := NULL]
-  # NOTE AE: I just asked Minh about why we have some obs in CPI that we don't use.
-  # NOTE AC: Yes, I saw the email thread. So that should be okay. In general my understanding is that there will be
-  # some discrepancies between PFW, CPI and DLW.
-
 
   #--------- Merge with PPP ---------
 
@@ -86,42 +82,9 @@ db_create_dsm_table <- function(lcu_table,
     )
   }
 
-  # Only CHN, IND and IDN could be left behind for national ppp_data_level
-  # Note AC: Not sure why we would need to hardcode CHN, IDN, IND here.
-  # This should preferrably be handlded "automatically" by the data level columns.
-  # If we want this to be a validation check than I think it should be in the
-  # validation repo.
+
   cdt <- dt[, unique(country_code)]
   cppp <- jn[report == "y", unique(country_code)]
-
-  # if (!identical(c("CHN", "IDN", "IND"), intersect(cdt, cppp))) {
-  #
-  #   miss <- setdiff(intersect(cdt, cppp), c("CHN", "IDN", "IND"))
-  #   extr <- setdiff(c("CHN", "IDN", "IND"), intersect(cdt, cppp))
-  #
-  #   if (length(miss) > 0) {
-  #
-  #     cli::cli_alert_danger("{.field {miss}} should be present in 'right'
-  #                           observations of joining table.", wrap = TRUE)
-  #
-  #   }
-  #
-  #   if (length(extr) > 0) {
-  #
-  #     cli::cli_alert_danger("{.field {extr}} should be present in 'inner'
-  #                           observations of joining table.", wrap = TRUE)
-  #
-  #     msg     <- "missing countries in resulting table."
-  #     hint    <- "All countries in survey-mean should have a corresponding PPP value"
-  #     rlang::abort(c(
-  #       msg,
-  #       i = hint
-  #     ),
-  #     class = "pipdm_error"
-  #     )
-  #   }
-  # }
-
 
   dt <- jn[
     report != "y" # Countries in PPP table for which we don't have data
@@ -212,44 +175,44 @@ db_create_dsm_table <- function(lcu_table,
 add_aggregated_mean <- function(dt) {
 
   # Select rows w/ non-national pop_data_level
-  dt_sub <- dt[pop_data_level != "national", ]
+  dt_sub <- dt[isTRUE(is_used_for_aggregation), ]
 
   # Compute aggregated mean (weighted population average)
   dt_agg <-
     dt_sub[, .(
       # survey_id       = unique(survey_id),
       # cache_id        = unique(cache_id),
-      wb_region_code = unique(wb_region_code),
-      pcn_region_code = unique(pcn_region_code),
-      country_code = unique(country_code),
-      survey_acronym = unique(survey_acronym),
-      survey_coverage = unique(survey_coverage),
+      wb_region_code       = unique(wb_region_code),
+      pcn_region_code      = unique(pcn_region_code),
+      country_code         = unique(country_code),
+      survey_acronym       = unique(survey_acronym),
+      survey_coverage      = unique(survey_coverage),
       survey_comparability = unique(survey_comparability),
-      comparable_spell = unique(comparable_spell),
-      surveyid_year = unique(surveyid_year),
-      reporting_year = unique(reporting_year),
-      survey_year = unique(survey_year),
-      welfare_type = unique(welfare_type),
-      survey_mean_lcu = collapse::fmean(
+      comparable_spell     = unique(comparable_spell),
+      surveyid_year        = unique(surveyid_year),
+      reporting_year       = unique(reporting_year),
+      survey_year          = unique(survey_year),
+      welfare_type         = unique(welfare_type),
+      survey_mean_lcu      = collapse::fmean(
         x = survey_mean_lcu,
         w = reporting_pop
       ),
-      survey_mean_ppp = collapse::fmean(
+      survey_mean_ppp      = collapse::fmean(
         x = survey_mean_ppp,
         w = reporting_pop
       ),
-      reporting_pop = collapse::fsum(reporting_pop),
-      ppp = NA,
-      cpi = NA,
-      pop_data_level = "national",
-      gdp_data_level = "national",
-      pce_data_level = "national",
-      cpi_data_level = "national",
-      ppp_data_level = "national",
-      reporting_level     = "national",
-      distribution_type = unique(distribution_type),
-      gd_type = unique(gd_type),
-      is_interpolated = FALSE,
+      reporting_pop           = collapse::fsum(reporting_pop),
+      ppp                     = NA,
+      cpi                     = NA,
+      pop_data_level          = "national",
+      gdp_data_level          = "national",
+      pce_data_level          = "national",
+      cpi_data_level          = "national",
+      ppp_data_level          = "national",
+      reporting_level         = "national",
+      distribution_type       = unique(distribution_type),
+      gd_type                 = unique(gd_type),
+      is_interpolated         = FALSE,
       is_used_for_aggregation = TRUE
     ),
     by = .(survey_id, cache_id)
@@ -258,5 +221,6 @@ add_aggregated_mean <- function(dt) {
   dt <- rbind(dt_agg, dt)
 
   # Sort rows
-  data.table::setorder(dt, survey_id)
+  data.table::setorder(dt, survey_id, cache_id)
+  return(dt)
 }
