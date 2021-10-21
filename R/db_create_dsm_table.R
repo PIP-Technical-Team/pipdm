@@ -175,7 +175,7 @@ db_create_dsm_table <- function(lcu_table,
 add_aggregated_mean <- function(dt) {
 
   # Select rows w/ non-national pop_data_level
-  dt_sub <- dt[isTRUE(is_used_for_aggregation), ]
+  dt_sub <- dt[is_used_for_aggregation == TRUE]
 
   # Compute aggregated mean (weighted population average)
   dt_agg <-
@@ -224,3 +224,5 @@ add_aggregated_mean <- function(dt) {
   data.table::setorder(dt, survey_id, cache_id)
   return(dt)
 }
+
+
