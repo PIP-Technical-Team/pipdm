@@ -162,10 +162,17 @@ db_create_dsm_table <- function(lcu_table,
   # Add is_used_for_aggregation column
   # Temporary quick fix for is_used_for_aggregation column,
   # see issue PIP-Technical-Team/TMP_pipeline#14
-  dt$is_used_for_aggregation <-
-    ifelse(dt$pop_data_level != "national",
-      TRUE, FALSE
-    )
+
+  dt[, # create number of rows per cache_id
+     n_rl := .N,
+     by = cache_id
+     ][,
+       # variable for aggregate
+       is_used_for_aggregation := fifelse(n_rl > 1, TRUE, FALSE)
+     ][,
+       # remove counter
+       n_rl := NULL
+     ]
 
   # Select and order columns
   dt <- dt[, .SD,
