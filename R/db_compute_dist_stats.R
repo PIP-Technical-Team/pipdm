@@ -67,7 +67,7 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
 
   names(res) <- pop_level
 
-  if (data_level != "D1") { # Urban/rural or subnat level
+  if (data_level != "D1" && length(pop_level) > 1) { # Urban/rural or subnat level
 
     if (source == "GROUP") { # Group data
 
