@@ -1,6 +1,7 @@
 # pipdm (development version)
 * Add function `db_create_pipeline_inventory`
 * add function `delete_old_output_file`
+* Add function `adjust_population`
 
 
 # pipdm 0.0.7
