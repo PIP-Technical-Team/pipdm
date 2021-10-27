@@ -13,24 +13,24 @@ if (getRversion() >= "2.15.1") {
 #' extrapolated welfare means for all specified reference years based on the
 #' provided survey, GDP and PCE data.
 #'
+#' @param dsm_table data.table: A table with deflated survey means.
 #' @param gdp_table data.table: A table with GDP data.
 #' @param pce_table data.table: A table with PCE data.
 #' @param pop_table data.table: A table with population data.
 #' @param pfw_table data.table: A table with the price framework file.
-#' @param dsm_table data.table: A table with deflated survey means.
 #' @param ref_years numeric: A vector with reference years.
 #' @param pip_years numeric: A vector with calender years used in PIP.
 #' @param region_code character: A value with the region code column to use.
 #'
 #' @return data.table
 #' @export
-db_create_ref_year_table <- function(gdp_table,
-                                     pce_table,
-                                     pop_table,
-                                     pfw_table,
-                                     dsm_table,
-                                     ref_years,
-                                     pip_years,
+db_create_ref_year_table <- function(dsm_table,
+                                     gdp_table = pipload::pip_load_aux("gdp"),
+                                     pce_table = pipload::pip_load_aux("pce"),
+                                     pop_table = pipload::pip_load_aux("pop"),
+                                     pfw_table = pipload::pip_load_aux("pfw"),
+                                     ref_years = gls$PIP_REF_YEARS,
+                                     pip_years = gls$PIP_YEARS,
                                      region_code =
                                        c(
                                          "pcn_region_code",
