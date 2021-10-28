@@ -5,17 +5,19 @@
 \title{Create reference year table}
 \usage{
 db_create_ref_year_table(
-  gdp_table,
-  pce_table,
-  pop_table,
-  pfw_table,
   dsm_table,
-  ref_years,
-  pip_years,
+  gdp_table = pipload::pip_load_aux("gdp"),
+  pce_table = pipload::pip_load_aux("pce"),
+  pop_table = pipload::pip_load_aux("pop"),
+  pfw_table = pipload::pip_load_aux("pfw"),
+  ref_years = gls$PIP_REF_YEARS,
+  pip_years = gls$PIP_YEARS,
   region_code = c("pcn_region_code", "wb_region_code")
 )
 }
 \arguments{
+\item{dsm_table}{data.table: A table with deflated survey means.}
+
 \item{gdp_table}{data.table: A table with GDP data.}
 
 \item{pce_table}{data.table: A table with PCE data.}
@@ -23,8 +25,6 @@ db_create_ref_year_table(
 \item{pop_table}{data.table: A table with population data.}
 
 \item{pfw_table}{data.table: A table with the price framework file.}
-
-\item{dsm_table}{data.table: A table with deflated survey means.}
 
 \item{ref_years}{numeric: A vector with reference years.}
 

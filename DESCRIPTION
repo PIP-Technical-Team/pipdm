@@ -1,6 +1,6 @@
 Package: pipdm
 Title: PIP Data Managment
-Version: 0.0.8
+Version: 0.0.7.9014
 Authors@R: 
     c(person(given = "Tony",
             family = "Fujs",
@@ -46,7 +46,7 @@ Imports:
     cli,
     tibble,
     joyn,
-    pipload (>= 0.1.5.9002),
+    pipload (>= 0.1.7.9000),
     fst,
     glue,
     haven,

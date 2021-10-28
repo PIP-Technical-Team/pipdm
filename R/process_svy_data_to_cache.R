@@ -20,7 +20,8 @@ process_svy_data_to_cache <- function(survey_id,
                                       cols          = NULL,
                                       cpi_dt        = pipload::pip_load_aux("cpi"),
                                       ppp_dt        = pipload::pip_load_aux("ppp"),
-                                      pfw_dt        = pipload::pip_load_aux("pfw")
+                                      pfw_dt        = pipload::pip_load_aux("pfw"),
+                                      pop_dt        = pipload::pip_load_aux("pop")
                                       ) {
 
 
@@ -117,10 +118,15 @@ process_svy_data_to_cache <- function(survey_id,
       # stadanrdize and change weflare type
       df[, welfare_type := wt]
 
-      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      ## additional variables --------
 
-      # add max data level variable
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      # additional variables   ---------
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      ## reporting level variable --------
+
       dl_var        <- grep("data_level", names(df), value = TRUE) # data_level vars
       ordered_level <- purrr::map_dbl(dl_var, ~ get_ordered_level(df, .x))
       select_var    <- dl_var[which.max(ordered_level)]
@@ -167,7 +173,19 @@ process_svy_data_to_cache <- function(survey_id,
           cpi          = cpi
         )
       ]
-    }, # end of expr section
+
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      ## scale subnational population to National accounts (WDI) --------
+
+
+      nrl <- length(df[, unique(reporting_level)]) # number of reporting level
+      dst <- df[, unique(distribution_type)]       # distribution type
+
+      if ( nrl > 1  &&  dst == "micro")  {
+        df <- adjust_population(df, pop_dt)
+      }  # end of population adjustment
+
+    }, # end of expr section in trycatch
 
     error = function(e) {
       NULL
@@ -256,3 +274,83 @@ get_ordered_level <- function(dt, x) {
     3
   }
 }
+
+
+
+
+
+#' Adjust microdata to WDI population levels when the number of reporting levels
+#' is equal or greater than 2
+#'
+#' @param df dataframe with microdata
+#' @param pop_dt population data from  WDI.
+#'
+#' @return dataframe
+adjust_population <- function(df, pop_dt) {
+
+  spop <- df[,
+             # get total population by level
+             .(weight = collapse::fsum(weight)),
+             by = c("country_code", "survey_year", "reporting_level")]
+
+
+  dpop <- joyn::merge(pop_dt, spop,
+                      by         = c("country_code",
+                                     "pop_data_level = reporting_level"),
+                      match_type =  "m:1",
+                      keep       = "inner",
+                      reportvar  =  FALSE)
+
+  dpop <-
+    dpop[,
+         # Abs difference in year
+         diff_year := abs(year - survey_year)
+    ][,
+      # get the min in each data level
+      .SD[diff_year == min(diff_year)],
+      by = pop_data_level
+    ][,
+      # get weights for weighted mean
+      wght := fifelse(diff_year == 0, 1, 1/diff_year) ]
+
+
+
+  fact <-
+    dpop[,
+         # get mean of population.
+         lapply(.SD, weighted.mean, w = wght),
+         by = "pop_data_level",
+         .SDcols = c("pop", "weight")
+    ][,
+      pop_fact := pop/weight
+    ][,
+      c("pop", "weight") := NULL]
+
+
+  df <- joyn::merge(x  = df,
+                    y  = fact,
+                    by = c("reporting_level = pop_data_level"),
+                    match_type = "m:1",
+                    reportvar = FALSE)
+
+  df[,
+     weight := weight*pop_fact]
+
+  return(df)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

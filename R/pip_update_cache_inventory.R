@@ -54,7 +54,8 @@ pip_update_cache_inventory <-
         dt        = pip_inventory,
         pfw_table =pipload::pip_load_aux(
                           measure = "pfw",
-                          msrdir  = paste0(pip_data_dir,"_aux/pfw/")
+                          msrdir  = paste0(pip_data_dir,"_aux/pfw/"),
+                          verbose = FALSE
                           )
         )
     }
@@ -132,21 +133,22 @@ pip_update_cache_inventory <-
       }
 
       # Update values with new information
-      crr <- joyn::merge(cci, crr,
+      crr <- joyn::merge(crr, cci,
         by            = "cache_id",
         match_type    = "1:1",
         update_values = TRUE,
         reportvar     = FALSE,
-        verbose       = FALSE
+        verbose       = FALSE,
+        keep          = "inner"
       )
 
       # remove information that is not longer necessary
-      crr <- joyn::merge(crr, cch,
-                         by            = "cache_id",
-                         match_type    = "1:1",
-                         verbose       = FALSE,
-                         keep          = "inner",
-                         reportvar     = FALSE )
+      # crr <- joyn::merge(crr, cch,
+      #                    by            = "cache_id",
+      #                    match_type    = "1:1",
+      #                    verbose       = FALSE,
+      #                    keep          = "inner",
+      #                    reportvar     = FALSE )
 
     } else {
       if (verbose) {
@@ -170,6 +172,20 @@ pip_update_cache_inventory <-
     haven::write_dta(crr, glue::glue("{crr_filename}.dta"))
     haven::write_dta(crr, glue::glue("{crr_vintage}.dta"))
 
+    if (isTRUE(verbose)) {
+      cli::cli_alert_info("file {.url {crr_fst}} has been updated. You
+                          can review it by loading it by typing
+                          {.code pipload::pip_load_cache_inventory()}",
+                          wrap = TRUE
+                          )
+    }
+
+
+  } else {
+    if (isTRUE(verbose)) {
+      cli::cli_alert_warning("Cache inventory was {cli::col_red('NOT')} updated",
+                          wrap = TRUE)
+    }
 
   }
 
