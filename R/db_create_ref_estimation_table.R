@@ -37,16 +37,6 @@ db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
   )
   dt <- set_int_cols_to_na(dt, dist_cols)
 
-  # Set dist stat columns to NA for interpolated surveys
-  dist_cols <- c(
-    "survey_median_lcu", "survey_median_ppp",
-    "gini", "mld", "polarization", "decile1",
-    "decile2", "decile3", "decile4", "decile5",
-    "decile6", "decile7", "decile8", "decile9",
-    "decile10"
-  )
-  dt <- set_int_cols_to_na(dt, dist_cols)
-
   # Remove rows with missing predicted_mean_ppp
   if (anyNA(dt$predicted_mean_ppp)) {
     rlang::warn(c(
