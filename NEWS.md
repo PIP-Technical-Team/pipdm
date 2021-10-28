@@ -2,6 +2,8 @@
 * Add function `db_create_pipeline_inventory`
 * add function `delete_old_output_file`
 * Add function `adjust_population`
+* Fix issue with regional population
+* change to welfare ppp in microdata dist stats
 
 
 # pipdm 0.0.7
