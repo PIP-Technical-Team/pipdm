@@ -311,7 +311,7 @@ adjust_population <- function(df, pop_dt) {
       by = pop_data_level
     ][,
       # get weights for weighted mean
-      wght := 1/diff_year]
+      wght := fifelse(diff_year == 0, 1, 1/diff_year) ]
 
 
 

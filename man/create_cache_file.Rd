@@ -12,9 +12,10 @@ create_cache_file(
   compress = 100,
   verbose = getOption("pipdm.verbose"),
   force = FALSE,
-  cpi_dt = NULL,
-  ppp_dt = NULL,
-  pfw_dt = NULL
+  cpi_dt = pipload::pip_load_aux("cpi"),
+  ppp_dt = pipload::pip_load_aux("ppp"),
+  pfw_dt = pipload::pip_load_aux("pfw"),
+  pop_dt = pipload::pip_load_aux("pop")
 )
 }
 \arguments{
