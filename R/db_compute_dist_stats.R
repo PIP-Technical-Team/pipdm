@@ -56,7 +56,7 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
   # use something similar to vartiable reporting_level in the function db_filter_inventory
 
   # Order by population data level
-  data.table::setorder(dt, pop_data_level, welfare)
+  data.table::setorder(dt, pop_data_level, welfare_ppp)
   pop_level <- unique(dt$pop_data_level)
 
   # get estimates by level
@@ -82,7 +82,7 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
     }
 
     # national mean
-    data.table::setorder(wf, welfare) # Data must be sorted
+    data.table::setorder(wf, welfare_ppp) # Data must be sorted
     res_national <- md_dist_stats(wf)
 
     res <- append(list(res_national), res)
@@ -99,7 +99,7 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
 md_dist_stats <- function(dt, mean = NULL) {
   # Calculate dist stats
   res <- md_compute_dist_stats(
-    welfare = dt$welfare,
+    welfare = dt$welfare_ppp,
     weight  = dt$weight,
     mean    = mean
   )
@@ -139,8 +139,8 @@ id_dist_stats <- function(dt) {
   dl_stats <- purrr::map(dl, function(x) md_dist_stats(x, mean = NULL))
 
   # Aggregate quantiles
-  q <- purrr::map(dl_stats, function(x) x$quantiles)
-  qm <- do.call("cbind", q)
+  q         <- purrr::map(dl_stats, function(x) x$quantiles)
+  qm        <- do.call("cbind", q)
   quantiles <- rowMeans(qm)
 
   # Aggregate the rest and
@@ -167,13 +167,21 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
   df <- dt[reporting_level == level]
 
   if (source == "GROUP") {
+
     res <- gd_dist_stats(df, mean[level])
+
   } else {
+
     is_imputed <- length(unique(df$imputation_id)) > 1
+
     if (is_imputed) {
-      res <- id_dist_stats(df)
+
+        res <- id_dist_stats(df)
+
     } else {
+
       res <- md_dist_stats(df, mean[level])
+
     }
   }
   return(res)
@@ -191,21 +199,22 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
 #' @return data.frame
 #' @noRd
 get_synth_vector <- function(dt, pop_table, mean, level) {
-  df <- dt[reporting_level == level]
-  ccode <- dt[, unique(country_code)]
+  df        <- dt[reporting_level == level]
+  ccode     <- dt[, unique(country_code)]
   svid_year <- dt[, unique(surveyid_year)]
 
   popf <- pop_table[
-    country_code == ccode &
-      year == svid_year &
-      pop_data_level == level,
+    country_code     == ccode
+    & year           == svid_year
+    & pop_data_level == level,
     pop
   ]
 
-  wf <- wbpip:::sd_create_synth_vector(df$welfare,
-    df$weight,
-    mean = mean[level],
-    pop  = popf
+  wf <- wbpip:::sd_create_synth_vector(
+    welfare    = df$welfare,
+    population = df$weight,
+    mean       = mean[level],
+    pop        = popf
   )
   return(wf)
 }
