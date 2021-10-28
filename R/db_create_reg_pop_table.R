@@ -36,11 +36,15 @@ db_create_reg_pop_table <- function(pop_table,
 
   # Aggregate population by region
   dt <- dt[, .(pop = sum(pop, na.rm = TRUE)),
-    by = .(region_code_to_use, year)
+    by = .(region_code_to_use, year, pop_data_level)
   ]
 
   # Subset to only include years used by PIP
   dt <- dt[year %in% pip_years]
+
+  # Subset only national rows
+  dt <- dt[pop_data_level == "national"]
+  dt$pop_data_level <- NULL
 
   # Add grouping type column
   dt[, grouping_type := "WB"]
