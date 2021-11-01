@@ -76,15 +76,16 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
         .x = pop_level,
         .f = ~ get_synth_vector(dt, pop_table, mean, level = .x)
       )
-
-      data.table::setorder(wf, welfare) # Data must be sorted
+      data.table::setDT(wf)
+      wf[,
+         welfare_ppp := welfare]
 
     } else { # microdata
 
       wf <- data.table::copy(dt)
-      data.table::setorder(wf, welfare_ppp) # Data must be sorted
     }
 
+    data.table::setorder(wf, welfare_ppp) # Data must be sorted
     # national mean
     res_national <- md_dist_stats(wf)
 
