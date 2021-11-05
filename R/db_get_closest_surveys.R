@@ -21,7 +21,7 @@ db_get_closest_surveys <- function(dt) {
   return(dt)
 }
 
-#' Get all closest surveys to a reference year, adding Income and Consumption surveys
+#' Get all closest surveys to a reference year, for all welfare types
 #'
 #' For any reference year, retrieves information about the closest surveys.
 #'
