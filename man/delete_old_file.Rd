@@ -33,6 +33,3 @@ available in cache_id will be deleted}
 \description{
 Delete cache files that are no longer in use
 }
-\examples{
-delete_old_output_file(delete = FALSE)
-}
