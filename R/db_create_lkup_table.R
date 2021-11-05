@@ -51,8 +51,7 @@ if (getRversion() >= "2.15.1") {
 #'
 #' @return data.table
 #' @keywords internal
-db_create_lkup_table <- function(dt, nac_table, pop_table,
-                                 ref_years, region_code) {
+db_create_lkup_table <- function(dt, nac_table, ref_years, region_code) {
 
   # CHECK inputs
   check_inputs_db_class(dt)
@@ -69,50 +68,34 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
       region_code_index    = region_code,
       country_code_index   = country_code,
       nac_data_level_index = nac_data_level,
-      pop_data_level_index = pop_data_level,
+      #pop_data_level_index = pop_data_level,
       ppp_data_level_index = ppp_data_level,
       cpi_data_level_index = cpi_data_level,
-      reporting_level_index     = reporting_level,
+      #reporting_level_index = reporting_level,
       reference_year_index = reference_year
     )
 
   # Merge with GDP and PCE data (left join)
-  dt <- joyn::merge(dt, nac_table,
-    by = c(
-      "country_code",
-      "nac_data_level_index = nac_data_level",
-      "reference_year_index = year"
-    ),
-    match_type = "m:1"
-  )
-  # NOTE AE: Originally, you have left join, but there are 569 obs from table
-  # dt that do not have match with nac_table. For those observations there is
-  # national accounts. Should we leave them in the sample or remove them?
-  # you were keeping them but I am not sure. I'll leave them for now
-
-  dt <- dt[report != "y"][, report := NULL]
+  dt <- merge(dt, nac_table, all.x = TRUE,
+              by.x = c('country_code', 'nac_data_level_index',
+                       'reference_year_index'),
+              by.y = c('country_code', 'nac_data_level',
+                       'year'))
 
   # Merge with POP data (left join)
-  dt <- joyn::merge(dt, pop_table,
-    by = c(
-      "country_code",
-      "pop_data_level_index = pop_data_level",
-      "reference_year_index = year"
-    ),
-    match_type = "m:1"
-  )
-
-  dt <- dt[
-    report != "y" # I found NO "x" in the report
-  ][, report := NULL]
+  # dt <- merge(dt, pop_table, all.x = TRUE,
+  #             by.x = c('country_code', 'pop_data_level_index',
+  #                      'reference_year_index'),
+  #             by.y = c('country_code', 'pop_data_level',
+  #                      'year'))
 
   # Order column
   data.table::setcolorder(
     dt, c(
       "country_code_index", "reference_year_index",
-      "nac_data_level_index", "pop_data_level_index",
-      "cpi_data_level_index", "ppp_data_level_index",
-      "reporting_level_index"
+      "nac_data_level_index", #"pop_data_level_index",
+      "cpi_data_level_index", "ppp_data_level_index"#,
+      #"reporting_level_index"
     )
   )
 
@@ -122,12 +105,12 @@ db_create_lkup_table <- function(dt, nac_table, pop_table,
       region_code_index,
       country_code_index,
       nac_data_level_index,
-      pop_data_level_index,
+      #pop_data_level_index,
       ppp_data_level_index,
       cpi_data_level_index,
-      reporting_level_index,
+      #reporting_level_index,
       reference_year_index,
-      gdp, pce, pop,
+      gdp, pce, #pop,
       .key = "data"
     )
 
