@@ -15,8 +15,6 @@
 #' @return
 #' @export
 #'
-#' @examples
-#' delete_old_output_file(delete = FALSE)
 delete_old_file <- function(target_dir = "in",
                             cache_ids  = NULL,
                             verbose    = getOption("pipdm.verbose"),
