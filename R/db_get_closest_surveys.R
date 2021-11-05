@@ -21,7 +21,7 @@ db_get_closest_surveys <- function(dt) {
   return(dt)
 }
 
-#' Get closest surveys to a reference year
+#' Get all closest surveys to a reference year, adding Income and Consumption surveys
 #'
 #' For any reference year, retrieves information about the closest surveys.
 #'
@@ -31,6 +31,29 @@ db_get_closest_surveys <- function(dt) {
 #' @return data.frame
 #' @keywords internal
 get_closest_surveys <- function(svy_lkup, ref_year) {
+
+  welfare_types <- unique(svy_lkup[["welfare_type"]])
+
+  out <- purrr::map_df(welfare_types, function(x) {
+    df <- svy_lkup[svy_lkup[["welfare_type"]] == x, ]
+    df <- select_closest_surveys(df, ref_year)
+    return(df)
+  })
+
+  out <- out[order(out[["survey_year"]]), ]
+  return(out)
+}
+
+#' Get all closest surveys to a reference year, for a single welfare type
+#'
+#' For any reference year, retrieves information about the closest surveys.
+#'
+#' @param svy_lkup data.frame: Look-up table for survey data.
+#' @param ref_year integer: The selected reference year.
+#'
+#' @return data.frame
+#' @keywords internal
+select_closest_surveys <- function(svy_lkup, ref_year) {
   n <- nrow(svy_lkup)
 
   # Case 1: No survey found
