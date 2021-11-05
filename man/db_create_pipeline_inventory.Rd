@@ -27,6 +27,3 @@ Create pipeline inventory. This is different from the pip inventory. PIP
 inventory is the surveys available in the PIP repository. Pipeline inventory
 takes is the PIP inventory, filtered by the Price FrameWork dataset
 }
-\examples{
-db_create_pipeline_inventory()
-}
