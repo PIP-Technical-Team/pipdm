@@ -6,14 +6,12 @@
 #' @param maindir character: Main directory
 #' @param inv_file character: file path to be loaded.
 #'
-#' @return
+#' @return data.table
 #' @export
 #'
-db_create_pipeline_inventory <- function(root_dir = Sys.getenv("PIP_ROOT_DIR"),
-                                         maindir  = gls$PIP_DATA_DIR,
-                                         inv_file = paste0(maindir,
-                                                       "_inventory/inventory.fst")
-                                         ) {
+db_create_pipeline_inventory <- function(root_dir,
+                                         maindir,
+                                         inv_file) {
 
   pip_inventory <-
     pipload::pip_find_data(

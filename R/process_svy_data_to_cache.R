@@ -14,15 +14,14 @@
 #' @export
 process_svy_data_to_cache <- function(survey_id,
                                       cache_id,
-                                      pip_data_dir  = gls$PIP_DATA_DIR,
-                                      cache_svy_dir = gls$CACHE_SVY_DIR_PC,
+                                      pip_data_dir,
+                                      cache_svy_dir,
                                       compress      = 100,
                                       cols          = NULL,
-                                      cpi_dt        = pipload::pip_load_aux("cpi"),
-                                      ppp_dt        = pipload::pip_load_aux("ppp"),
-                                      pfw_dt        = pipload::pip_load_aux("pfw"),
-                                      pop_dt        = pipload::pip_load_aux("pop")
-                                      ) {
+                                      cpi_dt,
+                                      ppp_dt,
+                                      pfw_dt,
+                                      pop_dt) {
 
 
   #--------- Load data ---------

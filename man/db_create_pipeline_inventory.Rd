@@ -6,11 +6,7 @@
 inventory is the surveys available in the PIP repository. Pipeline inventory
 takes is the PIP inventory, filtered by the Price FrameWork dataset}
 \usage{
-db_create_pipeline_inventory(
-  root_dir = Sys.getenv("PIP_ROOT_DIR"),
-  maindir = gls$PIP_DATA_DIR,
-  inv_file = paste0(maindir, "_inventory/inventory.fst")
-)
+db_create_pipeline_inventory(root_dir, maindir, inv_file)
 }
 \arguments{
 \item{root_dir}{character: root directory of the PIP data}
@@ -20,7 +16,7 @@ db_create_pipeline_inventory(
 \item{inv_file}{character: file path to be loaded.}
 }
 \value{
-
+data.table
 }
 \description{
 Create pipeline inventory. This is different from the pip inventory. PIP
