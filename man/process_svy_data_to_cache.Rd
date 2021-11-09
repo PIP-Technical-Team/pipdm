@@ -11,10 +11,10 @@ process_svy_data_to_cache(
   cache_svy_dir,
   compress = 100,
   cols = NULL,
-  cpi_dt,
-  ppp_dt,
-  pfw_dt,
-  pop_dt
+  cpi_table,
+  ppp_table,
+  pfw_table,
+  pop_table
 )
 }
 \arguments{
@@ -30,11 +30,13 @@ process_svy_data_to_cache(
 
 \item{cols}{character: vector of variables to keep. Default is NULL.}
 
-\item{cpi_dt}{data frame with CPI data to deflate welfare}
+\item{cpi_table}{data.table: A table with CPI data.}
 
-\item{ppp_dt}{data frame with PPP data to deflate welfare}
+\item{ppp_table}{data.table: A table with PPP data.}
 
-\item{pfw_dt}{data frame with Price FrameWork data}
+\item{pfw_table}{data.table: A table with the price framework file.}
+
+\item{pop_table}{data.table: A table with population data.}
 }
 \value{
 data frame with status of process
