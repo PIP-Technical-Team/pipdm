@@ -5,10 +5,10 @@
 \title{Cache survey data}
 \usage{
 create_cache_file(
-  pipeline_inventory = NULL,
+  pipeline_inventory,
   pip_data_dir,
-  tool = c("PC", "TB"),
   cache_svy_dir,
+  tool = c("PC", "TB"),
   compress = 100,
   verbose = getOption("pipdm.verbose"),
   force = FALSE,
@@ -23,10 +23,10 @@ create_cache_file(
 
 \item{pip_data_dir}{character: Input folder for the raw survey data.}
 
+\item{cache_svy_dir}{character: Output folder for the cached survey data.}
+
 \item{tool}{character: Either "PC" or "TB" for poverty calculator and Table
 Baker, receptively}
-
-\item{cache_svy_dir}{character: Output folder for the cached survey data.}
 
 \item{compress}{numeric: Compression level used in \code{fst::write_fst()}.}
 

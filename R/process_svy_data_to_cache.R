@@ -326,19 +326,3 @@ adjust_population <- function(df, pop_table) {
 
   return(df)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
