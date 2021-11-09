@@ -15,10 +15,10 @@
 #'
 #' @return list: creation status and cache data availability
 #' @export
-create_cache_file <- function(pipeline_inventory = NULL,
+create_cache_file <- function(pipeline_inventory,
                               pip_data_dir,
-                              tool = c("PC", "TB"),
                               cache_svy_dir,
+                              tool = c("PC", "TB"),
                               compress = 100,
                               verbose = getOption("pipdm.verbose"),
                               force = FALSE,
@@ -29,59 +29,10 @@ create_cache_file <- function(pipeline_inventory = NULL,
                               ) {
 
 
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # Parameters   ---------
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ## Tool --------
+  # Tool
   tool <- match.arg(tool)
 
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ## pipeline_inventory --------
-  if (is.null(pipeline_inventory)) {
-    # Load PIP inventory
-    if (tool == "PC") {
-      fil <- list(filter_to_pc = TRUE)
-    } else {
-      fil <- list(filter_to_tb = TRUE)
-    }
-
-    pip_inventory <-
-      do.call(
-        pipload::pip_find_data,
-        c(
-          inv_file = paste0(
-            pip_data_dir,
-            "_inventory/inventory.fst"
-          ),
-          fil,
-          maindir = pip_data_dir
-        )
-      )
-
-    # Create pipeline inventory
-    pipeline_inventory <-
-      db_filter_inventory(
-        pip_inventory,
-        pfw_table = pipload::pip_load_aux(measure = "pfw",
-                                          msrdir  = paste0(pip_data_dir,
-                                                    "_aux/", "pfw", "/")
-                                          )
-        )
-  }
-
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ## cache directory --------
-  if (is.null(cache_svy_dir)) {
-    if (tool == "PC") {
-      cache_svy_dir <- gls$CACHE_SVY_DIR_PC
-    } else {
-      cache_svy_dir <- gls$CACHE_SVY_DIR_TB
-    }
-  }
-
-  # correspondence file
+  # orrespondence file
   crr_dir <- glue::glue("{cache_svy_dir}_crr_inventory/")
   crr_filename <- glue::glue("{crr_dir}crr_inventory.fst")
 
@@ -93,7 +44,7 @@ create_cache_file <- function(pipeline_inventory = NULL,
   #--------- Identify new Surveys ---------
 
   # real new files
-  if (isFALSE(force)) {
+  if (!force) {
     new_svy_ids <- find_new_svy_data(
       cache_id      = pipeline_inventory$cache_id,
       filename      = pipeline_inventory$filename,
@@ -144,6 +95,7 @@ create_cache_file <- function(pipeline_inventory = NULL,
       processed_data = "No data processed",
       data_available = crr
     )))
+
   }  # end of `nrow(new_svy_ids) == 0`
 
   #--------- Process data: Load, clean, and save ---------
@@ -170,7 +122,7 @@ create_cache_file <- function(pipeline_inventory = NULL,
         cache_id      = .y,
         pip_data_dir  = pip_data_dir,
         cache_svy_dir = cache_svy_dir,
-        compress      = 100,
+        compress      = compress,
         cpi_table        = cpi_table,
         ppp_table        = ppp_table,
         pfw_table        = pfw_table,
@@ -205,6 +157,7 @@ create_cache_file <- function(pipeline_inventory = NULL,
   )
 
   #--------- DONE ---------
+
   if (verbose) {
     cli::cli_alert("Done!")
   }
