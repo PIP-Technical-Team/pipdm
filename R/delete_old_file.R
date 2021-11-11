@@ -17,7 +17,7 @@
 #'
 delete_old_file <- function(target_dir = "in",
                             cache_ids  = NULL,
-                            verbose    = getOption("pipdm.verbose"),
+                            verbose    = FALSE,
                             delete     = NULL) {
 
   if (is.null(cache_ids)) {

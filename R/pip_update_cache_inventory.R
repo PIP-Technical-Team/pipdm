@@ -15,7 +15,7 @@ pip_update_cache_inventory <-
            tool               = c("PC", "TB"),
            save               = TRUE,
            load               = FALSE,
-           verbose            = getOption("pipdm.verbose")) {
+           verbose            = FALSE) {
 
 
   tool <- match.arg(tool)
