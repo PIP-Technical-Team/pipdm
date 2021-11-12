@@ -8,14 +8,13 @@
 #' @return TRUE if file is update. FALSE If no data is in directory
 #' @export
 pip_update_cache_inventory <- function(
-           pipeline_inventory,
-           pip_data_dir,
-           cache_svy_dir      = NULL,
-           tool               = c("PC", "TB"),
-           save               = TRUE,
-           load               = FALSE,
-           verbose            = FALSE) {
-
+  pipeline_inventory,
+  pip_data_dir,
+  cache_svy_dir,
+  tool = c("PC", "TB"),
+  save = TRUE,
+  load = FALSE,
+  verbose = FALSE) {
 
   tool <- match.arg(tool)
 
@@ -35,7 +34,7 @@ pip_update_cache_inventory <- function(
   if (nrow(cch) == 0) {
     cli::cli_alert_warning("There is no data in directory {.field {cache_svy_dir}}\n
                            Cache inventory not created",
-      wrap = TRUE
+                           wrap = TRUE
     )
     return(invisible(FALSE))
   }
@@ -47,23 +46,23 @@ pip_update_cache_inventory <- function(
   cols <- c("orig", "filename", "survey_id")
 
   crr <- joyn::merge(cch, pipeline_inventory,
-    by         = "cache_id",
-    match_type = "1:1",
-    keep       = "inner",
-    reportvar  = FALSE,
-    yvars      = cols,
-    verbose    = FALSE
+                     by         = "cache_id",
+                     match_type = "1:1",
+                     keep       = "inner",
+                     reportvar  = FALSE,
+                     yvars      = cols,
+                     verbose    = FALSE
   )
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ## Auxiliary variables for joins --------
   crr[,
       wt := gsub("(.+)_([[:upper:]]+)_([[:upper:]]+$)", "\\2", cache_id)
-      ][,
-        welfare_type := fcase(wt == "CON", "consumption",
-                              wt == "INC", "income",
-                              default =  "")
-        ][, wt := NULL]
+  ][,
+    welfare_type := fcase(wt == "CON", "consumption",
+                          wt == "INC", "income",
+                          default =  "")
+  ][, wt := NULL]
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Stamps   ---------
@@ -93,12 +92,12 @@ pip_update_cache_inventory <- function(
 
       # Update values with new information
       crr <- joyn::merge(crr, cci,
-        by            = "cache_id",
-        match_type    = "1:1",
-        update_values = TRUE,
-        reportvar     = FALSE,
-        verbose       = FALSE,
-        keep          = "inner"
+                         by            = "cache_id",
+                         match_type    = "1:1",
+                         update_values = TRUE,
+                         reportvar     = FALSE,
+                         verbose       = FALSE,
+                         keep          = "inner"
       )
 
       # remove information that is not longer necessary
@@ -136,14 +135,14 @@ pip_update_cache_inventory <- function(
                           can review it by loading it by typing
                           {.code pipload::pip_load_cache_inventory()}",
                           wrap = TRUE
-                          )
+      )
     }
 
 
   } else {
     if (isTRUE(verbose)) {
       cli::cli_alert_warning("Cache inventory was {cli::col_red('NOT')} updated",
-                          wrap = TRUE)
+                             wrap = TRUE)
     }
 
   }

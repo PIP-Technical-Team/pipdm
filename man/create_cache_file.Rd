@@ -10,7 +10,7 @@ create_cache_file(
   cache_svy_dir,
   tool = c("PC", "TB"),
   compress = 100,
-  verbose = getOption("pipdm.verbose"),
+  verbose = FALSE,
   force = FALSE,
   cpi_table,
   ppp_table,

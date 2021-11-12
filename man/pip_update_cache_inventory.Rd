@@ -5,13 +5,13 @@
 \title{Update correspondence inventory file}
 \usage{
 pip_update_cache_inventory(
-  pipeline_inventory = NULL,
-  pip_data_dir = gls$PIP_DATA_DIR,
-  cache_svy_dir = NULL,
+  pipeline_inventory,
+  pip_data_dir,
+  cache_svy_dir,
   tool = c("PC", "TB"),
   save = TRUE,
   load = FALSE,
-  verbose = getOption("pipdm.verbose")
+  verbose = FALSE
 )
 }
 \arguments{
