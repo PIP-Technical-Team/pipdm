@@ -6,3 +6,6 @@
 ^data-raw$
 tmp/
 ^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
