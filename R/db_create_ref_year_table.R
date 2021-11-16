@@ -60,11 +60,11 @@ db_create_ref_year_table <- function(dsm_table,
   )
 
   # Create reference year table
-  dt_ref <- db_create_lkup_table(dt_svy, dt_nac, pop_table, ref_years, region_code)
+  dt_ref <- db_create_lkup_table(dt_svy, dt_nac, ref_years, region_code)
   dt_ref <- db_get_closest_surveys(dt_ref) # Select closets surveys
   dt_ref <- db_select_lineup_surveys(dt_ref) # Select lineup surveys
   dt_ref <- db_compute_predicted_means(dt_ref) # Calculate predicted means
-  dt_ref <- db_finalize_ref_year_table(dt_ref, pfw_table) # Finalize table (select rows and columns)
+  dt_ref <- db_finalize_ref_year_table(dt_ref, pfw_table, pop_table) # Finalize table (select rows and columns)
 
   return(dt_ref)
 }

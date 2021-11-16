@@ -15,7 +15,7 @@ if (getRversion() >= "2.15.1") {
 #'
 #' @return data.table
 #' @keywords internal
-db_finalize_ref_year_table <- function(dt, pfw_table) {
+db_finalize_ref_year_table <- function(dt, pfw_table, pop_table) {
 
   # CHECK inputs
   check_inputs_db_class(dt)
@@ -34,6 +34,13 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
   # Unnest 'req_items'
   dt <- tidyfast::dt_unnest(dt, req_items)
 
+  # Merge with population table
+  dt <- merge(dt, pop_table, all.x = TRUE,
+              by.x = c('country_code', 'pop_data_level',
+                       'reference_year'),
+              by.y = c('country_code', 'pop_data_level',
+                       'year'))
+
   # Add survey as category to estimation_type
   dt$estimation_type <-
     data.table::fifelse(
@@ -41,23 +48,6 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
       "survey",
       dt$estimation_type
     )
-
-  # Check for countries without any national surveys
-  cc <- check_no_national_survey(pfw_table)
-
-  # Recode survey coverage for countries without any national surveys
-  # and only one coverage level (e.g. ARG)
-  if (!purrr::is_empty(cc)) {
-    tmp <- purrr::map_df(cc, find_unique_coverage, pfw_table)
-    dt$survey_coverage <- ifelse(dt$country_code %in% tmp$country_code,
-      tmp$survey_coverage, dt$survey_coverage
-    )
-    msg <- sprintf(
-      "Info: Recoding survey coverage for '%s'.",
-      paste(tmp$country_code, collapse = "', '")
-    )
-    rlang::inform(msg)
-  }
 
   # Remove rows with national survey coverage and missing reference year mean
   na_check <- dt$survey_coverage == "national" & is.na(dt$pred_mean_ppp)
@@ -128,7 +118,7 @@ db_finalize_ref_year_table <- function(dt, pfw_table) {
     )
 
   # Sort rows
-  data.table::setorder(dt, survey_id, pop_data_level)
+  data.table::setorder(dt, country_code, reporting_year, welfare_type, reporting_level)
 
   return(dt)
 }
