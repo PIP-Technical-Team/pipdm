@@ -115,7 +115,7 @@ db_create_coverage_table <- function(ref_year_table,
   out <- rbind(out_region, out_wld, out_tot)
 
   # Remove NA's
-  out <- out[!is.na(pcn_region_code)] # Why is there NA observations?
+  out <- out[!is.na(out$pcn_region_code)] # Why is there NA observations?
 
   # Adjust digits
   out$coverage <- round(out$coverage, digits)
