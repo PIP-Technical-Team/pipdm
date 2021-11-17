@@ -14,22 +14,6 @@
 #' @keywords internal
 db_create_svy_anchor <- function(dsm_table, pfw_table) {
 
-  # Check for countries without any national surveys
-  cc <- check_no_national_survey(pfw_table)
-
-  # Add national coverage rows for countries without national surveys
-  if (!purrr::is_empty(cc)) {
-    msg <- sprintf(
-      "Info: National coverage rows have been added for '%s'.",
-      paste(cc, collapse = "', '")
-    )
-    rlang::inform(msg)
-    rows_to_add <-
-      pfw_table[pfw_table$country_code %in% cc, ] %>%
-      transform(survey_coverage = "national")
-    pfw_table <- rbind(pfw_table, rows_to_add)
-  }
-
   # Select columns
   pfw_table <-
     pfw_table[

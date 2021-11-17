@@ -9,8 +9,6 @@
 #' @return
 #' @export
 #'
-#' @examples
-#' db_create_pipeline_inventory()
 db_create_pipeline_inventory <- function(root_dir = Sys.getenv("PIP_ROOT_DIR"),
                                          maindir  = gls$PIP_DATA_DIR,
                                          inv_file = paste0(maindir,
