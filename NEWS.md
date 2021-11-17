@@ -1,4 +1,5 @@
 # pipdm (development version)
+* add censoring function
 
 # pipdm 0.0.8
 * Add function `db_create_pipeline_inventory`
