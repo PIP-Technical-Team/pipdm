@@ -42,10 +42,13 @@ db_create_ref_year_table <- function(dsm_table,
   check_inputs_ref_years(ref_years)
   check_inputs_pip_years(pip_years)
 
-  # Create Survey Anchor table
-  svy_anchor <- db_create_svy_anchor(
-    dsm_table = dsm_table, pfw_table = pfw_table
-  )
+  if (identical(dsm_table$gdp_data_level, dsm_table$pce_data_level)) {
+    dsm_table$nac_data_level <- dt$gdp_data_level
+    dsm_table$gdp_data_level <- NULL
+    dsm_table$pce_data_level <- NULL
+  } else {
+    rlang::abort("`gdp_data_level` and `pce_data_level` are not identical.")
+  }
 
   # Create National Accounts table
   dt_nac <- db_create_nac_table(
@@ -55,8 +58,8 @@ db_create_ref_year_table <- function(dsm_table,
 
   # Create a table with survey metadata information and adjusted values
   # for GDP and PCE for surveys that span multiple years
-  dt_svy <- db_merge_anchor_nac(
-    nac_table = dt_nac, svy_anchor = svy_anchor
+  dt_svy <- db_merge_dsm_nac(
+    nac_table = dt_nac, dsm_table = dsm_table
   )
 
   # Create reference year table
