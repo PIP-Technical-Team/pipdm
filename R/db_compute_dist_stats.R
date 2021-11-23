@@ -102,7 +102,7 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
 #' @noRd
 md_dist_stats <- function(dt, mean = NULL) {
   # Calculate dist stats
-  res <- md_compute_dist_stats(
+  res <- wbpip:::md_compute_dist_stats(
     welfare = dt$welfare_ppp,
     weight  = dt$weight,
     mean    = mean
@@ -116,7 +116,7 @@ md_dist_stats <- function(dt, mean = NULL) {
 #' @noRd
 gd_dist_stats <- function(dt, mean) {
   # Calculate dist stats
-  res <- gd_compute_dist_stats(
+  res <- wbpip:::gd_compute_dist_stats(
     welfare    = dt$welfare,
     population = dt$weight,
     mean       = mean
@@ -140,7 +140,7 @@ id_dist_stats <- function(dt) {
   dl <- split(dt, f = list(dt$imputation_id))
 
   # Compute stats by group
-  dl_stats <- purrr::map(dl, function(x) md_dist_stats(x, mean = NULL))
+  dl_stats <- purrr::map(dl, function(x) wbpip:::md_dist_stats(x, mean = NULL))
 
   # Aggregate quantiles
   q         <- purrr::map(dl_stats, function(x) x$quantiles)

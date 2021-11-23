@@ -37,7 +37,7 @@ db_compute_predicted_means <- function(dt) {
   }
 
   # Calculate predicted means
-  out <- purrr::map2(means, proxy, compute_predicted_mean)
+  out <- purrr::map2(means, proxy, wbpip:::compute_predicted_mean)
 
   # Add predicted means to the survey data tables
   dt$req_items <-

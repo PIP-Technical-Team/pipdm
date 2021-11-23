@@ -51,7 +51,7 @@ clean_data <- function(dt) {
   # Calculate distributional statistics
   if (dist_type == "micro") {
     # Clean data (remove negative values etc.)
-    df <- md_clean_data(
+    df <- wbpip:::md_clean_data(
       dt,
       welfare = "welfare",
       weight = "weight",
@@ -61,7 +61,7 @@ clean_data <- function(dt) {
     df <- as_pipmd(df)
   } else if (dist_type == "group") {
     # Standardize to type 1
-    df <- gd_clean_data(
+    df <- wbpip:::gd_clean_data(
       dt,
       welfare = "welfare",
       population = "weight",
@@ -78,7 +78,7 @@ clean_data <- function(dt) {
     # Standardize rural
     if (nrow(dt_rural) > 0) {
 
-      dt_rural <- gd_clean_data(
+      dt_rural <- wbpip:::gd_clean_data(
         dt_rural,
         welfare = "welfare",
         population = "weight",
@@ -95,7 +95,7 @@ clean_data <- function(dt) {
     # Standardize urban
     if (nrow(dt_urban) > 0) {
 
-      dt_urban <- gd_clean_data(
+      dt_urban <- wbpip:::gd_clean_data(
         dt_urban,
         welfare = "welfare",
         population = "weight",
@@ -130,7 +130,7 @@ clean_data <- function(dt) {
     df <- as_pipgd(df)
   } else if (dist_type == "imputed") {
     # Clean data (remove negative values etc.)
-    df <- md_clean_data(
+    df <- wbpip:::md_clean_data(
       dt,
       welfare = "welfare",
       weight = "weight",

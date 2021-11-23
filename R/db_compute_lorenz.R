@@ -11,7 +11,7 @@ db_compute_lorenz <- function(dt, gc = FALSE) {
     expr = {
       dist_type <- unique(dt$distribution_type)
       if (dist_type == "micro") {
-        res <- md_compute_lorenz(
+        res <- wbpip:::md_compute_lorenz(
           welfare = dt$welfare, weight = dt$weight
         )
       } else {
