@@ -8,24 +8,18 @@
 #' @param cache_id character: cache id to identify the right process
 #' @return list
 #' @export
-db_compute_dist_stats <- function(dt, mean_table, pop_table, cache_id, gc = FALSE) {
+db_compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
   tryCatch(
     expr = {
 
       # Compute dist stats
       res <- compute_dist_stats(dt, mean_table, pop_table, cache_id)
 
-      # Garbage collection
-      if (gc) gc(verbose = FALSE)
-
       return(res)
     }, # end of expr section
 
     error = function(e) {
       rlang::warn("Distributional statistics caluclation failed. Returning NULL.")
-
-      # Garbage collection
-      if (gc) gc(verbose = FALSE)
 
       return(NULL)
     } # end of error

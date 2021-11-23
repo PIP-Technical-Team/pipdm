@@ -8,9 +8,7 @@
 #'
 #' @return data.table
 #' @export
-db_compute_survey_mean <- function(dt,
-                                   gd_mean = NULL,
-                                   gc = FALSE) {
+db_compute_survey_mean <- function(dt, gd_mean = NULL) {
   tryCatch(
     expr = {
 
@@ -28,17 +26,11 @@ db_compute_survey_mean <- function(dt,
         )
       )
 
-      # Garbage collection
-      if (gc) gc(verbose = FALSE)
-
       return(dt)
     }, # end of expr section
 
     error = function(e) {
       rlang::warn("Survey mean caluclation failed. Returning NULL.")
-
-      # Garbage collection
-      if (gc) gc(verbose = FALSE)
 
       return(NULL)
     } # end of error
