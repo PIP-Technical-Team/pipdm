@@ -185,6 +185,18 @@ process_svy_data_to_cache <- function(survey_id,
         df <- adjust_population(df, pop_dt)
       }  # end of population adjustment
 
+
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      ## Convert character to factors --------
+
+      chr_vars <- names(df)[sapply(df, is.character)]
+
+      df[,
+         (chr_vars) := lapply(.SD, as.factor),
+         .SDcols = chr_vars
+         ]
+
+
     }, # end of expr section in trycatch
 
     error = function(e) {
