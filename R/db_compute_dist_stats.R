@@ -90,7 +90,7 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
     res_national <- md_dist_stats(wf)
 
     res <- append(list(res_national), res)
-    names(res) <- c("national", pop_level)
+    names(res) <- c("national", as.character(pop_level))
   }
 
   return(res)
