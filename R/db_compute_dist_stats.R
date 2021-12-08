@@ -57,7 +57,7 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
 
   # Order by population data level
   data.table::setorder(dt, pop_data_level, welfare_ppp)
-  pop_level <- unique(dt$pop_data_level)
+  pop_level <- unique(as.character(dt$pop_data_level))
 
   # get estimates by level
   res <- purrr::map(
@@ -90,7 +90,7 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
     res_national <- md_dist_stats(wf)
 
     res <- append(list(res_national), res)
-    names(res) <- c("national", as.character(pop_level))
+    names(res) <- c("national", pop_level)
   }
 
   return(res)
@@ -172,7 +172,7 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
 
   if (source == "GROUP") {
 
-    res <- gd_dist_stats(df, mean[as.character(level)])
+    res <- gd_dist_stats(df, mean[level])
 
   } else {
 
@@ -184,7 +184,7 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
 
     } else {
 
-      res <- md_dist_stats(df, mean[as.character(level)])
+      res <- md_dist_stats(df, mean[level])
 
     }
   }
@@ -217,7 +217,7 @@ get_synth_vector <- function(dt, pop_table, mean, level) {
   wf <- wbpip:::sd_create_synth_vector(
     welfare    = df$welfare,
     population = df$weight,
-    mean       = mean[as.character(level)],
+    mean       = mean[level],
     pop        = popf
   )
   return(wf)
