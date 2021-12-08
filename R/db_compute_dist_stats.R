@@ -172,7 +172,7 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
 
   if (source == "GROUP") {
 
-    res <- gd_dist_stats(df, mean[level])
+    res <- gd_dist_stats(df, mean[as.character(level)])
 
   } else {
 
@@ -184,7 +184,7 @@ get_dist_stats_by_level <- function(dt, mean, source, level) {
 
     } else {
 
-      res <- md_dist_stats(df, mean[level])
+      res <- md_dist_stats(df, mean[as.character(level)])
 
     }
   }
@@ -217,7 +217,7 @@ get_synth_vector <- function(dt, pop_table, mean, level) {
   wf <- wbpip:::sd_create_synth_vector(
     welfare    = df$welfare,
     population = df$weight,
-    mean       = mean[level],
+    mean       = mean[as.character(level)],
     pop        = popf
   )
   return(wf)
