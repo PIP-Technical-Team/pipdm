@@ -39,14 +39,14 @@ db_compute_dist_stats <- function(dt, mean_table, pop_table, cache_id, gc = FALS
 compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
 
   # identify procedure
-  source <- gsub("(.*_)([A-Z]+$)", "\\2", cache_id)
+  source     <- gsub("(.*_)([A-Z]+$)", "\\2", cache_id)
   data_level <- gsub("(.*_)(D[123])(.+$)", "\\2", cache_id)
 
 
   # Extract PPP means
-  ci <- cache_id
-  mean       <- mean_table[cache_id == ci,
-                           survey_mean_ppp ]
+  ci    <- cache_id
+  mean  <- mean_table[cache_id == ci,
+                     survey_mean_ppp ]
 
   names(mean) <- mean_table[cache_id == ci,
                             reporting_level  ]
