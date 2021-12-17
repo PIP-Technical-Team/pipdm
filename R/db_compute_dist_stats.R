@@ -117,7 +117,7 @@ md_dist_stats <- function(dt, mean = NULL) {
 gd_dist_stats <- function(dt, mean) {
   # Calculate dist stats
   res <- gd_compute_dist_stats(
-    welfare    = dt$welfare,
+    welfare    = dt$welfare_ppp,
     population = dt$weight,
     mean       = mean
   )
