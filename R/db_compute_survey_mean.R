@@ -15,7 +15,7 @@ db_compute_survey_mean <- function(dt,
     expr = {
 
       # Get distribution type
-      dist_type <- unique(dt$distribution_type)
+      dist_type <- as.character(unique(dt$distribution_type))
 
       # Calculate weighted welfare mean
       dt <- compute_survey_mean[[dist_type]](dt, gd_mean)

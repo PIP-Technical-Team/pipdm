@@ -39,14 +39,14 @@ db_compute_dist_stats <- function(dt, mean_table, pop_table, cache_id, gc = FALS
 compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
 
   # identify procedure
-  source <- gsub("(.*_)([A-Z]+$)", "\\2", cache_id)
+  source     <- gsub("(.*_)([A-Z]+$)", "\\2", cache_id)
   data_level <- gsub("(.*_)(D[123])(.+$)", "\\2", cache_id)
 
 
   # Extract PPP means
-  ci <- cache_id
-  mean       <- mean_table[cache_id == ci,
-                           survey_mean_ppp ]
+  ci    <- cache_id
+  mean  <- mean_table[cache_id == ci,
+                     survey_mean_ppp ]
 
   names(mean) <- mean_table[cache_id == ci,
                             reporting_level  ]
@@ -57,7 +57,7 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
 
   # Order by population data level
   data.table::setorder(dt, pop_data_level, welfare_ppp)
-  pop_level <- unique(dt$pop_data_level)
+  pop_level <- unique(as.character(dt$pop_data_level))
 
   # get estimates by level
   res <- purrr::map(
@@ -117,7 +117,7 @@ md_dist_stats <- function(dt, mean = NULL) {
 gd_dist_stats <- function(dt, mean) {
   # Calculate dist stats
   res <- gd_compute_dist_stats(
-    welfare    = dt$welfare,
+    welfare    = dt$welfare, # cummulative distribution. Not actual welfare
     population = dt$weight,
     mean       = mean
   )
