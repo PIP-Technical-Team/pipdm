@@ -118,6 +118,8 @@ uniq_vars_to_attr <- function(x) {
 
   if (!data.table::is.data.table(x)) {
     x <- as.data.table(x)
+  } else {
+    x <- data.table::copy(x)
   }
 
   N_vars   <- x[, lapply(.SD, uniqueN)]
@@ -137,3 +139,36 @@ uniq_vars_to_attr <- function(x) {
   return(x)
 
 }
+
+
+
+
+#' Add attributes to dataset from single-value variables in another dataset.
+#'
+#' @param x
+#' @param y
+#'
+#' @return
+#' @export
+#'
+#' @examples
+add_simple_attr <- function(x, y) {
+
+  if (!data.table::is.data.table(x)) {
+    x <- as.data.table(x)
+  } else {
+    x <- data.table::copy(x)
+  }
+
+  vars <- names(y)
+
+  for (i in seq_along(vars)) {
+
+    var <- vars[i]
+    value <- y[, get(var)]
+    attr(x, var) <- value
+  } # end of loop
+
+  return(x)
+
+} # end of function
