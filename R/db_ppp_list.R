@@ -9,39 +9,22 @@
 db_ppp_list <- function(ppp) {
 
   pt <- ppp[, unique(ppp_year)] # ppp_year
+  rv <- ppp[, unique(release_version)] # release version
+  av <- ppp[, unique(adaptation_version)] # adaptation version
 
+  #
+  va <- tidyr::expand_grid(pt, rv, av) # versions available
+  data.table::setDT(va)
 
-  y <- purrr::map(pt, ~{
-    ppp[ppp_year == .x]
-  })
+  dd <- purrr::pmap(.l = va,
+                    .f = ppp_filter,
+                    ppp = ppp)
 
+  names(dd) <- va[,
+                  paste("PPP", pt, rv, "M", av, "A", sep = "_")]
 
-
-  z <- purrr::map(y, ~{
-    rv <- .x[, unique(release_version)] # release version
-    av <- .x[, unique(adaptation_version)] # adaptation version
-
-
-    va <- tidyr::expand_grid(rv, av) # versions available
-    data.table::setDT(va)
-
-    dd <- purrr::pmap(.l = va,
-                      .f = ppp_filter,
-                      ppp = .x)
-
-    names(dd) <- va[,
-                    paste(rv, "M", av, "A", sep = "_")]
-
-    dd <-  purrr::compact(dd)
-
-    return(dd)
-
-  })
-
-  names(z) <- paste0("y", pt)
-
-
-  return(z)
+  dd <-  purrr::compact(dd)
+  return(dd)
 
 }
 
@@ -49,15 +32,17 @@ db_ppp_list <- function(ppp) {
 #' Filter PPP data from using the structure of `pipload::pip_load_aux("ppp")`
 #'
 #' @inheritParams db_ppp_list
+#' @param pt numeric: ppp release years
 #' @param rv character: Release Version in the form "vX" where "X" refers to the
 #'   version number
 #' @param av character: Adaptation Version in the form "vX" where "X" refers to
 #'   the version number
 #'
 #' @return data frmae
-ppp_filter <- function(ppp, rv, av) {
+ppp_filter <- function(ppp, pt, rv, av) {
   x <-
-    ppp[release_version == rv
+    ppp[ppp_year == pt
+        & release_version == rv
         & adaptation_version == av
     ]
 
@@ -73,9 +58,4 @@ ppp_filter <- function(ppp, rv, av) {
 
   return(x)
 }
-
-
-
-
-
 
