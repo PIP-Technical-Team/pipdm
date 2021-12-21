@@ -94,6 +94,11 @@ db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
   )
   dt <- dt[, .SD, .SDcols = cols]
 
+  # change factors to characters
+  nn <- names(dt[, .SD, .SDcols = is.factor])
+  dt[, (nn) := lapply(.SD, as.character),
+     .SDcols = nn]
+
   return(dt)
 }
 

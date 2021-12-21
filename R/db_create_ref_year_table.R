@@ -66,5 +66,10 @@ db_create_ref_year_table <- function(dsm_table,
   dt_ref <- db_compute_predicted_means(dt_ref) # Calculate predicted means
   dt_ref <- db_finalize_ref_year_table(dt_ref, pfw_table, pop_table) # Finalize table (select rows and columns)
 
+  # change factors to characters
+  nn <- names(dt_ref[, .SD, .SDcols = is.factor])
+  dt_ref[, (nn) := lapply(.SD, as.character),
+     .SDcols = nn]
+
   return(dt_ref)
 }
