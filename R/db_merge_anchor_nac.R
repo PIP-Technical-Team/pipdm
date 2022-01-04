@@ -16,20 +16,20 @@ if (getRversion() >= "2.15.1") {
 #' For surveys that span two calender years the returned GDP and PCE values are
 #' adjusted by the weighted average of the years in question.
 #'
-#' @param svy_anchor data.table: A table with survey metadata information.
+#' @inheritParams db_create_ref_year_table
 #' @param nac_table data.table: Output of [db_create_nac_table()].
 #'
 #' @seealso [adjust_aux_values()]
 #' @return data.table
 #' @keywords internal
-db_merge_anchor_nac <- function(svy_anchor, nac_table) {
+db_merge_dsm_nac <- function(dsm_table, nac_table) {
 
   # Create nested NAC table
   nac_nested <- nac_table %>%
     tidyfast::dt_nest(country_code, nac_data_level, .key = "data")
 
-  # Merge svy_anchor with nac_nested (left join)
-  dt <- joyn::merge(svy_anchor, nac_nested,
+  # Merge dsm_table with nac_nested (left join)
+  dt <- joyn::merge(dsm_table, nac_nested,
     by = c("country_code", "nac_data_level"),
     match_type = "m:1",
     keep = "left",
