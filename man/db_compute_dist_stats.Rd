@@ -4,7 +4,7 @@
 \alias{db_compute_dist_stats}
 \title{Calculate distributional statistics}
 \usage{
-db_compute_dist_stats(dt, mean_table, pop_table, cache_id, gc = FALSE)
+db_compute_dist_stats(dt, mean_table, pop_table, cache_id)
 }
 \arguments{
 \item{dt}{data.table: A survey dataset.}
@@ -14,8 +14,6 @@ db_compute_dist_stats(dt, mean_table, pop_table, cache_id, gc = FALSE)
 \item{pop_table}{data.table: A table with population data.}
 
 \item{cache_id}{character: cache id to identify the right process}
-
-\item{gc}{logical: If TRUE garbage collection is forced.}
 }
 \value{
 list
