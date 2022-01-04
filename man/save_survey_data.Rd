@@ -13,7 +13,7 @@ save_survey_data(
   compress,
   save = TRUE,
   load = FALSE,
-  verbose = getOption("pipdm.verbose")
+  verbose = FALSE
 )
 }
 \arguments{

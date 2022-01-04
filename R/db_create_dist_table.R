@@ -12,7 +12,7 @@
 db_create_dist_table <- function(dl,
                                  dsm_table,
                                  crr_inv,
-                                 verbose = getOption("pipdm.verbose")) {
+                                 verbose = FALSE) {
 
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -25,12 +25,12 @@ if (getRversion() >= "2.15.1") {
 #' @return data.table
 #' @export
 db_create_ref_year_table <- function(dsm_table,
-                                     gdp_table = pipload::pip_load_aux("gdp"),
-                                     pce_table = pipload::pip_load_aux("pce"),
-                                     pop_table = pipload::pip_load_aux("pop"),
-                                     pfw_table = pipload::pip_load_aux("pfw"),
-                                     ref_years = gls$PIP_REF_YEARS,
-                                     pip_years = gls$PIP_YEARS,
+                                     gdp_table,
+                                     pce_table,
+                                     pop_table,
+                                     pfw_table,
+                                     ref_years,
+                                     pip_years,
                                      region_code =
                                        c(
                                          "pcn_region_code",

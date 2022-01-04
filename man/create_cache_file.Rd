@@ -5,17 +5,17 @@
 \title{Cache survey data}
 \usage{
 create_cache_file(
-  pipeline_inventory = NULL,
-  pip_data_dir = gls$PIP_DATA_DIR,
+  pipeline_inventory,
+  pip_data_dir,
+  cache_svy_dir,
   tool = c("PC", "TB"),
-  cache_svy_dir = gls$CACHE_SVY_DIR_PC,
   compress = 100,
-  verbose = getOption("pipdm.verbose"),
+  verbose = FALSE,
   force = FALSE,
-  cpi_dt = pipload::pip_load_aux("cpi"),
-  ppp_dt = pipload::pip_load_aux("ppp"),
-  pfw_dt = pipload::pip_load_aux("pfw"),
-  pop_dt = pipload::pip_load_aux("pop")
+  cpi_table,
+  ppp_table,
+  pfw_table,
+  pop_table
 )
 }
 \arguments{
@@ -23,10 +23,10 @@ create_cache_file(
 
 \item{pip_data_dir}{character: Input folder for the raw survey data.}
 
+\item{cache_svy_dir}{character: Output folder for the cached survey data.}
+
 \item{tool}{character: Either "PC" or "TB" for poverty calculator and Table
 Baker, receptively}
-
-\item{cache_svy_dir}{character: Output folder for the cached survey data.}
 
 \item{compress}{numeric: Compression level used in \code{fst::write_fst()}.}
 
@@ -35,11 +35,9 @@ console.}
 
 \item{force}{logical: if TRUE, all files will be generate again.}
 
-\item{cpi_dt}{data frame with CPI data to deflate welfare}
+\item{pfw_table}{data.table: A table with the price framework file.}
 
-\item{ppp_dt}{data frame with PPP data to deflate welfare}
-
-\item{pfw_dt}{data frame with Price FrameWork data}
+\item{pop_table}{data.table: A table with population data.}
 }
 \value{
 list: creation status and cache data availability

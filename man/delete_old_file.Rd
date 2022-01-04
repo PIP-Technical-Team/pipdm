@@ -6,14 +6,17 @@
 \usage{
 delete_old_file(
   target_dir = "in",
+  gls,
   cache_ids = NULL,
-  verbose = getOption("pipdm.verbose"),
+  verbose = FALSE,
   delete = NULL
 )
 }
 \arguments{
 \item{target_dir}{character: directory where the cache files are stored. If
 could be a patch, like \code{gls$OUT_SVY_DIR_PC} from}
+
+\item{gls}{list: List of globals.}
 
 \item{cache_ids}{character:vector with  Cache_ids. default from
 \code{db_create_pipeline_inventory()}

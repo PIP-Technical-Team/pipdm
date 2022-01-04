@@ -4,12 +4,7 @@
 \alias{db_create_dist_table}
 \title{Create distributional statistics table}
 \usage{
-db_create_dist_table(
-  dl,
-  dsm_table,
-  crr_inv,
-  verbose = getOption("pipdm.verbose")
-)
+db_create_dist_table(dl, dsm_table, crr_inv, verbose = FALSE)
 }
 \arguments{
 \item{dl}{list: A list with distributional statistics datasets.}

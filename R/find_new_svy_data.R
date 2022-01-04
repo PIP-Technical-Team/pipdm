@@ -11,20 +11,12 @@
 find_new_svy_data <- function(cache_id,
                               filename,
                               tool = c("PC", "TB"),
-                              cache_svy_dir = NULL) {
+                              cache_svy_dir) {
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   ## check parameters --------
   tool <- match.arg(tool)
-
-  if (is.null(cache_svy_dir)) {
-    if (tool == "PC") {
-      cache_svy_dir <- gls$CACHE_SVY_DIR_PC
-    } else {
-      cache_svy_dir <- gls$CACHE_SVY_DIR_TB
-    }
-  }
 
   # Get existing survey ids
   existing_chh_ids <- gsub("(.+)(\\.fst)", "\\1", list.files(cache_svy_dir))

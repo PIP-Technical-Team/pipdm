@@ -51,7 +51,6 @@ clean_data <- function(dt) {
       quiet = TRUE
     )$data
 
-    df <- as_pipmd(df)
   } else if (dist_type == "group") {
     # Standardize to type 1
     df <- wbpip:::gd_clean_data(
@@ -62,7 +61,6 @@ clean_data <- function(dt) {
       quiet = TRUE
     )
 
-    df <- as_pipgd(df)
   } else if (dist_type == "aggregate") {
     # Split by area
     dt_rural <- dt[dt$area == "rural"]
@@ -78,9 +76,7 @@ clean_data <- function(dt) {
         gd_type = gd_type,
         quiet = TRUE
       )
-
       ra <- TRUE
-
     } else {
       ra <- FALSE
     }
@@ -95,7 +91,6 @@ clean_data <- function(dt) {
         gd_type = gd_type,
         quiet = TRUE
       )
-
       ua <- TRUE
 
     } else {
@@ -106,11 +101,11 @@ clean_data <- function(dt) {
 
       df <- rbind(dt_rural, dt_urban)
 
-    } else if (isTRUE(ua)) {
+    } else if (ua) {
 
       df <- dt_urban
 
-    } else if (isTRUE(ra)) {
+    } else if (ra) {
 
       df <- dt_rural
 
@@ -120,7 +115,6 @@ clean_data <- function(dt) {
                      wrap = TRUE)
     }
 
-    df <- as_pipgd(df)
   } else if (dist_type == "imputed") {
     # Clean data (remove negative values etc.)
     df <- wbpip:::md_clean_data(
@@ -130,7 +124,6 @@ clean_data <- function(dt) {
       quiet = TRUE
     )$data
 
-    df <- as_pipid(df)
   } else {
     stop("`dist_type` not valid")
   }
