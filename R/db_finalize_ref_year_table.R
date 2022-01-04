@@ -99,7 +99,8 @@ db_finalize_ref_year_table <- function(dt, pfw_table, pop_table) {
     "ppp_data_level", "reporting_level", "distribution_type",
     "gd_type", "is_interpolated",
     "is_used_for_aggregation",
-    "estimation_type"
+    "estimation_type",
+    "display_cp"
   )
   dt <- dt[, .SD, .SDcols = cols]
 

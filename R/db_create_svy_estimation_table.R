@@ -94,7 +94,8 @@ db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce
     "distribution_type", "gd_type",
     "is_interpolated",
     "is_used_for_aggregation",
-    "estimation_type"
+    "estimation_type",
+    "display_cp"
   )
   dt <- dt[, .SD, .SDcols = cols]
 
