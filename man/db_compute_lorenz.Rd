@@ -4,12 +4,10 @@
 \alias{db_compute_lorenz}
 \title{Compute Lorenz}
 \usage{
-db_compute_lorenz(dt, gc = FALSE)
+db_compute_lorenz(dt)
 }
 \arguments{
 \item{dt}{data.table: A survey dataset.}
-
-\item{gc}{logical: If TRUE garbage collection is forced.}
 }
 \description{
 Calculate points on the Lorenz curve for a single survey dataset.

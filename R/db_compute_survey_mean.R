@@ -8,14 +8,12 @@
 #'
 #' @return data.table
 #' @export
-db_compute_survey_mean <- function(dt,
-                                   gd_mean = NULL,
-                                   gc = FALSE) {
+db_compute_survey_mean <- function(dt, gd_mean = NULL) {
   tryCatch(
     expr = {
 
       # Get distribution type
-      dist_type <- unique(dt$distribution_type)
+      dist_type <- as.character(unique(dt$distribution_type))
 
       # Calculate weighted welfare mean
       dt <- compute_survey_mean[[dist_type]](dt, gd_mean)
@@ -28,17 +26,11 @@ db_compute_survey_mean <- function(dt,
         )
       )
 
-      # Garbage collection
-      if (gc) gc(verbose = FALSE)
-
       return(dt)
     }, # end of expr section
 
     error = function(e) {
       rlang::warn("Survey mean caluclation failed. Returning NULL.")
-
-      # Garbage collection
-      if (gc) gc(verbose = FALSE)
 
       return(NULL)
     } # end of error

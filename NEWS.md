@@ -1,3 +1,7 @@
+# pipdm 0.0.11
+* change character to vectos and fix other related things
+* Revert median on ppp to LCU
+
 # pipdm 0.0.10
 * add censoring function
 
