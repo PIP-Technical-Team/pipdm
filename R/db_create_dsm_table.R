@@ -162,6 +162,11 @@ db_create_dsm_table <- function(lcu_table,
   # Sort rows
   data.table::setorder(dt, survey_id)
 
+  # change factors to characters
+  nn <- names(dt[, .SD, .SDcols = is.factor])
+  dt[, (nn) := lapply(.SD, as.character),
+     .SDcols = nn]
+
   return(dt)
 }
 
