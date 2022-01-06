@@ -252,7 +252,7 @@ db_create_dist_table <- function(dl,
   # change factors to characters
   nn <- names(dt[, .SD, .SDcols = is.factor])
   dt[, (nn) := lapply(.SD, as.character),
-       .SDcols = nn]
+     .SDcols = nn]
 
   return(dt)
 }

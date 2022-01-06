@@ -166,7 +166,6 @@ db_create_dsm_table <- function(lcu_table,
   dt[, (nn) := lapply(.SD, as.character),
      .SDcols = nn]
 
-
   return(dt)
 }
 

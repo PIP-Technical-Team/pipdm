@@ -98,11 +98,5 @@ db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce
   )
   dt <- dt[, .SD, .SDcols = cols]
 
-  # change factors to characters
-  nn <- names(dt[, .SD, .SDcols = is.factor])
-  dt[, (nn) := lapply(.SD, as.character),
-     .SDcols = nn]
-
-
   return(dt)
 }
