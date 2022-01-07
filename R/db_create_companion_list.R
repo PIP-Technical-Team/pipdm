@@ -98,8 +98,14 @@ db_create_companion_list <- function(df,
 
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   ## population table --------
+  popf <- pop_table[
+    country_code     == c_c
+    & year           == s_y,
+    .(pop_data_level, pop)
+  ]
 
-
+  # Add population
+  ld$pop <- popf
 
   return(ld)
 } # end of db_create_companion_list function

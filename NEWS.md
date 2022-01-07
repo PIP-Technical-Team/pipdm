@@ -1,4 +1,7 @@
 # pipdm (development version)
+Add new function `db_create_companion_list()` to have all the information necessary
+for every welfare data file
+
 
 # pipdm 0.0.11
 * change character to vectos and fix other related things
