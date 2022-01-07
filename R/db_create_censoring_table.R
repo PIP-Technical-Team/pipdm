@@ -14,7 +14,7 @@ db_create_censoring_table <- function(censored, coverage_table, coverage_thresho
   dt %>% data.table::setnames('pcn_region_code', 'region_code')
   dt$statistic <- 'all'
   dt$id <- with(dt, sprintf('%s_%s', region_code, reporting_year))
-  dt <- dt[, c('region_code', 'reporting_year', 'statistic')]
+  dt <- dt[, c('region_code', 'reporting_year', 'statistic', 'id')]
 
   # Add region-years to censor based on coverage
   censored$regions <- rbind(censored$regions, dt)
