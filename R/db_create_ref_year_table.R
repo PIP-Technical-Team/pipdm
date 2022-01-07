@@ -43,7 +43,7 @@ db_create_ref_year_table <- function(dsm_table,
   check_inputs_pip_years(pip_years)
 
   if (identical(dsm_table$gdp_data_level, dsm_table$pce_data_level)) {
-    dsm_table$nac_data_level <- dt$gdp_data_level
+    dsm_table$nac_data_level <- dsm_table$gdp_data_level
     dsm_table$gdp_data_level <- NULL
     dsm_table$pce_data_level <- NULL
   } else {
