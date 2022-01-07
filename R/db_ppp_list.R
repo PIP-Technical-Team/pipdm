@@ -21,7 +21,7 @@ db_ppp_list <- function(ppp) {
                     ppp = ppp)
 
   names(dd) <- va[,
-                  paste("PPP", pt, rv, "M", av, "A", sep = "_")]
+                  paste("PPP", pt, rv, "R", av, "A", sep = "_")]
 
   dd <-  purrr::compact(dd)
   return(dd)

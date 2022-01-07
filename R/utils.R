@@ -111,10 +111,12 @@ compute_predicted_mean <-
 #' remove those unique variables
 #'
 #' @param x data frame.
+#' @param ex_pattern character: variable name pattern to exclude from
+#'   single-value variables, so that they are not converted to attributes
 #'
 #' @return
 #' @export
-uniq_vars_to_attr <- function(x) {
+uniq_vars_to_attr <- function(x, ex_pattern = NULL) {
 
   if (!data.table::is.data.table(x)) {
     x <- as.data.table(x)
@@ -123,8 +125,20 @@ uniq_vars_to_attr <- function(x) {
   }
 
   N_vars   <- x[, lapply(.SD, uniqueN)]
-  uni_vars <- names(N_vars)[N_vars == 1]
-  mul_vars <- names(N_vars)[N_vars != 1]
+
+  # if no pattern is selected
+  if (is.null(ex_pattern)) {
+
+    uni_vars <- names(N_vars)[N_vars == 1]
+    mul_vars <- names(N_vars)[N_vars != 1]
+
+  } else {
+
+    uni_vars <- names(N_vars)[N_vars == 1 & !grepl(ex_pattern, names(N_vars))]
+    mul_vars <- names(N_vars)[N_vars != 1 | grepl(ex_pattern, names(N_vars))]
+
+  }
+
 
   for (i in seq_along(uni_vars)) {
 
