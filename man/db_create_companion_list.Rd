@@ -13,7 +13,13 @@ db_create_companion_list(
 )
 }
 \arguments{
-\item{pop_table}{}
+\item{cpi_table}{data.table: A table with CPI data.}
+
+\item{ppp_table}{data.table: A table with PPP data.}
+
+\item{pfw_table}{data.table: A table with the price framework file.}
+
+\item{pop_table}{data.table: A table with population data.}
 }
 \value{
 

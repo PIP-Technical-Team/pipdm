@@ -1,10 +1,7 @@
 #' Create companion list of all information relavan for each survey data
 #'
 #' @param df
-#' @param cpi_table
-#' @param ppp_table
-#' @param pfw_table
-#' @param pop_table
+#' @inheritParams process_svy_data_to_cache
 #'
 #' @return
 #' @export
@@ -15,10 +12,8 @@ db_create_companion_list <- function(df,
                                      ppp_table  = pipload::pip_load_aux("ppp"),
                                      pfw_table  = pipload::pip_load_aux("pfw"),
                                      pop_table  = pipload::pip_load_aux("pop")) {
-  pipload::pip_load_all_aux(replace = TRUE)
 
 
-  df <- pipload::pip_load_data("PRY", year = 2015)
   df <- db_clean_data(df)
   ld <- vector(mode = "list")
 
