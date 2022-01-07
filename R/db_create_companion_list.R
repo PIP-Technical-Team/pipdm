@@ -5,8 +5,6 @@
 #'
 #' @return
 #' @export
-#'
-#' @examples
 db_create_companion_list <- function(df,
                                      cpi_table  = pipload::pip_load_aux("cpi"),
                                      ppp_table  = pipload::pip_load_aux("ppp"),
@@ -26,7 +24,8 @@ db_create_companion_list <- function(df,
                       by          = byvar,
                       match_type  = "m:1",
                       keep        = "left",
-                      reportvar   = FALSE)
+                      reportvar   = FALSE,
+                      verbose     = FALSE)
 
   # get single-value variables as attributes
 
