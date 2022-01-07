@@ -5,10 +5,13 @@
 \title{convert variagles with unique values along the data set to attrbitus and then
 remove those unique variables}
 \usage{
-uniq_vars_to_attr(x)
+uniq_vars_to_attr(x, ex_pattern = NULL)
 }
 \arguments{
 \item{x}{data frame.}
+
+\item{ex_pattern}{character: variable name pattern to exclude from
+single-value variables, so that they are not converted to attributes}
 }
 \value{
 

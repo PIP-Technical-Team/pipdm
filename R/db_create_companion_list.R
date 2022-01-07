@@ -1,4 +1,20 @@
-db_create_companion_list <- function(df) {
+#' Create companion list of all information relavan for each survey data
+#'
+#' @param df
+#' @param cpi_table
+#' @param ppp_table
+#' @param pfw_table
+#' @param pop_table
+#'
+#' @return
+#' @export
+#'
+#' @examples
+db_create_companion_list <- function(df,
+                                     cpi_table  = pipload::pip_load_aux("cpi"),
+                                     ppp_table  = pipload::pip_load_aux("ppp"),
+                                     pfw_table  = pipload::pip_load_aux("pfw"),
+                                     pop_table  = pipload::pip_load_aux("pop")) {
   pipload::pip_load_all_aux(replace = TRUE)
 
 
@@ -86,5 +102,10 @@ db_create_companion_list <- function(df) {
   ld$ppp <- ppp_ld
 
 
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ## population table --------
+
+
+
   return(ld)
-}
+} # end of db_create_companion_list function
