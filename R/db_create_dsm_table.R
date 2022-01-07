@@ -151,7 +151,8 @@ db_create_dsm_table <- function(lcu_table,
         "gdp_data_level", "pce_data_level",
         "cpi_data_level", "ppp_data_level", "reporting_level",
         "distribution_type", "gd_type",
-        "is_interpolated", "is_used_for_aggregation"
+        "is_interpolated", "is_used_for_aggregation",
+        "display_cp"
       )
   ]
 
@@ -160,6 +161,11 @@ db_create_dsm_table <- function(lcu_table,
 
   # Sort rows
   data.table::setorder(dt, survey_id)
+
+  # change factors to characters
+  nn <- names(dt[, .SD, .SDcols = is.factor])
+  dt[, (nn) := lapply(.SD, as.character),
+     .SDcols = nn]
 
   return(dt)
 }
@@ -213,7 +219,9 @@ add_aggregated_mean <- function(dt) {
       distribution_type       = unique(distribution_type),
       gd_type                 = unique(gd_type),
       is_interpolated         = FALSE,
-      is_used_for_aggregation = TRUE
+      is_used_for_aggregation = TRUE,
+      display_cp              = unique(display_cp)
+
     ),
     by = .(survey_id, cache_id)
     ]

@@ -5,12 +5,12 @@
 \title{Adjust microdata to WDI population levels when the number of reporting levels
 is equal or greater than 2}
 \usage{
-adjust_population(df, pop_dt)
+adjust_population(df, pop_table)
 }
 \arguments{
 \item{df}{dataframe with microdata}
 
-\item{pop_dt}{population data from  WDI.}
+\item{pop_table}{population data from WDI.}
 }
 \value{
 dataframe

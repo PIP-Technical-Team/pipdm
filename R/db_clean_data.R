@@ -4,10 +4,9 @@
 #' and `wbpip:::gd_clean_data()`.
 #'
 #' @param dt data.table: A survey dataset.
-#' @param gc logical: If TRUE garbage collection is forced.
 #' @return data.table
 #' @export
-db_clean_data <- function(dt, gc = FALSE) {
+db_clean_data <- function(dt) {
   tryCatch(
     expr = {
 
@@ -20,17 +19,11 @@ db_clean_data <- function(dt, gc = FALSE) {
       # Remove labels from each column
       dt[] <- lapply(dt, c)
 
-      # Garbage collection
-      if (gc) gc(verbose = FALSE)
-
       return(dt)
     }, # end of expr section
 
     error = function(e) {
       rlang::warn("Data cleaning failed. Returning NULL.")
-
-      # Garbage collection
-      if (gc) gc(verbose = FALSE)
 
       return(NULL)
     } # end of error
@@ -51,17 +44,16 @@ clean_data <- function(dt) {
   # Calculate distributional statistics
   if (dist_type == "micro") {
     # Clean data (remove negative values etc.)
-    df <- md_clean_data(
+    df <- wbpip:::md_clean_data(
       dt,
       welfare = "welfare",
       weight = "weight",
       quiet = TRUE
     )$data
 
-    df <- as_pipmd(df)
   } else if (dist_type == "group") {
     # Standardize to type 1
-    df <- gd_clean_data(
+    df <- wbpip:::gd_clean_data(
       dt,
       welfare = "welfare",
       population = "weight",
@@ -69,7 +61,6 @@ clean_data <- function(dt) {
       quiet = TRUE
     )
 
-    df <- as_pipgd(df)
   } else if (dist_type == "aggregate") {
     # Split by area
     dt_rural <- dt[dt$area == "rural"]
@@ -78,16 +69,14 @@ clean_data <- function(dt) {
     # Standardize rural
     if (nrow(dt_rural) > 0) {
 
-      dt_rural <- gd_clean_data(
+      dt_rural <- wbpip:::gd_clean_data(
         dt_rural,
         welfare = "welfare",
         population = "weight",
         gd_type = gd_type,
         quiet = TRUE
       )
-
       ra <- TRUE
-
     } else {
       ra <- FALSE
     }
@@ -95,14 +84,13 @@ clean_data <- function(dt) {
     # Standardize urban
     if (nrow(dt_urban) > 0) {
 
-      dt_urban <- gd_clean_data(
+      dt_urban <- wbpip:::gd_clean_data(
         dt_urban,
         welfare = "welfare",
         population = "weight",
         gd_type = gd_type,
         quiet = TRUE
       )
-
       ua <- TRUE
 
     } else {
@@ -113,11 +101,11 @@ clean_data <- function(dt) {
 
       df <- rbind(dt_rural, dt_urban)
 
-    } else if (isTRUE(ua)) {
+    } else if (ua) {
 
       df <- dt_urban
 
-    } else if (isTRUE(ra)) {
+    } else if (ra) {
 
       df <- dt_rural
 
@@ -127,17 +115,15 @@ clean_data <- function(dt) {
                      wrap = TRUE)
     }
 
-    df <- as_pipgd(df)
   } else if (dist_type == "imputed") {
     # Clean data (remove negative values etc.)
-    df <- md_clean_data(
+    df <- wbpip:::md_clean_data(
       dt,
       welfare = "welfare",
       weight = "weight",
       quiet = TRUE
     )$data
 
-    df <- as_pipid(df)
   } else {
     stop("`dist_type` not valid")
   }

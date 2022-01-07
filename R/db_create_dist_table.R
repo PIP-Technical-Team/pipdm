@@ -12,7 +12,7 @@
 db_create_dist_table <- function(dl,
                                  dsm_table,
                                  crr_inv,
-                                 verbose = getOption("pipdm.verbose")) {
+                                 verbose = FALSE) {
 
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,6 +248,11 @@ db_create_dist_table <- function(dl,
 
   # Sort rows
   data.table::setorder(dt, cache_id)
+
+  # change factors to characters
+  nn <- names(dt[, .SD, .SDcols = is.factor])
+  dt[, (nn) := lapply(.SD, as.character),
+     .SDcols = nn]
 
   return(dt)
 }

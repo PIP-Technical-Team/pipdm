@@ -8,24 +8,18 @@
 #' @param cache_id character: cache id to identify the right process
 #' @return list
 #' @export
-db_compute_dist_stats <- function(dt, mean_table, pop_table, cache_id, gc = FALSE) {
+db_compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
   tryCatch(
     expr = {
 
       # Compute dist stats
       res <- compute_dist_stats(dt, mean_table, pop_table, cache_id)
 
-      # Garbage collection
-      if (gc) gc(verbose = FALSE)
-
       return(res)
     }, # end of expr section
 
     error = function(e) {
       rlang::warn("Distributional statistics caluclation failed. Returning NULL.")
-
-      # Garbage collection
-      if (gc) gc(verbose = FALSE)
 
       return(NULL)
     } # end of error
@@ -41,7 +35,6 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
   # identify procedure
   source     <- gsub("(.*_)([A-Z]+$)", "\\2", cache_id)
   data_level <- gsub("(.*_)(D[123])(.+$)", "\\2", cache_id)
-
 
   # Extract PPP means
   ci    <- cache_id
@@ -102,7 +95,7 @@ compute_dist_stats <- function(dt, mean_table, pop_table, cache_id) {
 #' @noRd
 md_dist_stats <- function(dt, mean = NULL) {
   # Calculate dist stats
-  res <- md_compute_dist_stats(
+  res <- wbpip:::md_compute_dist_stats(
     welfare = dt$welfare_ppp,
     weight  = dt$weight,
     mean    = mean
@@ -116,8 +109,8 @@ md_dist_stats <- function(dt, mean = NULL) {
 #' @noRd
 gd_dist_stats <- function(dt, mean) {
   # Calculate dist stats
-  res <- gd_compute_dist_stats(
-    welfare    = dt$welfare, # cummulative distribution. Not actual welfare
+  res <- wbpip:::gd_compute_dist_stats(
+    welfare    = dt$welfare,  # cummulative distribution. Not actual welfare
     population = dt$weight,
     mean       = mean
   )
@@ -140,7 +133,7 @@ id_dist_stats <- function(dt) {
   dl <- split(dt, f = list(dt$imputation_id))
 
   # Compute stats by group
-  dl_stats <- purrr::map(dl, function(x) md_dist_stats(x, mean = NULL))
+  dl_stats <- purrr::map(dl, function(x) wbpip:::md_dist_stats(x, mean = NULL))
 
   # Aggregate quantiles
   q         <- purrr::map(dl_stats, function(x) x$quantiles)

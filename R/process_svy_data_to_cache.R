@@ -6,23 +6,21 @@
 #' @param cols character: vector of variables to keep. Default is NULL.
 #' @param cache_svy_dir character: Output directory
 #' @param compress numeric: Compression level used in `fst::write_fst()`.
-#' @param cpi_dt data frame with CPI data to deflate welfare
-#' @param ppp_dt data frame with PPP data to deflate welfare
-#' @param pfw_dt data frame with Price FrameWork data
+#' @inheritParams db_create_ref_year_table
+#' @inheritParams db_create_dsm_table
 #'
 #' @return data frame with status of process
 #' @export
 process_svy_data_to_cache <- function(survey_id,
                                       cache_id,
-                                      pip_data_dir  = gls$PIP_DATA_DIR,
-                                      cache_svy_dir = gls$CACHE_SVY_DIR_PC,
+                                      pip_data_dir,
+                                      cache_svy_dir,
                                       compress      = 100,
                                       cols          = NULL,
-                                      cpi_dt        = pipload::pip_load_aux("cpi"),
-                                      ppp_dt        = pipload::pip_load_aux("ppp"),
-                                      pfw_dt        = pipload::pip_load_aux("pfw"),
-                                      pop_dt        = pipload::pip_load_aux("pop")
-                                      ) {
+                                      cpi_table,
+                                      ppp_table,
+                                      pfw_table,
+                                      pop_table) {
 
 
   #--------- Load data ---------
@@ -72,7 +70,6 @@ process_svy_data_to_cache <- function(survey_id,
 
       df <- db_clean_data(df)
 
-
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       ## check if there is alternative welfare to use --------
 
@@ -101,7 +98,7 @@ process_svy_data_to_cache <- function(survey_id,
         surveyid_year := as.integer(surveyid_year)
       ]
 
-      pfw <- joyn::merge(pfw_dt,
+      pfw <- joyn::merge(pfw_table,
                          dt_id,
                          by = c("country_code", "surveyid_year", "survey_acronym"),
                          match_type = "1:1",
@@ -137,10 +134,10 @@ process_svy_data_to_cache <- function(survey_id,
 
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       ## Deflate data --------
-      ppp_dt <- ppp_dt[ppp_default == TRUE]
+      ppp_table <- ppp_table[ppp_default == TRUE]
 
       # Merge survey table with PPP (left join)
-      df <- joyn::merge(df, ppp_dt,
+      df <- joyn::merge(df, ppp_table,
         by         = c("country_code", "ppp_data_level"),
         match_type = "m:1",
         yvars      = "ppp",
@@ -150,7 +147,7 @@ process_svy_data_to_cache <- function(survey_id,
       )
 
       # Merge survey table with CPI (left join)
-      df <- joyn::merge(df, cpi_dt,
+      df <- joyn::merge(df, cpi_table,
         by = c(
           "country_code", "survey_year",
           "survey_acronym", "cpi_data_level"
@@ -182,7 +179,7 @@ process_svy_data_to_cache <- function(survey_id,
       dst <- df[, unique(distribution_type)]       # distribution type
 
       if ( nrl > 1  &&  dst == "micro")  {
-        df <- adjust_population(df, pop_dt)
+        df <- adjust_population(df, pop_table)
       }  # end of population adjustment
 
 
@@ -264,8 +261,6 @@ process_svy_data_to_cache <- function(survey_id,
   return(ret)
 }
 
-
-
 #' get ordered level of data_level variables
 #'
 #' @param dt cleaned dataframe
@@ -287,18 +282,14 @@ get_ordered_level <- function(dt, x) {
   }
 }
 
-
-
-
-
 #' Adjust microdata to WDI population levels when the number of reporting levels
 #' is equal or greater than 2
 #'
 #' @param df dataframe with microdata
-#' @param pop_dt population data from  WDI.
+#' @param pop_table population data from WDI.
 #'
 #' @return dataframe
-adjust_population <- function(df, pop_dt) {
+adjust_population <- function(df, pop_table) {
 
   spop <- df[,
              # get total population by level
@@ -306,7 +297,7 @@ adjust_population <- function(df, pop_dt) {
              by = c("country_code", "survey_year", "reporting_level")]
 
 
-  dpop <- joyn::merge(pop_dt, spop,
+  dpop <- joyn::merge(pop_table, spop,
                       by         = c("country_code",
                                      "pop_data_level = reporting_level"),
                       match_type =  "m:1",
@@ -325,8 +316,6 @@ adjust_population <- function(df, pop_dt) {
       # get weights for weighted mean
       wght := fifelse(diff_year == 0, 1, 1/diff_year) ]
 
-
-
   fact <-
     dpop[,
          # get mean of population.
@@ -337,7 +326,6 @@ adjust_population <- function(df, pop_dt) {
       pop_fact := pop/weight
     ][,
       c("pop", "weight") := NULL]
-
 
   df <- joyn::merge(x  = df,
                     y  = fact,
@@ -350,19 +338,3 @@ adjust_population <- function(df, pop_dt) {
 
   return(df)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

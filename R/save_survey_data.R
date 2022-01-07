@@ -23,7 +23,7 @@ save_survey_data <- function(dt,
                              compress,
                              save        = TRUE,
                              load        = FALSE,
-                             verbose     = getOption("pipdm.verbose")) {
+                             verbose     = FALSE) {
 
   # Select columns
   if (!is.null(cols)) {

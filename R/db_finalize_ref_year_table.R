@@ -99,7 +99,8 @@ db_finalize_ref_year_table <- function(dt, pfw_table, pop_table) {
     "ppp_data_level", "reporting_level", "distribution_type",
     "gd_type", "is_interpolated",
     "is_used_for_aggregation",
-    "estimation_type"
+    "estimation_type",
+    "display_cp"
   )
   dt <- dt[, .SD, .SDcols = cols]
 
@@ -116,6 +117,11 @@ db_finalize_ref_year_table <- function(dt, pfw_table, pop_table) {
     base::transform(
       interpolation_id = paste(country_code, reporting_year, pop_data_level, sep = "_")
     )
+
+  # change factors to characters
+  nn <- names(dt[, .SD, .SDcols = is.factor])
+  dt[, (nn) := lapply(.SD, as.character),
+         .SDcols = nn]
 
   # Sort rows
   data.table::setorder(dt, country_code, reporting_year, welfare_type, reporting_level)

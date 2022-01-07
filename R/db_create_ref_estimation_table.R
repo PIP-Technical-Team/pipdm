@@ -90,7 +90,8 @@ db_create_ref_estimation_table <- function(ref_year_table, dist_table) {
     "is_interpolated",
     "is_used_for_aggregation",
     "estimation_type",
-    "interpolation_id"
+    "interpolation_id",
+    "display_cp"
   )
   dt <- dt[, .SD, .SDcols = cols]
 
