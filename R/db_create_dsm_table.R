@@ -55,9 +55,6 @@ db_create_dsm_table <- function(lcu_table,
 
   #--------- Merge with PPP ---------
 
-  # Select default PPP values
-  ppp_table <- ppp_table[ppp_default == TRUE]
-
   # Select PPP columns
   ppp_table <-
     ppp_table[, .SD,
