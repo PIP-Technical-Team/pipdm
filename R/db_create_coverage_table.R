@@ -41,15 +41,17 @@ db_create_coverage_table <- function(ref_year_table,
       pcn_region_code, wb_region_code
     )
   ]
-  dt$survey_year_2 <- dt$survey_year %>%
-    regmatches(., gregexpr(", .*", .)) %>%
-    gsub(", ", "", .) %>%
-    ifelse(. == "character(0)", NA, .) %>%
-    as.numeric()
-  dt$survey_year <-
-    gsub(", .*", "", dt$survey_year) %>%
-    as.character() %>%
-    as.numeric()
+
+  # split by comma created above with toString()
+  sv <- c("survey_year", "survey_year_2")
+
+  dt[,
+     (sv) := tstrsplit(survey_year, ", ",  fill = NA)
+  ][,
+    # Convert to numeric
+    (sv) := lapply(.SD, as.numeric),
+    .SDcols = sv]
+
 
   # ---- Prepare Population table ----
 
