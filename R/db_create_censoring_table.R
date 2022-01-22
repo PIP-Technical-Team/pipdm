@@ -7,17 +7,27 @@
 #' @param coverage_threshold numeric: Value with the threshold to censor regions based on their coverage (e.g 50 %).
 #'
 #' @export
-db_create_censoring_table <- function(censored, coverage_table, coverage_threshold) {
+db_create_censoring_table <- function(censored,
+                                      coverage_table,
+                                      coverage_threshold) {
 
   # Filther by threshold
   dt <- coverage_table[coverage < coverage_threshold]
-  dt %>% data.table::setnames('pcn_region_code', 'region_code')
-  dt$statistic <- 'all'
-  dt$id <- with(dt, sprintf('%s_%s', region_code, reporting_year))
-  dt <- dt[, c('region_code', 'reporting_year', 'statistic', 'id')]
+  data.table::setnames(dt, 'pcn_region_code', 'region_code')
+
+
+  dt <-
+    dt[,
+     `:=`(
+         statistic = 'all',
+         id        = paste0(region_code, "_", reporting_year)
+       )
+     ][,
+       c('region_code', 'reporting_year', 'statistic', 'id')
+       ]
 
   # Add region-years to censor based on coverage
-  censored$regions <- rbind(censored$regions, dt)
+  censored$regions <- data.table::rbindlist(list(censored$regions, dt))
 
   return(censored)
 }
