@@ -31,7 +31,7 @@ db_create_coverage_table <- function(ref_year_table,
   ]
 
   # Remove duplicated rows
-  dt <- dt[!duplicated(dt), ]
+  dt <- unique(dt)
 
   # Transform table to one row per country-year-coverage
   dt <- dt[, .(survey_year = toString(survey_year)),
@@ -85,10 +85,14 @@ db_create_coverage_table <- function(ref_year_table,
   dt <- dt[!is.na(pop), ]
 
   # Create coverage column (current method)
-  dt$coverage <- (abs(dt$reporting_year - dt$survey_year) < 3 |
-    abs(dt$reporting_year - dt$survey_year_2) < 3)
-  dt$coverage <- data.table::fifelse(dt$coverage, 100, 0)
-  dt[is.na(coverage), ]$coverage <- 0
+  dt[,
+     coverage := {
+       x <- (  abs(reporting_year - survey_year) < 3
+             | abs(reporting_year - survey_year_2) < 3
+       )
+       x <- fifelse(x, 100, 0)
+       x <- nafill(x, fill = 0)
+     }]
 
   # ---- Calculate world and regional coverage ----
 
@@ -122,5 +126,7 @@ db_create_coverage_table <- function(ref_year_table,
   # Adjust digits
   out$coverage <- round(out$coverage, digits)
 
+  data.table::setorder(out, pcn_region_code, reporting_year)
   return(out)
+
 }
