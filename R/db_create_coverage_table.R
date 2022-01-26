@@ -83,8 +83,8 @@ db_create_coverage_table <- function(ref_year_table,
   dt <- dt[!is.na(pop), ]
 
   # Create coverage column (current method)
-  dt$coverage <- (abs(dt$reporting_year - dt$survey_year) < 3 |
-    abs(dt$reporting_year - dt$survey_year_2) < 3)
+  dt$coverage <- (abs(dt$reporting_year - dt$survey_year) <= 3 |
+    abs(dt$reporting_year - dt$survey_year_2) <= 3)
   dt$coverage <- data.table::fifelse(dt$coverage, 100, 0)
   dt[is.na(coverage), ]$coverage <- 0
 
