@@ -4,6 +4,7 @@
 #'
 #' @param ref_year_table data.table: Full interpolated means table. Output of
 #'   `db_create_ref_year_table()`.
+#' @param cl_table data.table: Country list table with all WDI countries.
 #' @inheritParams db_create_ref_year_table
 #' @param digits numeric: The number of digits the returned coverage numbers are
 #'   rounded by.
@@ -12,10 +13,11 @@
 #' @export
 db_create_coverage_table <- function(ref_year_table,
                                      pop_table,
+                                     cl_table,
                                      ref_years,
                                      digits = 2,
                                      special_countries =
-                                       c("ARG", "CHN", "IDN", "IND")) {
+                                       c("ARG", "CHN", "IDN", "IND", "SUR")) {
 
   # ---- Prepare Reference year table ----
 
@@ -26,20 +28,18 @@ db_create_coverage_table <- function(ref_year_table,
       "wb_region_code", "pcn_region_code",
       "country_code", "reporting_year",
       "survey_year", "welfare_type",
-      "pop_data_level"
+      "pop_data_level", "reporting_level"
     )
   ]
 
-  # Remove duplicated rows
-  dt <- dt[!duplicated(dt), ]
-
-  # Transform table to one row per country-year-coverage
+  # Transform table to one row per country-year-reporting_level
   dt <- dt[, .(survey_year = toString(survey_year)),
-    by = list(
-      country_code, reporting_year,
-      pop_data_level, welfare_type,
-      pcn_region_code, wb_region_code
-    )
+           by = list(
+             country_code, reporting_year,
+             pop_data_level, welfare_type,
+             pcn_region_code, wb_region_code,
+             reporting_level
+           )
   ]
   dt$survey_year_2 <- dt$survey_year %>%
     regmatches(., gregexpr(", .*", .)) %>%
@@ -50,6 +50,7 @@ db_create_coverage_table <- function(ref_year_table,
     gsub(", .*", "", dt$survey_year) %>%
     as.character() %>%
     as.numeric()
+
 
   # ---- Prepare Population table ----
 
@@ -67,13 +68,19 @@ db_create_coverage_table <- function(ref_year_table,
   # Remove domain column
   pop_table$pop_domain <- NULL
 
+  # Merge with cl (to get *_region_code for all countries)
+  pop_table <-
+    merge(pop_table,
+          cl_table[, c('country_code', 'pcn_region_code')],
+          by = 'country_code')
+
 
   # ---- Merge datasets ----
 
   # Merge dt with pop_table (full outer join)
   dt <- merge(dt, pop_table,
-    by.x = c("country_code", "reporting_year", "pop_data_level"),
-    by.y = c("country_code", "year", "pop_data_level"),
+    by.x = c("country_code", "reporting_year", "pop_data_level", "pcn_region_code"),
+    by.y = c("country_code", "year", "pop_data_level", "pcn_region_code"),
     all = TRUE
   )
 
@@ -113,9 +120,6 @@ db_create_coverage_table <- function(ref_year_table,
 
   # Combine to a single table
   out <- rbind(out_region, out_wld, out_tot)
-
-  # Remove NA's
-  out <- out[!is.na(out$pcn_region_code)] # Why is there NA observations?
 
   # Adjust digits
   out$coverage <- round(out$coverage, digits)
