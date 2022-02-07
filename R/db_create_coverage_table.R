@@ -1,19 +1,23 @@
-#' Create coverage table
+#' Create coverage tables
 #'
-#' Create a table with coverage estimates at regional, WLD and TOT levels.
+#' Create a list of tables with coverage estimates at 1) regional, WLD, TOT and
+#' 2) income group levels.
 #'
 #' @param ref_year_table data.table: Full interpolated means table. Output of
 #'   `db_create_ref_year_table()`.
 #' @param cl_table data.table: Country list table with all WDI countries.
+#' @param incgrp_table data.table: Table with historical income groups for all WDI countries.
 #' @inheritParams db_create_ref_year_table
 #' @param digits numeric: The number of digits the returned coverage numbers are
 #'   rounded by.
 #' @param special_countries character: A string with 3-letter country codes.
 #'
+#' @return list
 #' @export
 db_create_coverage_table <- function(ref_year_table,
                                      pop_table,
                                      cl_table,
+                                     incgrp_table,
                                      ref_years,
                                      digits = 2,
                                      special_countries =
@@ -74,6 +78,13 @@ db_create_coverage_table <- function(ref_year_table,
           cl_table[, c('country_code', 'pcn_region_code')],
           by = 'country_code')
 
+  # Merge with historical income group table
+  pop_table <-
+    merge(pop_table,
+          incgrp_table[, c('country_code', 'year_data', 'incgroup_historical')],
+          by.x = c('country_code', 'year'),
+          by.y = c('country_code', 'year_data')
+    )
 
   # ---- Merge datasets ----
 
@@ -118,11 +129,24 @@ db_create_coverage_table <- function(ref_year_table,
     base::transform(pcn_region_code = "TOT") %>%
     data.table::as.data.table()
 
-  # Combine to a single table
-  out <- rbind(out_region, out_wld, out_tot)
+  # Income group coverage
+  out_inc <- dt %>%
+    dplyr::filter(incgroup_historical %in% c("Low income", "Lower middle income")) %>%
+    dplyr::group_by(reporting_year, incgroup_historical) %>%
+    dplyr::summarise(coverage = stats::weighted.mean(coverage, pop)) %>%
+    dplyr::group_by(reporting_year) %>%
+    dplyr::summarise(coverage = mean(coverage)) %>%
+    dplyr::mutate(incgroup_historical = "LIC/LMIC") %>%
+    data.table::as.data.table()
+  out_inc <-  out_inc[, c('reporting_year', 'incgroup_historical', 'coverage')]
+
+  # Combine
+  out <- list(region = rbind(out_region, out_wld, out_tot),
+              incgrp = out_inc)
 
   # Adjust digits
-  out$coverage <- round(out$coverage, digits)
+  out$region$coverage <- round(out$region$coverage, digits)
+  out$incgrp$coverage <- round(out$incgrp$coverage, digits)
 
   return(out)
 }

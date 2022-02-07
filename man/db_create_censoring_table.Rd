@@ -4,12 +4,12 @@
 \alias{db_create_censoring_table}
 \title{Create censoring table}
 \usage{
-db_create_censoring_table(censored, coverage_table, coverage_threshold)
+db_create_censoring_table(censored, coverage_list, coverage_threshold)
 }
 \arguments{
 \item{censored}{list: List with manual provided countries or regions to censor.}
 
-\item{coverage_table}{data.table: Coverage table. Output of \code{db_create_coverage_table()}.}
+\item{coverage_list}{list: Coverage list. Output of \code{db_create_coverage_table()}.}
 
 \item{coverage_threshold}{numeric: Value with the threshold to censor regions based on their coverage (e.g 50 \%).}
 }
