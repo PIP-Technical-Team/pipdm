@@ -1,3 +1,20 @@
+
+#' Find countries without national coverage
+#'
+#' @param df data.frame: A table with survey metadata information.
+#'
+#' @return character
+#' @seealso `db_create_lkup_table()`
+#' @noRd
+check_no_national_survey <- function(df) {
+  tmp <- table(df$country_code, df$reporting_level)
+  tmp <- as.data.frame(tmp, stringsAsFactors = FALSE)
+  names(tmp) <- c("country_code", "reporting_level", "freq")
+  cc <- tmp[(tmp$reporting_level == "national" & tmp$freq == 0), ][["country_code"]]
+  if (is.null(cc)) cc <- ""
+  return(cc)
+}
+
 #' check_inputs_ref_years
 #' @noRd
 check_inputs_ref_years <- function(x) {
