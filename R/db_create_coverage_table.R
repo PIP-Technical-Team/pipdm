@@ -55,7 +55,6 @@ db_create_coverage_table <- function(ref_year_table,
     as.character() %>%
     as.numeric()
 
-
   # ---- Prepare Population table ----
 
   # Select national population estimates except for special countries
@@ -76,15 +75,20 @@ db_create_coverage_table <- function(ref_year_table,
   pop_table <-
     merge(pop_table,
           cl_table[, c('country_code', 'pcn_region_code')],
-          by = 'country_code')
+          by = 'country_code',
+          all.x = TRUE)
 
   # Merge with historical income group table
   pop_table <-
     merge(pop_table,
           incgrp_table[, c('country_code', 'year_data', 'incgroup_historical')],
           by.x = c('country_code', 'year'),
-          by.y = c('country_code', 'year_data')
+          by.y = c('country_code', 'year_data'),
+          all.x = TRUE
     )
+  # Impute incgroup_historical 1981-86 based on 1987 value
+  pop_table <- pop_table[order(country_code, year)]
+  pop_table[, incgroup_historical := impute_missing(incgroup_historical), by = country_code]
 
   # ---- Merge datasets ----
 
@@ -150,3 +154,12 @@ db_create_coverage_table <- function(ref_year_table,
 
   return(out)
 }
+
+#' Set missing to first available value
+#' @noRd
+impute_missing <- function(x) {
+  x[is.na(x)] <- x[!is.na(x)][1]
+  return(x)
+}
+
+
