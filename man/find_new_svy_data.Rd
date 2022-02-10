@@ -4,12 +4,7 @@
 \alias{find_new_svy_data}
 \title{Find which data is not available in cache folder or has changed SVY ID}
 \usage{
-find_new_svy_data(
-  cache_id,
-  filename,
-  tool = c("PC", "TB"),
-  cache_svy_dir = NULL
-)
+find_new_svy_data(cache_id, filename, tool = c("PC", "TB"), cache_svy_dir)
 }
 \arguments{
 \item{cache_id}{character: vector with cache Ids from pipeline inventory}

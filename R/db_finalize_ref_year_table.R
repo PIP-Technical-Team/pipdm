@@ -15,7 +15,7 @@ if (getRversion() >= "2.15.1") {
 #'
 #' @return data.table
 #' @keywords internal
-db_finalize_ref_year_table <- function(dt, pfw_table, pop_table) {
+db_finalize_ref_year_table <- function(dt, pop_table) {
 
   # CHECK inputs
   check_inputs_db_class(dt)
