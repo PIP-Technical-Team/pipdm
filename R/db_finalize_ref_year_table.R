@@ -98,7 +98,7 @@ db_finalize_ref_year_table <- function(dt, pop_table) {
     "pce_data_level", "cpi_data_level",
     "ppp_data_level", "reporting_level", "distribution_type",
     "gd_type", "is_interpolated",
-    "is_used_for_line_up",
+    "is_used_for_line_up", "is_used_for_aggregation",
     "estimation_type",
     "display_cp"
   )

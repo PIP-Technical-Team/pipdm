@@ -126,9 +126,12 @@ db_create_dsm_table <- function(lcu_table,
   cc <- check_no_national_survey(dt) # Check for no national surveys
   dt[, n_rl := .N, by = cache_id]    # Create number of rows per cache_id
   check <- (dt$reporting_level == "national" & dt$n_rl == 1) |  # Surveys w/ national reporting level and no split by U/R domain (e.g USA)
-    (dt$reporting_level %in% c("urban", "rural") & dt$n_rl == 3) | # Surveys split by U/R domain (e.g. CHN, IND)
+    (dt$reporting_level %in% c("urban", "rural") & dt$n_rl == 2) | # Surveys split by U/R domain (e.g. CHN, IND)
     dt$country_code %in% cc  # Countries wo/ any national surveys (e.g. ARG, SUR)
   dt[, is_used_for_line_up := ifelse(check, TRUE, FALSE)]
+
+  # Add is_used_for_aggregation column
+  dt[, is_used_for_aggregation := ifelse((dt$reporting_level %in% c("urban", "rural") & dt$n_rl == 2), TRUE, FALSE)]
   dt$n_rl <- NULL
 
   # Select and order columns
@@ -146,7 +149,7 @@ db_create_dsm_table <- function(lcu_table,
         "cpi_data_level", "ppp_data_level", "reporting_level",
         "distribution_type", "gd_type",
         "is_interpolated", "is_used_for_line_up",
-        "display_cp"
+        "is_used_for_aggregation", "display_cp"
       )
   ]
 
@@ -175,7 +178,7 @@ db_create_dsm_table <- function(lcu_table,
 add_aggregated_mean <- function(dt) {
 
   # Select rows w/ non-national pop_data_level
-  dt_sub <- dt[is_used_for_line_up == TRUE]
+  dt_sub <- dt[is_used_for_aggregation == TRUE]
 
   # Compute aggregated mean (weighted population average)
   dt_agg <-
@@ -213,7 +216,8 @@ add_aggregated_mean <- function(dt) {
       distribution_type       = unique(distribution_type),
       gd_type                 = unique(gd_type),
       is_interpolated         = FALSE,
-      is_used_for_line_up     = TRUE,
+      is_used_for_line_up     = FALSE,
+      is_used_for_aggregation = FALSE,
       display_cp              = unique(display_cp)
 
     ),
