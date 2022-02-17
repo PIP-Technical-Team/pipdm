@@ -112,6 +112,9 @@ db_finalize_ref_year_table <- function(dt, pfw_table, pop_table) {
     reporting_gdp = gdp
   )
 
+  # Recode class
+  dt$reporting_year <- as.integer(dt$reporting_year)
+
   # Add interpolation id
   dt <- dt %>%
     base::transform(
