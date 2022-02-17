@@ -6,11 +6,14 @@
 #' @param ref_year_table data.table: Full interpolated means table. Output of
 #'   `db_create_ref_year_table()`.
 #' @param cl_table data.table: Country list table with all WDI countries.
-#' @param incgrp_table data.table: Table with historical income groups for all WDI countries.
+#' @param incgrp_table data.table: Table with historical income groups for all
+#'   WDI countries.
 #' @inheritParams db_create_ref_year_table
 #' @param digits numeric: The number of digits the returned coverage numbers are
 #'   rounded by.
-#' @param special_countries character: A string with 3-letter country codes.
+#' @param urban_rural_countries character: A string with 3-letter country codes.
+#'   Countries where the coverage calculation is based on urban or rural
+#'   population numbers.
 #'
 #' @return list
 #' @export
@@ -20,7 +23,7 @@ db_create_coverage_table <- function(ref_year_table,
                                      incgrp_table,
                                      ref_years,
                                      digits = 2,
-                                     special_countries =
+                                     urban_rural_countries =
                                        c("ARG", "CHN", "IDN", "IND", "SUR")) {
 
   # ---- Prepare Reference year table ----
@@ -57,13 +60,13 @@ db_create_coverage_table <- function(ref_year_table,
 
   # ---- Prepare Population table ----
 
-  # Select national population estimates except for special countries
+  # Select national population estimates except for selected countries
   pop_table <- pop_table[(pop_data_level == "national" |
-    country_code %in% special_countries), ]
+    country_code %in% urban_rural_countries), ]
 
   # Remove national population estimates for selected countries
   pop_table <- pop_table[!(pop_data_level == "national" &
-    country_code %in% special_countries), ]
+    country_code %in% urban_rural_countries), ]
 
   # Select population estimates for selected reference years
   pop_table <- pop_table[year %in% ref_years, ]

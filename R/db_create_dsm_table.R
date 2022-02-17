@@ -123,14 +123,10 @@ db_create_dsm_table <- function(lcu_table,
   dt$is_interpolated <- FALSE
 
   # Add is_used_for_line_up column
-  cc <- check_no_national_survey(dt) # Check for no national surveys
-  dt[, n_rl := .N, by = cache_id]    # Create number of rows per cache_id
-  check <- (dt$reporting_level == "national" & dt$n_rl == 1) |  # Surveys w/ national reporting level and no split by U/R domain (e.g USA)
-    (dt$reporting_level %in% c("urban", "rural") & dt$n_rl == 2) | # Surveys split by U/R domain (e.g. CHN, IND)
-    dt$country_code %in% cc  # Countries wo/ any national surveys (e.g. ARG, SUR)
-  dt[, is_used_for_line_up := ifelse(check, TRUE, FALSE)]
+  dt <- create_line_up_check(dt)
 
   # Add is_used_for_aggregation column
+  dt[, n_rl := .N, by = cache_id]
   dt[, is_used_for_aggregation := ifelse((dt$reporting_level %in% c("urban", "rural") & dt$n_rl == 2), TRUE, FALSE)]
   dt$n_rl <- NULL
 
