@@ -32,7 +32,7 @@ db_create_coverage_table <- function(ref_year_table,
   dt <- ref_year_table[
     ,
     c(
-      "wb_region_code", "pcn_region_code",
+      "pcn_region_code", # "wb_region_code",
       "country_code", "reporting_year",
       "survey_year", "welfare_type",
       "pop_data_level", "reporting_level"
@@ -44,7 +44,7 @@ db_create_coverage_table <- function(ref_year_table,
            by = list(
              country_code, reporting_year,
              pop_data_level, welfare_type,
-             pcn_region_code, wb_region_code,
+             pcn_region_code, # wb_region_code,
              reporting_level
            )
   ]
@@ -110,7 +110,7 @@ db_create_coverage_table <- function(ref_year_table,
   # Create coverage column (current method)
   dt$coverage <- (abs(dt$reporting_year - dt$survey_year) <= 3 |
     abs(dt$reporting_year - dt$survey_year_2) <= 3)
-  dt$coverage <- data.table::fifelse(dt$coverage, 100, 0)
+  # dt$coverage <- data.table::fifelse(dt$coverage, 1, 0)
   dt[is.na(coverage), ]$coverage <- 0
 
   # ---- Calculate world and regional coverage ----
@@ -147,13 +147,14 @@ db_create_coverage_table <- function(ref_year_table,
     data.table::as.data.table()
   out_inc <-  out_inc[, c('reporting_year', 'incgroup_historical', 'coverage')]
 
-  # Combine
+  # Create output list
   out <- list(region = rbind(out_region, out_wld, out_tot),
-              incgrp = out_inc)
+              incgrp = out_inc,
+              country_year_coverage = dt)
 
   # Adjust digits
-  out$region$coverage <- round(out$region$coverage, digits)
-  out$incgrp$coverage <- round(out$incgrp$coverage, digits)
+  out$region$coverage <- round(out$region$coverage * 100, digits)
+  out$incgrp$coverage <- round(out$incgrp$coverage * 100, digits)
 
   return(out)
 }
