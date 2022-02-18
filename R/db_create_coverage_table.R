@@ -48,7 +48,7 @@ db_create_coverage_table <- function(ref_year_table,
              reporting_level
            )
   ]
-  dt$survey_year_2 <- dt$survey_year %>%
+  dt$survey_year_after <- dt$survey_year %>%
     regmatches(., gregexpr(", .*", .)) %>%
     gsub(", ", "", .) %>%
     ifelse(. == "character(0)", NA, .) %>%
@@ -57,6 +57,7 @@ db_create_coverage_table <- function(ref_year_table,
     gsub(", .*", "", dt$survey_year) %>%
     as.character() %>%
     as.numeric()
+  dt <- data.table::setnames(dt, 'survey_year', 'survey_year_before')
 
   # ---- Prepare Population table ----
 
@@ -108,8 +109,8 @@ db_create_coverage_table <- function(ref_year_table,
   dt <- dt[!is.na(pop), ]
 
   # Create coverage column (current method)
-  dt$coverage <- (abs(dt$reporting_year - dt$survey_year) <= 3 |
-    abs(dt$reporting_year - dt$survey_year_2) <= 3)
+  dt$coverage <- (abs(dt$reporting_year - dt$survey_year_before) <= 3 |
+    abs(dt$reporting_year - dt$survey_year_after) <= 3)
   # dt$coverage <- data.table::fifelse(dt$coverage, 1, 0)
   dt[is.na(coverage), ]$coverage <- 0
 
