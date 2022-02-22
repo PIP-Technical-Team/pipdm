@@ -3,6 +3,7 @@
 #' Save a cleaned version of the survey data in the cache survey data directory.
 #'
 #' @inheritParams db_create_ref_year_table
+#' @param pfw_table data.table: A table with the price framework file.
 #' @param pipeline_inventory data.table: Pipeline inventory table.
 #' @param pip_data_dir character: Input folder for the raw survey data.
 #' @param cache_svy_dir character: Output folder for the cached survey data.

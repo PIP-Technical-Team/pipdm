@@ -4,12 +4,10 @@
 \alias{db_finalize_ref_year_table}
 \title{Finalize reference year table}
 \usage{
-db_finalize_ref_year_table(dt, pfw_table, pop_table)
+db_finalize_ref_year_table(dt, pop_table)
 }
 \arguments{
 \item{dt}{data.table: Output of \code{\link[=db_compute_predicted_means]{db_compute_predicted_means()}}.}
-
-\item{pfw_table}{data.table: A table with the price framework file.}
 
 \item{pop_table}{data.table: A table with population data.}
 }

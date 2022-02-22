@@ -9,7 +9,6 @@ db_create_ref_year_table(
   gdp_table,
   pce_table,
   pop_table,
-  pfw_table,
   ref_years,
   pip_years,
   region_code = c("pcn_region_code", "wb_region_code")
@@ -23,8 +22,6 @@ db_create_ref_year_table(
 \item{pce_table}{data.table: A table with PCE data.}
 
 \item{pop_table}{data.table: A table with population data.}
-
-\item{pfw_table}{data.table: A table with the price framework file.}
 
 \item{ref_years}{numeric: A vector with reference years.}
 
