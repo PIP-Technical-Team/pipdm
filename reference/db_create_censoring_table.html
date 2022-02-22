@@ -53,15 +53,15 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">db_create_censoring_table</span><span class="op">(</span><span class="va">censored</span>, <span class="va">coverage_table</span>, <span class="va">coverage_threshold</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">db_create_censoring_table</span><span class="op">(</span><span class="va">censored</span>, <span class="va">coverage_list</span>, <span class="va">coverage_threshold</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>censored</dt>
 <dd><p>list: List with manual provided countries or regions to censor.</p></dd>
-<dt>coverage_table</dt>
-<dd><p>data.table: Coverage table. Output of <code><a href="db_create_coverage_table.html">db_create_coverage_table()</a></code>.</p></dd>
+<dt>coverage_list</dt>
+<dd><p>list: Coverage list. Output of <code><a href="db_create_coverage_table.html">db_create_coverage_table()</a></code>.</p></dd>
 <dt>coverage_threshold</dt>
 <dd><p>numeric: Value with the threshold to censor regions based on their coverage (e.g 50 %).</p></dd>
 </dl></div>
