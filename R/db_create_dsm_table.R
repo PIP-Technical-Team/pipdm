@@ -1,6 +1,3 @@
-#' @import data.table
-NULL
-
 #' Create deflated survey mean table
 #'
 #' Create a table with deflated welfare means for each country and surveyid
