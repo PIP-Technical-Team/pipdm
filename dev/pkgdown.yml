@@ -2,7 +2,7 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-02-07T15:18Z
+last_built: 2024-02-07T15:27Z
 urls:
   reference: https://pip-technical-team.github.io/pipdm/reference
   article: https://pip-technical-team.github.io/pipdm/articles
