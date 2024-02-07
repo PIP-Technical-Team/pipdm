@@ -14,7 +14,7 @@ save_aux_data(x, filename, compress = FALSE)
 \item{compress}{logical. iF TRUE it compress output}
 }
 \value{
-
+directory path and file name
 }
 \description{
 Save auxiliary data.

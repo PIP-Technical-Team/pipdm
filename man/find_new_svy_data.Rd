@@ -17,7 +17,7 @@ Baker, receptively}
 \item{cache_svy_dir}{character: Output folder for the cached survey data.}
 }
 \value{
-
+data.table with survey ID information
 }
 \description{
 Find which data is not available in cache folder or has changed SVY ID

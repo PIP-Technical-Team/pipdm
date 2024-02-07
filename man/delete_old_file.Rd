@@ -31,7 +31,7 @@ or "out". The former refers to \code{gls$CACHE_SVY_DIR_PC}. the latter refers to
 available in cache_id will be deleted}
 }
 \value{
-
+invisible NA
 }
 \description{
 Delete cache files that are no longer in use

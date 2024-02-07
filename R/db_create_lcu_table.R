@@ -1,28 +1,3 @@
-#' @import data.table
-NULL
-
-# Add global variables to avoid NSE notes in R CMD check
-if (getRversion() >= "2.15.1") {
-  utils::globalVariables(
-    c(
-      "survey_id",
-      "welfare",
-      "weight",
-      "cpi_data_level",
-      "ppp_data_level",
-      "gdp_data_level",
-      "pce_data_level",
-      "pop_data_level",
-      "reporting_level",
-      "svy_mean_lcu",
-      "surveyid_year",
-      "survey_acronym",
-      "gd_type",
-      "welfare_type"
-    )
-  )
-}
-
 #' Create survey mean table (LCU)
 #'
 #' Create a table with welfare means in Local Currency Units (LCU) for each

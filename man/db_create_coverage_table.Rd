@@ -11,7 +11,7 @@ db_create_coverage_table(
   incgrp_table,
   ref_years,
   digits = 2,
-  special_countries = c("ARG", "CHN", "IDN", "IND", "SUR")
+  urban_rural_countries = c("ARG", "CHN", "IDN", "IND", "SUR")
 )
 }
 \arguments{
@@ -22,14 +22,17 @@ db_create_coverage_table(
 
 \item{cl_table}{data.table: Country list table with all WDI countries.}
 
-\item{incgrp_table}{data.table: Table with historical income groups for all WDI countries.}
+\item{incgrp_table}{data.table: Table with historical income groups for all
+WDI countries.}
 
 \item{ref_years}{numeric: A vector with reference years.}
 
 \item{digits}{numeric: The number of digits the returned coverage numbers are
 rounded by.}
 
-\item{special_countries}{character: A string with 3-letter country codes.}
+\item{urban_rural_countries}{character: A string with 3-letter country codes.
+Countries where the coverage calculation is based on urban or rural
+population numbers.}
 }
 \value{
 list

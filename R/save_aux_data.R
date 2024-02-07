@@ -4,7 +4,7 @@
 #' @param filename final name of aux data
 #' @param compress logical. iF TRUE it compress output
 #'
-#' @return
+#' @return directory path and file name
 #' @export
 save_aux_data <- function(x,
                           filename,
