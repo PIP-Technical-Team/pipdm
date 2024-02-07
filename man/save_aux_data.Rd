@@ -13,9 +13,6 @@ save_aux_data(x, filename, compress = FALSE)
 
 \item{compress}{logical. iF TRUE it compress output}
 }
-\value{
-
-}
 \description{
 Save auxiliary data.
 }

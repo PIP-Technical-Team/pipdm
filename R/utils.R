@@ -102,3 +102,92 @@ uniq_vars_to_attr <- function(x) {
   return(x)
 
 }
+
+
+#' FIlter data.frame and convert it to list
+#'
+#' @param dt_ data.frame
+#' @param condition condition in `i`  as in  `DT[i,j]`
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' library(data.table)
+#' dt <- data.table(x = c("a", "a", "b", "c", "c"),
+#'  y = 1:5)
+#'
+#' filter2list(dt, y > 3)
+filter2list <- function(dt_,...) {
+
+  l <- list(...)
+  cn <-
+    purrr::imap(l,
+                \(x, ix) {
+                  if (is.character(x)) {
+                    x <- shQuote(x)
+                  }
+                  left <- paste(ix, "==")
+                  cnx  <- paste(left, x, collapse = " | ")
+                  cnx  <- paste0("(", cnx, ")")
+                }) |>
+    paste(collapse = " & ") |>
+    parse(text = _)
+
+  dt_ |>
+    fsubset(eval(cn)) |>
+    as.list()
+}
+
+
+
+
+#' get weights from survey year to reference year
+#'
+#' @param ref_year numeric: reference year
+#' @param svy_years numeric: survey years. Length either 1 or 2
+#'
+#' @return numeric vector with both weights that sum up to 1
+#' @export
+distance_weight <- function(ref_year, svy_years) {
+
+  # early return
+  l_sy <- length(svy_years)
+  if (l_sy == 1) {
+    return(1)
+  }
+
+  # check reference year is unique
+  ref_year  <- unique(ref_year)
+  stopifnot(exprs = {
+    length(ref_year) == 1
+    l_sy %% 2 == 0
+  })
+
+  x <- matrix(svy_years, nrow = 2)
+
+  wt <- vector(mode   = "numeric",
+               length = l_sy)
+
+  a <- c(1,2)
+  for (i in seq_along(x[1, ])) {
+    svy_year1 <- x[1, i]
+    svy_year2 <- x[2, i]
+
+    weight1 <- (svy_year2 - ref_year)/(svy_year2 - svy_year1)
+    weight2 <- 1 - weight1
+    wt[a] <- c(weight1, weight2)
+    a <-  a + 2
+  }
+
+  return(wt)
+
+}
+
+
+
+
+
+
+
+

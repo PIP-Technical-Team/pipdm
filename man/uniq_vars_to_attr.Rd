@@ -10,9 +10,6 @@ uniq_vars_to_attr(x)
 \arguments{
 \item{x}{data frame.}
 }
-\value{
-
-}
 \description{
 convert variagles with unique values along the data set to attrbitus and then
 remove those unique variables
