@@ -380,23 +380,3 @@ same_dir_growth_factor <- function(survey_mean1,
 
 }
 
-
-
-is_required <- function(pak) {
-  !(suppressWarnings(require(pak, quietly = TRUE)))
-}
-
-
-# source("renv/activate.R")
-#
-# Sys.setenv(RENV_PATHS_LIBRARY_ROOT = "e:/PovcalNet/01.personal/wb384996/R/.renv/library")
-# source("~/.Rprofile")
-# source("R/db_utils.R")
-# source("R/packages.R")
-#
-
-
-
-
-
-
