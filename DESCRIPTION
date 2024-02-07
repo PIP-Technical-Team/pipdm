@@ -26,8 +26,7 @@ Suggests:
     knitr,
     rmarkdown,
     pushoverr
-URL: https://github.com/PIP-Technical-Team/pipdm,
-    https://pip-technical-team.github.io/pipdm
+URL: https://github.com/PIP-Technical-Team/pipdm, https://pip-technical-team.github.io/pipdm, https://pip-technical-team.github.io/pipdm/
 BugReports: https://github.com/PIP-Technical-Team/pipdm/issues
 Depends: 
     R (>= 3.5.0)

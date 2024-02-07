@@ -1,2 +1,6 @@
-url: https://pip-technical-team.github.io/pipdm
+url: https://pip-technical-team.github.io/pipdm/
+template:
+  bootstrap: 5
+development:
+  mode: auto
 

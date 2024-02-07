@@ -13,6 +13,7 @@ Useful links:
 \itemize{
   \item \url{https://github.com/PIP-Technical-Team/pipdm}
   \item \url{https://pip-technical-team.github.io/pipdm}
+  \item \url{https://pip-technical-team.github.io/pipdm/}
   \item Report bugs at \url{https://github.com/PIP-Technical-Team/pipdm/issues}
 }
 
