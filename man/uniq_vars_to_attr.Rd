@@ -2,15 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{uniq_vars_to_attr}
 \alias{uniq_vars_to_attr}
-\title{convert variagles with unique values along the data set to attrbitus and then
-remove those unique variables}
+\title{convert variables with unique values along the data set to attributes and
+then remove those unique variables}
 \usage{
 uniq_vars_to_attr(x)
 }
 \arguments{
 \item{x}{data frame.}
 }
+\value{
+same data.table without variables iwth unique values. Those variables
+become attributes of the data
+}
 \description{
-convert variagles with unique values along the data set to attrbitus and then
-remove those unique variables
+convert variables with unique values along the data set to attributes and
+then remove those unique variables
 }

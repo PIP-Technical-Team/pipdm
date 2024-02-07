@@ -6,7 +6,7 @@
 #' @param tool character: Either "PC" or "TB" for poverty calculator and Table
 #'   Baker, receptively
 #'
-#' @return
+#' @return data.table with survey ID information
 #' @export
 find_new_svy_data <- function(cache_id,
                               filename,

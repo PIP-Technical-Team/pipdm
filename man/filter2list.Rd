@@ -11,6 +11,9 @@ filter2list(dt_, ...)
 
 \item{condition}{condition in \code{i}  as in  \code{DT[i,j]}}
 }
+\value{
+list
+}
 \description{
 FIlter data.frame and convert it to list
 }

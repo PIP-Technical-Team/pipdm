@@ -30,6 +30,9 @@ or "out". The former refers to \code{gls$CACHE_SVY_DIR_PC}. the latter refers to
 (default). If false, no file will be deleleted. If TRUE, all old files not
 available in cache_id will be deleted}
 }
+\value{
+invisible NA
+}
 \description{
 Delete cache files that are no longer in use
 }

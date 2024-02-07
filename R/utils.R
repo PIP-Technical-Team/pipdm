@@ -72,12 +72,13 @@ check_inputs_db_class <- function(dt) {
   }
 }
 
-#' convert variagles with unique values along the data set to attrbitus and then
-#' remove those unique variables
+#' convert variables with unique values along the data set to attributes and
+#' then remove those unique variables
 #'
 #' @param x data frame.
 #'
-#' @return
+#' @return same data.table without variables iwth unique values. Those variables
+#'   become attributes of the data
 #' @export
 uniq_vars_to_attr <- function(x) {
 
@@ -109,7 +110,7 @@ uniq_vars_to_attr <- function(x) {
 #' @param dt_ data.frame
 #' @param condition condition in `i`  as in  `DT[i,j]`
 #'
-#' @return
+#' @return list
 #' @export
 #'
 #' @examples
