@@ -34,7 +34,7 @@ process_svy_data_to_cache <- function(survey_id,
   df <- tryCatch(
     expr = {
       # Load data
-      pipload::pip_load_data(
+      df <- pipload::pip_load_data(
         survey_id = survey_id,
         maindir   = pip_data_dir,
         verbose   = FALSE
@@ -42,10 +42,6 @@ process_svy_data_to_cache <- function(survey_id,
     }, # end of expr section
 
     error = function(e) {
-      NULL
-    }, # end of error section
-
-    warning = function(w) {
       NULL
     }
   ) # End of trycatch
@@ -66,11 +62,7 @@ process_svy_data_to_cache <- function(survey_id,
       # Clean data   ---------
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      ## Standard cleaning --------
-
-      df <- db_clean_data(df)
-
+      
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       ## check if there is alternative welfare to use --------
 
@@ -99,7 +91,7 @@ process_svy_data_to_cache <- function(survey_id,
         surveyid_year := as.integer(surveyid_year)
       ]
 
-      pfw <- joyn::merge(pfw_table,
+      pfw <- joyn::joyn(pfw_table,
                          dt_id,
                          by = c("country_code", "surveyid_year", "survey_acronym"),
                          match_type = "1:1",
@@ -115,7 +107,12 @@ process_svy_data_to_cache <- function(survey_id,
 
       # stadanrdize and change weflare type
       df[, welfare_type := wt]
-
+      
+      # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      ## Standard cleaning --------
+      
+      df <- db_clean_data(df)
+      
 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       # additional variables   ---------
@@ -135,26 +132,26 @@ process_svy_data_to_cache <- function(survey_id,
 
       # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       ## Deflate data --------
-      ppp_table <- ppp_table[ppp_default == TRUE]
+      # ppp_table <- ppp_table[ppp_default == TRUE]
 
       # Merge survey table with PPP (left join)
-      df <- joyn::merge(df, ppp_table,
+      df <- joyn::joyn(df, ppp_table,
         by         = c("country_code", "ppp_data_level"),
         match_type = "m:1",
-        yvars      = "ppp",
+        y_vars_to_keep = "ppp",
         keep       = "left",
         reportvar  = FALSE,
         verbose    = FALSE
       )
 
       # Merge survey table with CPI (left join)
-      df <- joyn::merge(df, cpi_table,
+      df <- joyn::joyn(df, cpi_table,
         by = c(
           "country_code", "survey_year",
           "survey_acronym", "cpi_data_level"
         ),
         match_type = "m:1",
-        yvars = "cpi",
+        y_vars_to_keep = "cpi",
         keep = "left",
         reportvar = FALSE,
         verbose = FALSE
@@ -179,7 +176,12 @@ process_svy_data_to_cache <- function(survey_id,
       nrl <- length(df[, unique(reporting_level)]) # number of reporting level
       dst <- df[, unique(distribution_type)]       # distribution type
 
-      if ( nrl > 1  &&  dst == "micro")  {
+      if ( nrl > 1  &&  !(dst %in% c("group", "aggregate")))  {
+        # sd <- split(df, by = "imputation_id")
+        # lf <- purrr::map(.x = sd, 
+        #                  adjust_population, 
+        #                  pop_table = pop_table)
+        # 
         df <- adjust_population(df, pop_table)
       }  # end of population adjustment
 
@@ -298,7 +300,7 @@ adjust_population <- function(df, pop_table) {
              by = c("country_code", "survey_year", "reporting_level")]
 
 
-  dpop <- joyn::merge(pop_table, spop,
+  dpop <- joyn::joyn(pop_table, spop,
                       by         = c("country_code",
                                      "pop_data_level = reporting_level"),
                       match_type =  "m:1",
@@ -328,7 +330,7 @@ adjust_population <- function(df, pop_table) {
     ][,
       c("pop", "weight") := NULL]
 
-  df <- joyn::merge(x  = df,
+  df <- joyn::joyn(x  = df,
                     y  = fact,
                     by = c("reporting_level = pop_data_level"),
                     match_type = "m:1",

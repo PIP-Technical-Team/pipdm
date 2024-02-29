@@ -1,3 +1,16 @@
+#' @importFrom magrittr %>%
+NULL
+
+# Add global variables to avoid NSE notes in R CMD check
+if (getRversion() >= "2.15.1") {
+  utils::globalVariables(
+    c(
+      "survey_year", "is_ref_year", "n_per_welfare_type", "both_sides",
+      "dist_from_ref_year", "welfare_type"
+    )
+  )
+}
+
 #' Select correct line-up surveys
 #'
 #' Select a single line-up survey when there are multiple line-up surveys

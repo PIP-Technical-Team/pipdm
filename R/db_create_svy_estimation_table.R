@@ -10,13 +10,14 @@ db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce
 
   # TEMP FIX: TO BE REMOVED
   dist_table$survey_id <- toupper(dist_table$survey_id)
+  dsm_table$survey_id <- toupper(dsm_table$survey_id)
 
   # Remove cols from dist_table
   dist_table$reporting_year <- NULL
   dist_table$problem <- NULL
 
   # Merge DSM table w/ dist stat table (full join)
-  dt <- joyn::merge(dsm_table, dist_table, match_type = "1:1")
+  dt <- joyn::joyn(dsm_table, dist_table, match_type = "1:1")
   dt$report <- NULL
 
   # Merge with GDP
@@ -79,7 +80,7 @@ db_create_svy_estimation_table <- function(dsm_table, dist_table, gdp_table, pce
   cols <- c(
     "survey_id", "cache_id", "region_code", "wb_region_code",
     "country_code", "reporting_year", "surveyid_year",
-    "survey_year", "survey_acronym", "survey_coverage",
+    "survey_year", "survey_time", "survey_acronym", "survey_coverage",
     "survey_comparability", "comparable_spell", "welfare_type",
     "reporting_level",
     # "mean", "median", "mld", "gini",

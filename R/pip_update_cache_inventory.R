@@ -45,12 +45,12 @@ pip_update_cache_inventory <- function(
   # Filter pipeline inventory and select relevant variables
   cols <- c("orig", "filename", "survey_id")
 
-  crr <- joyn::merge(cch, pipeline_inventory,
+  crr <- joyn::joyn(cch, pipeline_inventory,
                      by         = "cache_id",
                      match_type = "1:1",
                      keep       = "inner",
                      reportvar  = FALSE,
-                     yvars      = cols,
+                     y_vars_to_keep = cols,
                      verbose    = FALSE
   )
 
@@ -69,11 +69,12 @@ pip_update_cache_inventory <- function(
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   time <- format(Sys.time(), "%Y%m%d%H%M%S") # find a way to account for time zones
 
-  crr_dir      <- glue::glue("{cache_svy_dir}_crr_inventory/")
-  crr_filename <- glue::glue("{crr_dir}crr_inventory")
-  crr_vintage  <- glue::glue("{crr_dir}vintage/crr_inventory_{time}")
+  
+  crr_dir      <- fs::path(cache_svy_dir, "_crr_inventory")
+  crr_filename <- fs::path(crr_dir, "crr_inventory")
+  crr_vintage  <- fs::path(crr_dir, "vintage", paste0("crr_inventory_", time))
 
-  crr_fst <- glue::glue("{crr_filename}.fst")
+  crr_fst <- fs::path(crr_filename, ext = "fst")
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # Current inventory   ---------
@@ -91,22 +92,20 @@ pip_update_cache_inventory <- function(
       }
 
       # Update values with new information
-      crr <- joyn::merge(crr, cci,
+      crr <- joyn::joyn(cci, crr, 
                          by            = "cache_id",
                          match_type    = "1:1",
                          update_values = TRUE,
                          reportvar     = FALSE,
-                         verbose       = FALSE,
-                         keep          = "inner"
-      )
+                         verbose       = FALSE)
 
       # remove information that is not longer necessary
-      # crr <- joyn::merge(crr, cch,
-      #                    by            = "cache_id",
-      #                    match_type    = "1:1",
-      #                    verbose       = FALSE,
-      #                    keep          = "inner",
-      #                    reportvar     = FALSE )
+      crr <- joyn::joyn(crr, cch,
+                         by            = "cache_id",
+                         match_type    = "1:1",
+                         verbose       = FALSE,
+                         keep          = "inner",
+                         reportvar     = FALSE )
 
     } else {
       if (verbose) {
@@ -124,11 +123,11 @@ pip_update_cache_inventory <- function(
 
     # fst
     fst::write_fst(crr, crr_fst)
-    fst::write_fst(crr, glue::glue("{crr_vintage}.fst"))
+    fst::write_fst(crr, fs::path(crr_vintage, ext = "fst"))
 
     # dta
-    haven::write_dta(crr, glue::glue("{crr_filename}.dta"))
-    haven::write_dta(crr, glue::glue("{crr_vintage}.dta"))
+    haven::write_dta(crr, fs::path(crr_filename, ext = "dta"))
+    haven::write_dta(crr, fs::path(crr_vintage,  ext = "dta"))
 
     if (isTRUE(verbose)) {
       cli::cli_alert_info("file {.url {crr_fst}} has been updated. You

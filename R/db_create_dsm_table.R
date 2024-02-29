@@ -1,3 +1,6 @@
+#' @import data.table
+NULL
+
 #' Create deflated survey mean table
 #'
 #' Create a table with deflated welfare means for each country and surveyid
@@ -27,7 +30,7 @@ db_create_dsm_table <- function(lcu_table,
     ]
 
   # Merge survey table with CPI (left join)
-  dt <- joyn::merge(lcu_table, cpi_table,
+  dt <- joyn::joyn(lcu_table, cpi_table,
     by = c(
       "country_code", "survey_year",
       "survey_acronym", "cpi_data_level"
@@ -63,7 +66,7 @@ db_create_dsm_table <- function(lcu_table,
     ]
 
   # Merge survey table with PPP (left join)
-  jn <- joyn::merge(dt, ppp_table,
+  jn <- joyn::joyn(dt, ppp_table,
     by = c("country_code", "ppp_data_level"),
     match_type = "m:1"
   )
@@ -135,7 +138,7 @@ db_create_dsm_table <- function(lcu_table,
         "country_code", "survey_acronym", "survey_coverage",
         "survey_comparability", "comparable_spell",
         "surveyid_year", "reporting_year",
-        "survey_year", "welfare_type",
+        "survey_year", "survey_time", "welfare_type",
         "survey_mean_lcu", "survey_mean_ppp", #' survey_pop',
         "reporting_pop", "ppp", "cpi", "pop_data_level",
         "gdp_data_level", "pce_data_level",
@@ -188,6 +191,7 @@ add_aggregated_mean <- function(dt) {
       surveyid_year        = unique(surveyid_year),
       reporting_year       = unique(reporting_year),
       survey_year          = unique(survey_year),
+      survey_time          = unique(survey_time),
       welfare_type         = unique(welfare_type),
       survey_mean_lcu      = collapse::fmean(
         x = survey_mean_lcu,

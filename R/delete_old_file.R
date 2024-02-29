@@ -12,8 +12,9 @@
 #'   (default). If false, no file will be deleleted. If TRUE, all old files not
 #'   available in cache_id will be deleted
 #' @param gls list: List of globals.
-#' @return invisible NA
+#' @return
 #' @export
+#'
 delete_old_file <- function(target_dir = "in",
                             gls,
                             cache_ids  = NULL,

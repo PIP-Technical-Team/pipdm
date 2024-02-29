@@ -1,3 +1,28 @@
+#' @import data.table
+NULL
+
+# Add global variables to avoid NSE notes in R CMD check
+if (getRversion() >= "2.15.1") {
+  utils::globalVariables(
+    c(
+      "survey_id",
+      "welfare",
+      "weight",
+      "cpi_data_level",
+      "ppp_data_level",
+      "gdp_data_level",
+      "pce_data_level",
+      "pop_data_level",
+      "reporting_level",
+      "svy_mean_lcu",
+      "surveyid_year",
+      "survey_acronym",
+      "gd_type",
+      "welfare_type"
+    )
+  )
+}
+
 #' Create survey mean table (LCU)
 #'
 #' Create a table with welfare means in Local Currency Units (LCU) for each
@@ -23,11 +48,11 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
       "country_code", "survey_coverage",
       "surveyid_year", "survey_acronym",
       "reporting_year", "survey_comparability",
-      "display_cp"
+      "display_cp", "survey_time"
     )]
 
   # Merge LCU table with PFW (left join)
-  dt <- joyn::merge(dt, pfw_table,
+  dt <- joyn::joyn(dt, pfw_table,
     by = c(
       "country_code",
       "surveyid_year",
@@ -74,7 +99,7 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
     tidyfast::dt_nest(country_code, pop_data_level, .key = "data")
 
   # Merge dt with pop_nested (add survey_pop)
-  dt <- joyn::merge(dt, pop_nested,
+  dt <- joyn::joyn(dt, pop_nested,
     by = c("country_code", "pop_data_level"),
     match_type = "m:1"
   )
@@ -115,7 +140,7 @@ db_create_lcu_table <- function(dl, pop_table, pfw_table) {
   dt$data <- NULL
 
   # Merge with pop_table (add reporting_pop)
-  dt <- joyn::merge(dt, pop_table,
+  dt <- joyn::joyn(dt, pop_table,
     by = c(
       "country_code",
       "reporting_year = year",

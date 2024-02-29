@@ -1,15 +1,15 @@
 #' Find which data is not available in cache folder or has changed SVY ID
 #'
-#' @param cache_svy_dir character: Output folder for the cached survey data.
-#' @param cache_id  character: vector with cache Ids from pipeline inventory
+#' @param pipeline_inventory data.table: Pipeline inventory table.
+#' @param pip_data_dir character: Input folder for the raw survey data.
 #' @param filename character: vector with original dta file names
 #' @param tool character: Either "PC" or "TB" for poverty calculator and Table
 #'   Baker, receptively
 #'
-#' @return data.table with survey ID information
+#' @return
 #' @export
-find_new_svy_data <- function(cache_id,
-                              filename,
+find_new_svy_data <- function(pipeline_inventory,
+                              pip_data_dir,
                               tool = c("PC", "TB"),
                               cache_svy_dir) {
 
@@ -17,7 +17,12 @@ find_new_svy_data <- function(cache_id,
 
   ## check parameters --------
   tool <- match.arg(tool)
-
+  
+  
+  cache_id <- pipeline_inventory$cache_id
+  filename <- pipeline_inventory$filename
+  
+  
   # Get existing survey ids
   existing_chh_ids <- gsub("(.+)(\\.fst)", "\\1", list.files(cache_svy_dir))
 
@@ -35,10 +40,10 @@ find_new_svy_data <- function(cache_id,
   #--------- find data whose SVY id has changed ---------
 
   # load correspondence inventory
-  crr_dir <- glue::glue("{cache_svy_dir}_crr_inventory/")
-
-  if (file.exists(glue::glue("{crr_dir}crr_inventory.fst"))) {
-    crr_inv <- fst::read_fst(glue::glue("{crr_dir}crr_inventory.fst"))
+  crr_dir <- fs::path(cache_svy_dir, "_crr_inventory/")
+  crr_inv_file <- fs::path(crr_dir, "crr_inventory", ext = "fst")
+  if (file.exists(crr_inv_file)) {
+    crr_inv <- fst::read_fst(crr_inv_file)
     data.table::setDT(crr_inv)
 
     chd_svy <-
@@ -57,7 +62,9 @@ find_new_svy_data <- function(cache_id,
     }
   } else {
     pip_update_cache_inventory(
+      pipeline_inventory = pipeline_inventory,
       cache_svy_dir = cache_svy_dir,
+      pip_data_dir = pip_data_dir,
       tool = tool
     )
   }
